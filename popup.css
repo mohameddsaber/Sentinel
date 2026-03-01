@@ -1,0 +1,117 @@
+:root {
+  --ink: #1f1b16;
+  --muted: #6d6258;
+  --paper: #f7f0e6;
+  --accent: #1f3b2d;
+  --accent-soft: #d9e4d8;
+  --card: #fff7ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Georgia", "Times New Roman", serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top, #fff8f0, #efe2d0);
+  width: 360px;
+}
+
+.app {
+  padding: 16px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.subtitle {
+  margin: 4px 0 16px;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 10px 24px rgba(31, 27, 22, 0.08);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+button.secondary {
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d4c6b8;
+  padding: 6px;
+  margin-bottom: 8px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+}
+
+.timer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+#report {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.rules {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}

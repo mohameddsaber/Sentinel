@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deep Work</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Deep Work</h1>
+      <p class="subtitle">Behavior-aware focus mode</p>
+    </header>
+
+    <section class="panel">
+      <div class="row">
+        <div>
+          <div class="label">Status</div>
+          <div id="status">Loading...</div>
+        </div>
+        <button id="toggleBtn" class="primary">Toggle</button>
+      </div>
+
+      <div class="row">
+        <div class="label">Timer (25–90 min)</div>
+        <div class="timer-row">
+          <input id="timerRange" type="range" min="25" max="90" step="5" />
+          <span id="timerValue">50</span>
+        </div>
+        <label class="checkbox">
+          <input id="timerEnabled" type="checkbox" />
+          Use timer
+        </label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="label">Blocking Rules</div>
+      <div class="rules">
+        <div>Automatic entertainment blocklist is enabled.</div>
+        <div class="muted">Rules are managed by the extension.</div>
+      </div>
+    </section>
+
+    <section class="panel" id="reportPanel">
+      <div class="label">Last Session Report</div>
+      <div id="report">No session yet.</div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
