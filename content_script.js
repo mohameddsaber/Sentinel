@@ -136,6 +136,16 @@
     const style = document.createElement("style");
     style.id = YT_STYLE_ID;
     style.textContent = `
+      /* Homepage recommendation grid/shelves */
+      ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+      ytd-browse[page-subtype="home"] ytd-rich-section-renderer,
+      ytd-browse[page-subtype="home"] ytd-rich-item-renderer,
+      ytd-browse[page-subtype="home"] #contents.ytd-rich-grid-renderer,
+      ytd-browse[page-subtype="home"] #contents {
+        display: none !important;
+      }
+
+      /* Watch-page algorithmic suggestions */
       ytd-watch-next-secondary-results-renderer,
       #secondary,
       ytd-compact-video-renderer,

@@ -467,14 +467,15 @@ async function handlePromptResponse(choice, tabId) {
 
 function isBlockedByRules(url, settings, meta) {
   if (isAllowlisted(url, settings.allowPatterns || [])) return false;
-  if (settings.blockShorts && isYouTubeShorts(url)) return true;
-  if (isBlockedYouTubeSurface(url)) return true;
+  if (isYouTubeDomain(url)) {
+    if (settings.blockShorts && isYouTubeShorts(url)) return true;
+    return !isAllowedYouTubeRoute(url);
+  }
   if (matchesDomain(url, settings.blockedDomains || [])) return true;
   if (matchesPatterns(url, settings.blockedPatterns || [])) return true;
 
   if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
   if (isKnownSafeYouTubeIntent(url)) return false;
-  if (isYouTubeDomain(url)) return true;
 
   const domainRisk = domainPatternRisk(url);
   if (domainRisk >= 3) return true;
@@ -526,11 +527,8 @@ function isYouTubeShorts(url) {
 function isBlockedYouTubeSurface(url) {
   if (!isYouTubeDomain(url)) return false;
   const path = getPath(url);
-  if (path === "/") return true;
-  if (path === "/feed/subscriptions") return true;
   if (path === "/feed/explore") return true;
   if (path === "/feed/trending") return true;
-  if (path === "/feed/library") return true;
   return false;
 }
 
@@ -541,10 +539,26 @@ function isKnownSafeYouTubeIntent(url) {
   const path = parsed.pathname;
   if (path === "/results" && parsed.searchParams.has("search_query")) return true;
   if (path === "/watch" && parsed.searchParams.has("v")) return true;
+  if (path === "/playlist" && parsed.searchParams.has("list")) return true;
+  if (path === "/feed/playlists") return true;
+  if (path === "/feed/library") return true;
   if (path.startsWith("/@")) return true;
   if (path.startsWith("/channel/")) return true;
   if (path.startsWith("/c/")) return true;
   if (path.startsWith("/user/")) return true;
+  return false;
+}
+
+function isAllowedYouTubeRoute(url) {
+  if (!isYouTubeDomain(url)) return false;
+  const parsed = parseUrl(url);
+  if (!parsed) return false;
+  const path = parsed.pathname;
+
+  if (path === "/") return true;
+  if (isKnownSafeYouTubeIntent(url)) return true;
+  if (path === "/results") return parsed.searchParams.has("search_query");
+  if (path === "/watch") return parsed.searchParams.has("v");
   return false;
 }
 
