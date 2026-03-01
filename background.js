@@ -135,6 +135,8 @@ const KNOWN_SAFE_STREAMING_DOMAINS = [
   "khanacademy.org"
 ];
 
+const STRICT_UNKNOWN_MEDIA_BLOCK = true;
+
 const tabMeta = new Map();
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -472,9 +474,14 @@ function isBlockedByRules(url, settings, meta) {
 
   if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
   if (isKnownSafeYouTubeIntent(url)) return false;
+  if (isYouTubeDomain(url)) return true;
 
   const domainRisk = domainPatternRisk(url);
   if (domainRisk >= 3) return true;
+
+  if (STRICT_UNKNOWN_MEDIA_BLOCK && shouldBlockUnknownMediaDomain(url, meta?.title || "")) {
+    return true;
+  }
 
   const score = keywordScore(url, meta?.title || "");
   const hasNegatives = score.negativeHits > 0;
@@ -614,6 +621,33 @@ function domainPatternRisk(url) {
   }
 
   return risk;
+}
+
+function shouldBlockUnknownMediaDomain(url, title) {
+  if (matchesDomain(url, KNOWN_SAFE_STREAMING_DOMAINS)) return false;
+  if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
+  if (isKnownSafeYouTubeIntent(url)) return false;
+  if (isYouTubeDomain(url)) return true;
+
+  const text = `${extractDomain(url)} ${getPath(url)} ${title}`.toLowerCase();
+
+  const strongMediaTokens = [
+    "watch", "stream", "movie", "movies", "series", "episode", "season", "anime", "tv",
+    "video", "videos", "player", "vod", "live", "broadcast", "reel", "shorts", "clip"
+  ];
+  const adultTokens = [
+    "porn", "sex", "xxx", "hentai", "cam", "nsfw", "onlyfans", "erotic"
+  ];
+
+  for (const token of adultTokens) {
+    if (text.includes(token)) return true;
+  }
+
+  for (const token of strongMediaTokens) {
+    if (text.includes(token)) return true;
+  }
+
+  return false;
 }
 
 function keywordScore(url, title) {
