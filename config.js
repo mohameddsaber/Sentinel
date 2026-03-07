@@ -39,7 +39,11 @@
   const config = {
     system: {
       ENGINE_KEY: "engine",
-      DEBUG: false
+      DEBUG: false,
+      CACHE: {
+        FLUSH_DEBOUNCE_MS: 800,
+        FLUSH_INTERVAL_MS: 5000
+      }
     },
     defaults: {
       settings: DEFAULT_SETTINGS,

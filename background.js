@@ -5,6 +5,7 @@ importScripts(
   "core/transitions.js",
   "core/decision.js",
   "adapter/storage.js",
+  "adapter/engineCache.js",
   "adapter/enforcement.js"
 );
 
@@ -62,13 +63,30 @@ const ENFORCEMENT_CONSTANTS = {
 
 const tabMeta = new Map();
 let dispatchQueue = Promise.resolve();
+const engineCache = SentinelAdapterEngineCache.createEngineCache({
+  load: () => SentinelAdapterStorage.loadEngine(ENGINE_KEY, STORAGE_DEFAULTS),
+  save: (engine) => SentinelAdapterStorage.saveEngine(ENGINE_KEY, engine, STORAGE_DEFAULTS),
+  normalize: (engine) => SentinelAdapterStorage.normalizeEngine(engine, STORAGE_DEFAULTS),
+  debounceMs: CONFIG.system.CACHE.FLUSH_DEBOUNCE_MS,
+  flushIntervalMs: CONFIG.system.CACHE.FLUSH_INTERVAL_MS,
+  dlog
+});
 
 chrome.runtime.onInstalled.addListener(async () => {
   const { settings } = await chrome.storage.local.get(["settings"]);
   if (!settings) {
     await chrome.storage.local.set({ settings: DEFAULT_SETTINGS });
   }
+  await engineCache.init();
   await dispatchQueued(SentinelEvent.ACTIVE_UPDATE, {});
+});
+
+chrome.runtime.onStartup?.addListener(() => {
+  void engineCache.init();
+});
+
+chrome.runtime.onSuspend.addListener(() => {
+  engineCache.flushNowNoAwait("suspend");
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -298,7 +316,10 @@ async function dispatch(event, payload = {}) {
       }
     }
 
-    await saveEngine(engine);
+    await saveEngine(engine, {
+      flushNow: isCriticalTransition(from, to, event),
+      reason: "navigation"
+    });
     dlog("transition", `${from} --${event}--> ${to}`, {
       resistanceCount: engine.stats.resistanceCount || 0,
       interruptionAttempts: engine.stats.interruptionAttempts || 0
@@ -328,7 +349,10 @@ async function dispatch(event, payload = {}) {
     await SentinelAdapterEnforcement.applyStateSideEffects(from, to, nextEngine, now, ENFORCEMENT_CONSTANTS, dlog);
   }
 
-  await saveEngine(nextEngine);
+  await saveEngine(nextEngine, {
+    flushNow: isCriticalTransition(from, to, event),
+    reason: "state_event"
+  });
   dlog("transition", `${from} --${event}--> ${to}`, {
     resistanceCount: nextEngine.stats.resistanceCount || 0,
     interruptionAttempts: nextEngine.stats.interruptionAttempts || 0
@@ -338,11 +362,11 @@ async function dispatch(event, payload = {}) {
 }
 
 async function loadEngine() {
-  return SentinelAdapterStorage.loadEngine(ENGINE_KEY, STORAGE_DEFAULTS);
+  return engineCache.get();
 }
 
-async function saveEngine(engine) {
-  return SentinelAdapterStorage.saveEngine(ENGINE_KEY, engine, STORAGE_DEFAULTS);
+async function saveEngine(engine, options = {}) {
+  return engineCache.set(engine, options);
 }
 
 async function loadSettings() {
@@ -402,4 +426,11 @@ function isExtensionUrl(url) {
 function dlog(...args) {
   if (!DEBUG) return;
   console.log("[Sentinel]", ...args);
+}
+
+function isCriticalTransition(from, to, event) {
+  if (event === SentinelEvent.START_SESSION) return true;
+  if (event === SentinelEvent.END_SESSION) return true;
+  if (to === SentinelState.LOCKDOWN && from !== SentinelState.LOCKDOWN) return true;
+  return false;
 }
