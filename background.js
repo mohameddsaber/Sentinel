@@ -62,6 +62,7 @@ const ENFORCEMENT_CONSTANTS = {
 };
 
 const tabMeta = new Map();
+const navigationCoalescer = new Map();
 let dispatchQueue = Promise.resolve();
 const engineCache = SentinelAdapterEngineCache.createEngineCache({
   load: () => SentinelAdapterStorage.loadEngine(ENGINE_KEY, STORAGE_DEFAULTS),
@@ -120,6 +121,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   tabMeta.delete(tabId);
+  clearNavigationCoalescerForTab(tabId);
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -157,6 +159,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function handleNavigation(tabId, url, isActive) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
+  const now = Date.now();
+  if (shouldCoalesceNavigation(tabId, url, isActive, now)) return;
   const meta = tabMeta.get(tabId);
   await dispatchQueued(SentinelEvent.NAVIGATION, { tabId, url, isActive, meta });
 }
@@ -426,6 +430,53 @@ function isExtensionUrl(url) {
 function dlog(...args) {
   if (!DEBUG) return;
   console.log("[Sentinel]", ...args);
+}
+
+function shouldCoalesceNavigation(tabId, url, isActive, now) {
+  pruneNavigationCoalescer(now);
+  const key = navigationKey(tabId, url);
+  const previous = navigationCoalescer.get(key);
+  const windowMs = CONFIG.timing.NAVIGATION_COALESCE_WINDOW_MS;
+
+  if (!previous) {
+    navigationCoalescer.set(key, { tabId, url, seenAt: now, isActive: Boolean(isActive) });
+    return false;
+  }
+
+  // Preserve correctness: if we receive an "active" navigation after an inactive duplicate,
+  // let it through once so active-category updates are not lost.
+  const shouldUpgrade = Boolean(isActive) && !previous.isActive;
+  const isWithinWindow = now - previous.seenAt <= windowMs;
+  previous.seenAt = now;
+  previous.isActive = previous.isActive || Boolean(isActive);
+  navigationCoalescer.set(key, previous);
+
+  if (isWithinWindow && !shouldUpgrade) {
+    dlog("navigation coalesced", { tabId, url });
+    return true;
+  }
+  return false;
+}
+
+function pruneNavigationCoalescer(now) {
+  const ttl = CONFIG.timing.NAVIGATION_COALESCE_WINDOW_MS * 4;
+  for (const [key, value] of navigationCoalescer.entries()) {
+    if (now - value.seenAt > ttl) {
+      navigationCoalescer.delete(key);
+    }
+  }
+}
+
+function clearNavigationCoalescerForTab(tabId) {
+  for (const [key, value] of navigationCoalescer.entries()) {
+    if (value.tabId === tabId) {
+      navigationCoalescer.delete(key);
+    }
+  }
+}
+
+function navigationKey(tabId, url) {
+  return `${tabId}::${url}`;
 }
 
 function isCriticalTransition(from, to, event) {
