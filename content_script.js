@@ -33,7 +33,7 @@
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
-    if (changes.deepWorkActive) {
+    if (changes.engine) {
       syncYouTubeFocusUI();
     }
   });
@@ -121,12 +121,16 @@
   }
 
   async function syncYouTubeFocusUI() {
-    const state = await chrome.storage.local.get(["deepWorkActive"]);
-    if (state.deepWorkActive) {
+    const state = await chrome.storage.local.get(["engine"]);
+    if (isSessionState(state.engine?.state)) {
       enforceYouTubeFocusUI();
       return;
     }
     removeYouTubeFocusUI();
+  }
+
+  function isSessionState(sentinelState) {
+    return sentinelState && sentinelState !== "IDLE";
   }
 
   function enforceYouTubeFocusUI() {

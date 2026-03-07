@@ -29,7 +29,7 @@ toggleBtn.addEventListener("click", async () => {
 
 function renderState(state) {
   const active = state.deepWorkActive;
-  statusEl.textContent = active ? "Active" : "Off";
+  statusEl.textContent = active ? formatState(state.sentinelState) : "Off";
   toggleBtn.textContent = active ? "End" : "Start";
 
   const settings = state.settings || {};
@@ -39,6 +39,15 @@ function renderState(state) {
   timerEnabled.checked = (state.durationMin || 0) > 0;
 
   renderReport(state.lastReport);
+}
+
+function formatState(rawState) {
+  if (!rawState) return "Active";
+  return rawState
+    .toLowerCase()
+    .split("_")
+    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
+    .join(" ");
 }
 
 function renderReport(report) {

@@ -3,9 +3,22 @@
   "name": "Sentinel",
   "version": "0.1.0",
   "description": "Deep work mode with distraction loop detection and session reports.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Deep Work"
+    "default_title": "Deep Work",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
   },
   "permissions": [
     "storage",
