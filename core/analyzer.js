@@ -71,9 +71,9 @@
     };
   }
 
-  function detectQuickSwitch(engine, isDistracting, now, switchWindowMs) {
+  function detectQuickSwitch(engine, isDistracting, now, switchWindowMs, constants) {
     return (
-      engine.lastActiveCategory === "work" &&
+      engine.lastActiveCategory === constants.categories.WORK &&
       isDistracting &&
       Boolean(engine.lastActiveAt) &&
       now - engine.lastActiveAt <= switchWindowMs
@@ -85,13 +85,13 @@
       (ts) => now - ts <= constants.LOOP_WINDOW_MINUTES * 60 * 1000
     );
     if (recent.length >= 3) {
-      return "3 distractions in 10 minutes";
+      return constants.messages.LOOP_DENSITY;
     }
 
     const domain = extractDomain(url);
     const info = engine.stats.attemptsByDomain?.[domain];
     if (info && info.count >= constants.REPEAT_DOMAIN_THRESHOLD && now - info.firstAt <= constants.REPEAT_DOMAIN_WINDOW_MS) {
-      return "repeated attempts on the same site";
+      return constants.messages.LOOP_REPEAT_DOMAIN;
     }
     return null;
   }

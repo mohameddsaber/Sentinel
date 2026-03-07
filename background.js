@@ -1,4 +1,5 @@
 importScripts(
+  "config.js",
   "core/events.js",
   "core/analyzer.js",
   "core/transitions.js",
@@ -8,95 +9,15 @@ importScripts(
 );
 
 const { SentinelEvent } = SentinelCoreEvents;
+const CONFIG = SentinelConfig;
 
-const DEFAULT_SETTINGS = {
-  blockedDomains: [],
-  blockedPatterns: [],
-  allowPatterns: [],
-  blockShorts: true,
-  timerMinutes: 50
-};
+const DEFAULT_SETTINGS = CONFIG.defaults.settings;
+const DEFAULT_STATS = CONFIG.defaults.stats;
+const DEFAULT_ENGINE = CONFIG.defaults.engine;
+const SentinelState = CONFIG.session.states;
 
-const SentinelState = Object.freeze({
-  IDLE: "IDLE",
-  SESSION_ACTIVE: "SESSION_ACTIVE",
-  SESSION_ESCALATED: "SESSION_ESCALATED",
-  LOCKDOWN: "LOCKDOWN",
-  BREAK: "BREAK",
-  COOLDOWN: "COOLDOWN"
-});
-
-const DEFAULT_STATS = {
-  firstDistractionAt: null,
-  interruptionAttempts: 0,
-  resistanceCount: 0,
-  attemptsByBucket: {},
-  attemptsByDomain: {},
-  distractionTimestamps: []
-};
-
-const DEFAULT_ENGINE = {
-  state: SentinelState.IDLE,
-  startTime: null,
-  durationMin: 0,
-  breakUntil: null,
-  cooldownUntil: null,
-  lastActiveCategory: null,
-  lastActiveAt: null,
-  stats: { ...DEFAULT_STATS }
-};
-
-const ENGINE_KEY = "engine";
-const DEBUG = false;
-
-const CONSTANTS = {
-  BUCKET_MINUTES: 5,
-  LOOP_WINDOW_MINUTES: 10,
-  SWITCH_WINDOW_MS: 2 * 60 * 1000,
-  REPEAT_DOMAIN_WINDOW_MS: 5 * 60 * 1000,
-  REPEAT_DOMAIN_THRESHOLD: 3,
-  ESCALATION_THRESHOLD: 3,
-  LOCKDOWN_THRESHOLD: 6,
-  BREAK_MINUTES: 5,
-  COOLDOWN_MINUTES: 3,
-  SCORE_ALLOW_THRESHOLD: 2,
-  SCORE_BLOCK_THRESHOLD: -2,
-  STRICT_UNKNOWN_MEDIA_BLOCK: true,
-  ALWAYS_BLOCK_DOMAINS: [
-    "twitter.com", "x.com", "instagram.com", "tiktok.com", "reddit.com", "facebook.com", "threads.net",
-    "snapchat.com", "pinterest.com", "tumblr.com", "9gag.com", "imgur.com", "twitch.tv", "netflix.com",
-    "hulu.com", "disneyplus.com", "hbomax.com", "max.com", "primevideo.com", "crunchyroll.com",
-    "soundcloud.com", "spotify.com", "bandcamp.com", "espn.com", "bleacherreport.com", "theathletic.com",
-    "ign.com", "gamespot.com", "steamcommunity.com"
-  ],
-  ALWAYS_ALLOW_DOMAINS: [
-    "coursera.org", "edx.org", "khanacademy.org", "udemy.com", "pluralsight.com", "frontendmasters.com",
-    "ocw.mit.edu", "mit.edu", "open.edu", "harvard.edu", "stanford.edu", "wikipedia.org",
-    "developer.mozilla.org", "docs.google.com"
-  ],
-  KEYWORD_WEIGHTS: [
-    { weight: 6, words: ["full course", "complete course", "crash course", "masterclass", "step by step", "from scratch", "for beginners", "advanced course"] },
-    { weight: 4, words: ["lecture", "lesson", "syllabus", "assignment", "lab session", "seminar", "workshop", "training program"] },
-    { weight: 3, words: ["tutorial", "guide", "how to", "how-to", "documentation", "docs", "reference", "api", "specification", "explained", "deep dive"] },
-    { weight: 3, words: ["university", "college", "research", "paper", "journal", "case study", "curriculum", "professor"] },
-    { weight: 3, words: ["react", "typescript", "javascript", "node", "express", "nextjs", "api design", "system design", "algorithms", "data structures", "database", "sql", "docker", "git"] },
-    { weight: 2, words: ["walkthrough", "explainer", "overview", "fundamentals", "intro", "bootcamp", "best practices", "project tutorial"] },
-    { weight: -6, words: ["shorts", "yt shorts", "reels", "tiktok", "asmr", "mukbang"] },
-    { weight: -4, words: ["prank", "meme", "reaction", "reacts", "trailer", "compilation", "funny", "vlog", "highlights", "clip", "edit", "drama", "gossip"] },
-    { weight: -3, words: ["gameplay", "let's play", "lets play", "live stream", "livestream", "stream", "music", "lyrics", "concert"] },
-    { weight: -3, words: ["you won't believe", "insane", "shocking", "crazy", "top 10", "must watch", "gone wrong", "exposed", "destroyed"] }
-  ],
-  ADULT_DOMAIN_KEYWORDS: [
-    "porn", "sex", "xxx", "xvideos", "xhamster", "xnxx", "redtube", "youporn", "hentai", "cam", "cams",
-    "onlyfans", "erotic", "nsfw", "milf", "anal", "bdsm", "escort", "fuck", "boobs"
-  ],
-  STREAMING_DOMAIN_KEYWORDS: [
-    "watch", "stream", "movie", "movies", "series", "tv", "anime", "episode", "cinema", "flixtor",
-    "putlocker", "123movies", "soap2day", "cuevana", "myflixer", "sflix", "lookmovie", "vidcloud"
-  ],
-  SUSPICIOUS_TLDS: [".to", ".sx", ".ru", ".su", ".xyz", ".click", ".top", ".rest", ".monster", ".buzz", ".cam", ".porn", ".adult"],
-  KNOWN_SAFE_STREAMING_DOMAINS: ["youtube.com", "vimeo.com", "coursera.org", "edx.org", "udemy.com", "khanacademy.org"]
-};
+const ENGINE_KEY = CONFIG.system.ENGINE_KEY;
+const DEBUG = CONFIG.system.DEBUG;
 
 const STORAGE_DEFAULTS = {
   DEFAULT_ENGINE,
@@ -105,8 +26,39 @@ const STORAGE_DEFAULTS = {
   SESSION_ACTIVE: SentinelState.SESSION_ACTIVE
 };
 
-const STATE_CONSTANTS = { states: SentinelState, events: SentinelEvent };
-const TRANSITIONS = SentinelCoreTransitions.buildTransitions(SentinelState, CONSTANTS, SentinelEvent);
+const TRANSITIONS = SentinelCoreTransitions.buildTransitions(
+  SentinelState,
+  {
+    ESCALATION_THRESHOLD: CONFIG.thresholds.ESCALATION_THRESHOLD,
+    LOCKDOWN_THRESHOLD: CONFIG.thresholds.LOCKDOWN_THRESHOLD
+  },
+  SentinelEvent
+);
+
+const ANALYZER_CONSTANTS = {
+  BUCKET_MINUTES: CONFIG.timing.BUCKET_MINUTES,
+  LOOP_WINDOW_MINUTES: CONFIG.timing.LOOP_WINDOW_MINUTES,
+  REPEAT_DOMAIN_WINDOW_MS: CONFIG.timing.REPEAT_DOMAIN_WINDOW_MS,
+  REPEAT_DOMAIN_THRESHOLD: CONFIG.thresholds.REPEAT_DOMAIN_THRESHOLD,
+  events: SentinelEvent,
+  states: SentinelState,
+  categories: CONFIG.session.categories,
+  messages: CONFIG.messages
+};
+
+const DECISION_CONSTANTS = {
+  ...CONFIG.scoring,
+  SCORE_ALLOW_THRESHOLD: CONFIG.thresholds.SCORE_ALLOW_THRESHOLD,
+  SCORE_BLOCK_THRESHOLD: CONFIG.thresholds.SCORE_BLOCK_THRESHOLD,
+  DIRECTIVES: CONFIG.enforcement.DIRECTIVES
+};
+
+const ENFORCEMENT_CONSTANTS = {
+  states: SentinelState,
+  BREAK_MINUTES: CONFIG.timing.BREAK_MINUTES,
+  COOLDOWN_MINUTES: CONFIG.timing.COOLDOWN_MINUTES,
+  ALARM_NAMES: CONFIG.enforcement.ALARM_NAMES
+};
 
 const tabMeta = new Map();
 let dispatchQueue = Promise.resolve();
@@ -120,13 +72,13 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === "deepwork_end") {
+  if (alarm.name === CONFIG.enforcement.ALARM_NAMES.DEEPWORK_END) {
     await endDeepWork("timer");
   }
-  if (alarm.name === "break_end") {
+  if (alarm.name === CONFIG.enforcement.ALARM_NAMES.BREAK_END) {
     await dispatchQueued(SentinelEvent.BREAK_TIMER_EXPIRED, {});
   }
-  if (alarm.name === "cooldown_end") {
+  if (alarm.name === CONFIG.enforcement.ALARM_NAMES.COOLDOWN_END) {
     await dispatchQueued(SentinelEvent.COOLDOWN_TIMER_EXPIRED, {});
   }
 });
@@ -217,14 +169,18 @@ async function toggleDeepWork(enabled, durationMin) {
 
 async function startDeepWork(durationMin) {
   const now = Date.now();
-  await SentinelAdapterEnforcement.clearAlarm("deepwork_end", dlog);
-  await SentinelAdapterEnforcement.clearAlarm("break_end", dlog);
-  await SentinelAdapterEnforcement.clearAlarm("cooldown_end", dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.DEEPWORK_END, dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.BREAK_END, dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.COOLDOWN_END, dlog);
 
   await dispatchQueued(SentinelEvent.START_SESSION, { durationMin });
 
   if (durationMin && durationMin > 0) {
-    await SentinelAdapterEnforcement.createAlarm("deepwork_end", now + durationMin * 60 * 1000, dlog);
+    await SentinelAdapterEnforcement.createAlarm(
+      CONFIG.enforcement.ALARM_NAMES.DEEPWORK_END,
+      now + durationMin * 60 * 1000,
+      dlog
+    );
   }
 
   await SentinelAdapterEnforcement.refreshActiveTab();
@@ -240,9 +196,9 @@ async function endDeepWork(reason) {
   await dispatchQueued(SentinelEvent.END_SESSION, { reason });
   await chrome.storage.local.set({ lastReport: report });
 
-  await SentinelAdapterEnforcement.clearAlarm("deepwork_end", dlog);
-  await SentinelAdapterEnforcement.clearAlarm("break_end", dlog);
-  await SentinelAdapterEnforcement.clearAlarm("cooldown_end", dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.DEEPWORK_END, dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.BREAK_END, dlog);
+  await SentinelAdapterEnforcement.clearAlarm(CONFIG.enforcement.ALARM_NAMES.COOLDOWN_END, dlog);
 }
 
 async function requestBreak() {
@@ -256,7 +212,10 @@ async function handlePromptResponse(choice, tabId) {
     return { ok: true };
   }
   if (choice === "focus" && tabId) {
-    await SentinelAdapterEnforcement.applyDirective({ type: "FOCUS_REDIRECT" }, { tabId });
+    await SentinelAdapterEnforcement.applyDirective(
+      { type: CONFIG.enforcement.DIRECTIVES.FOCUS_REDIRECT },
+      { tabId, constants: CONFIG.enforcement }
+    );
   }
   return { ok: true };
 }
@@ -277,28 +236,29 @@ async function dispatch(event, payload = {}) {
   if (event === SentinelEvent.NAVIGATION) {
     const settings = await loadSettings();
     const enforcing = SentinelCoreDecision.isEnforcementState(engine.state, SentinelState);
-    const isDistracting = SentinelCoreDecision.classifyNavigation(payload.url, settings, payload.meta, CONSTANTS);
+    const isDistracting = SentinelCoreDecision.classifyNavigation(payload.url, settings, payload.meta, DECISION_CONSTANTS);
 
     const quickSwitch = SentinelCoreAnalyzer.detectQuickSwitch(
       engine,
       isDistracting,
       now,
-      CONSTANTS.SWITCH_WINDOW_MS
+      CONFIG.timing.SWITCH_WINDOW_MS,
+      ANALYZER_CONSTANTS
     );
 
     if (payload.isActive) {
       engine = SentinelCoreAnalyzer.applyEventUpdates(
         engine,
         SentinelEvent.ACTIVE_UPDATE,
-        { category: isDistracting ? "distracting" : "work", at: now },
+        { category: isDistracting ? CONFIG.session.categories.DISTRACTING : CONFIG.session.categories.WORK, at: now },
         now,
-        { ...CONSTANTS, ...STATE_CONSTANTS },
+        ANALYZER_CONSTANTS,
         { DEFAULT_STATS }
       );
     }
 
-    const directive = SentinelCoreDecision.directiveForNavigation({ enforcing, isDistracting });
-    let from = engine.state;
+    const directive = SentinelCoreDecision.directiveForNavigation({ enforcing, isDistracting }, DECISION_CONSTANTS);
+    const from = engine.state;
     let to = engine.state;
 
     if (enforcing && isDistracting) {
@@ -307,7 +267,7 @@ async function dispatch(event, payload = {}) {
         SentinelEvent.DISTRACTION_ATTEMPT,
         payload,
         now,
-        { ...CONSTANTS, ...STATE_CONSTANTS },
+        ANALYZER_CONSTANTS,
         { DEFAULT_STATS }
       );
 
@@ -321,17 +281,20 @@ async function dispatch(event, payload = {}) {
       engine.state = to;
 
       if (to !== from) {
-        await SentinelAdapterEnforcement.applyStateSideEffects(from, to, engine, now, { ...CONSTANTS, states: SentinelState }, dlog);
+        await SentinelAdapterEnforcement.applyStateSideEffects(from, to, engine, now, ENFORCEMENT_CONSTANTS, dlog);
       }
 
-      const loopReason = SentinelCoreAnalyzer.detectLoopReason(engine, payload.url, now, CONSTANTS);
-      const promptReason = loopReason || (quickSwitch ? "switching quickly from work to entertainment" : null);
+      const loopReason = SentinelCoreAnalyzer.detectLoopReason(engine, payload.url, now, ANALYZER_CONSTANTS);
+      const promptReason = loopReason || (quickSwitch ? CONFIG.messages.QUICK_SWITCH : null);
       if (promptReason) {
-        await SentinelAdapterEnforcement.applyDirective({ type: "PROMPT", reason: promptReason }, payload);
+        await SentinelAdapterEnforcement.applyDirective(
+          { type: CONFIG.enforcement.DIRECTIVES.PROMPT, reason: promptReason },
+          { ...payload, constants: CONFIG.enforcement }
+        );
       }
 
-      if (directive.type === "BLOCK_HARD") {
-        await SentinelAdapterEnforcement.applyDirective(directive, payload);
+      if (directive.type === CONFIG.enforcement.DIRECTIVES.BLOCK_HARD) {
+        await SentinelAdapterEnforcement.applyDirective(directive, { ...payload, constants: CONFIG.enforcement });
       }
     }
 
@@ -348,7 +311,7 @@ async function dispatch(event, payload = {}) {
     event,
     payload,
     now,
-    { ...CONSTANTS, ...STATE_CONSTANTS },
+    ANALYZER_CONSTANTS,
     { DEFAULT_STATS }
   );
   const from = nextEngine.state;
@@ -362,7 +325,7 @@ async function dispatch(event, payload = {}) {
 
   nextEngine.state = to;
   if (to !== from) {
-    await SentinelAdapterEnforcement.applyStateSideEffects(from, to, nextEngine, now, { ...CONSTANTS, states: SentinelState }, dlog);
+    await SentinelAdapterEnforcement.applyStateSideEffects(from, to, nextEngine, now, ENFORCEMENT_CONSTANTS, dlog);
   }
 
   await saveEngine(nextEngine);
@@ -422,9 +385,9 @@ function strongestVulnerabilityWindow(startTime, buckets) {
   if (maxIndex === null) {
     return { windowLabel: null, windowCount: 0 };
   }
-  const windowStart = new Date(startTime + maxIndex * CONSTANTS.BUCKET_MINUTES * 60 * 1000);
-  const windowEnd = new Date(startTime + (maxIndex + 1) * CONSTANTS.BUCKET_MINUTES * 60 * 1000);
-  const windowLabel = `${windowStart.toLocaleTimeString()} - ${windowEnd.toLocaleTimeString()} (minute ${maxIndex * CONSTANTS.BUCKET_MINUTES}-${(maxIndex + 1) * CONSTANTS.BUCKET_MINUTES})`;
+  const windowStart = new Date(startTime + maxIndex * CONFIG.timing.BUCKET_MINUTES * 60 * 1000);
+  const windowEnd = new Date(startTime + (maxIndex + 1) * CONFIG.timing.BUCKET_MINUTES * 60 * 1000);
+  const windowLabel = `${windowStart.toLocaleTimeString()} - ${windowEnd.toLocaleTimeString()} (minute ${maxIndex * CONFIG.timing.BUCKET_MINUTES}-${(maxIndex + 1) * CONFIG.timing.BUCKET_MINUTES})`;
   return { windowLabel, windowCount: maxCount };
 }
 

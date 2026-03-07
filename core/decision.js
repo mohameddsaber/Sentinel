@@ -12,10 +12,10 @@
     return isBlockedByRules(url, settings, meta, constants);
   }
 
-  function directiveForNavigation({ enforcing, isDistracting }) {
-    if (!enforcing) return { type: "ALLOW" };
-    if (isDistracting) return { type: "BLOCK_HARD" };
-    return { type: "ALLOW" };
+  function directiveForNavigation({ enforcing, isDistracting }, constants) {
+    if (!enforcing) return { type: constants.DIRECTIVES.ALLOW };
+    if (isDistracting) return { type: constants.DIRECTIVES.BLOCK_HARD };
+    return { type: constants.DIRECTIVES.ALLOW };
   }
 
   function transitionContext(engine, metrics) {
