@@ -19,14 +19,13 @@ async function init() {
   });
 
   sessionBtn.addEventListener("click", async () => {
-    if (!currentState) return;
+    if (!currentState || currentState.deepWorkActive) return;
 
     sessionBtn.disabled = true;
-    sessionBtn.textContent = currentState.deepWorkActive ? "ENDING..." : "STARTING...";
+    sessionBtn.textContent = "STARTING...";
 
-    const enabled = !currentState.deepWorkActive;
-    const durationMin = enabled ? Number(timerSlider.value) : 0;
-    await chrome.runtime.sendMessage({ type: "toggle_deepwork", enabled, durationMin });
+    const durationMin = Number(timerSlider.value);
+    await chrome.runtime.sendMessage({ type: "toggle_deepwork", enabled: true, durationMin });
 
     const state = await chrome.runtime.sendMessage({ type: "get_state" });
     currentState = state;
@@ -41,14 +40,17 @@ async function init() {
 
 function renderState(state) {
   const active = state.deepWorkActive;
+  const sentinelState = getDisplayState(state);
   const timer = clampTimer(state.durationMin || state.settings?.timerMinutes || 50);
 
   popupEl.classList.toggle("inactive", !active);
   badgeLabelEl.textContent = active ? "ACTIVE" : "INACTIVE";
 
-  modeValEl.textContent = active ? formatState(state.sentinelState) : "IDLE";
-  sessionBtn.textContent = active ? "END SESSION" : "START SESSION";
+  modeValEl.textContent = formatState(sentinelState);
+  sessionBtn.textContent = active ? "SESSION LOCKED" : "START SESSION";
   sessionBtn.classList.toggle("inactive", !active);
+  sessionBtn.disabled = active;
+  timerSlider.disabled = active;
 
   timerSlider.value = String(timer);
   updateTimer(timer);
@@ -67,12 +69,13 @@ function updateTimer(value) {
 }
 
 function renderActivity(state) {
-  const level = signalLevelForState(state.deepWorkActive ? state.sentinelState : "IDLE");
+  const sentinelState = getDisplayState(state);
+  const level = signalLevelForState(sentinelState);
   signalBars.forEach((bar, index) => {
     bar.classList.toggle("on", index < level);
     bar.classList.toggle("off", index >= level);
   });
-  activityValEl.textContent = activityLabelForState(state.deepWorkActive ? state.sentinelState : "IDLE");
+  activityValEl.textContent = activityLabelForState(sentinelState);
 }
 
 function renderReport(report) {
@@ -107,6 +110,11 @@ function clampTimer(value) {
   const min = Number(timerSlider.min);
   const max = Number(timerSlider.max);
   return Math.min(max, Math.max(min, Number(value) || min));
+}
+
+function getDisplayState(state) {
+  if (!state?.deepWorkActive) return "IDLE";
+  return state.sentinelState || "SESSION_ACTIVE";
 }
 
 function formatState(rawState) {

@@ -28,6 +28,7 @@ const LOOP_WINDOW_MINUTES = 10;
 const SWITCH_WINDOW_MS = 2 * 60 * 1000;
 const REPEAT_DOMAIN_WINDOW_MS = 5 * 60 * 1000;
 const REPEAT_DOMAIN_THRESHOLD = 3;
+const EMERGENCY_EXIT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 const ALWAYS_BLOCK_DOMAINS = [
   "twitter.com",
@@ -150,9 +151,6 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "deepwork_end") {
     await endDeepWork("timer");
   }
-  if (alarm.name === "break_end") {
-    await chrome.storage.local.set({ breakUntil: null });
-  }
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -185,8 +183,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     toggleDeepWork(message.enabled, message.durationMin).then(sendResponse);
     return true;
   }
-  if (message.type === "start_break") {
-    startBreak(5).then(sendResponse);
+  if (message.type === "get_emergency_exit_status") {
+    getEmergencyExitStatus().then(sendResponse);
+    return true;
+  }
+  if (message.type === "emergency_exit") {
+    useEmergencyExit().then(sendResponse);
     return true;
   }
   if (message.type === "prompt_response") {
@@ -222,6 +224,7 @@ async function getStateForPopup() {
     deepWorkActive: deepWorkActive || false,
     startTime: startTime || null,
     durationMin: durationMin || 0,
+    sentinelState: deepWorkActive ? "SESSION_ACTIVE" : "IDLE",
     breakUntil: breakUntil || null,
     lastReport: lastReport || null
   };
@@ -231,8 +234,6 @@ async function getStateForPopup() {
 async function toggleDeepWork(enabled, durationMin) {
   if (enabled) {
     await startDeepWork(durationMin);
-  } else {
-    await endDeepWork("manual");
   }
   return { ok: true };
 }
@@ -332,19 +333,17 @@ async function handleUrlChange(tabId, url, isActive) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, deepWorkActive, breakUntil, startTime, stats } = await chrome.storage.local.get([
+  const { settings, deepWorkActive, startTime, stats } = await chrome.storage.local.get([
     "settings",
     "deepWorkActive",
-    "breakUntil",
     "startTime",
     "stats"
   ]);
   const activeSettings = settings || DEFAULT_SETTINGS;
-  const isOnBreak = breakUntil && Date.now() < breakUntil;
   const meta = tabMeta.get(tabId);
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
 
-  if (deepWorkActive && !isOnBreak) {
+  if (deepWorkActive) {
     if (isDistracting) {
       await recordDistraction(url, startTime, stats || DEFAULT_STATS);
       await maybeTriggerLoop(tabId, url, startTime, stats || DEFAULT_STATS);
@@ -361,13 +360,11 @@ async function handleActiveTabSwitch(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, deepWorkActive, breakUntil } = await chrome.storage.local.get([
+  const { settings, deepWorkActive } = await chrome.storage.local.get([
     "settings",
-    "deepWorkActive",
-    "breakUntil"
+    "deepWorkActive"
   ]);
   if (!deepWorkActive) return;
-  if (breakUntil && Date.now() < breakUntil) return;
 
   const activeSettings = settings || DEFAULT_SETTINGS;
   const meta = tabMeta.get(tabId);
@@ -446,23 +443,44 @@ async function redirectToBlocked(tabId, originalUrl) {
   }
 }
 
-async function startBreak(minutes) {
-  const breakUntil = Date.now() + minutes * 60 * 1000;
-  await chrome.storage.local.set({ breakUntil });
-  await chrome.alarms.clear("break_end");
-  await chrome.alarms.create("break_end", { when: breakUntil });
-  return { ok: true };
-}
-
 async function handlePromptResponse(choice, tabId) {
-  if (choice === "break") {
-    await startBreak(5);
-    return { ok: true };
-  }
   if (choice === "focus" && tabId) {
     await chrome.tabs.update(tabId, { url: "about:blank" });
   }
   return { ok: true };
+}
+
+async function getEmergencyExitStatus() {
+  const { emergencyExitLastUsedAt } = await chrome.storage.local.get("emergencyExitLastUsedAt");
+  const lastUsedAt = typeof emergencyExitLastUsedAt === "number" ? emergencyExitLastUsedAt : null;
+
+  if (!lastUsedAt) {
+    return { available: true, remainingMs: 0, lastUsedAt: null };
+  }
+
+  const remainingMs = Math.max(0, lastUsedAt + EMERGENCY_EXIT_COOLDOWN_MS - Date.now());
+  return {
+    available: remainingMs === 0,
+    remainingMs,
+    lastUsedAt
+  };
+}
+
+async function useEmergencyExit() {
+  const status = await getEmergencyExitStatus();
+  if (!status.available) {
+    return { ok: false, ...status };
+  }
+
+  const { deepWorkActive } = await chrome.storage.local.get("deepWorkActive");
+  if (!deepWorkActive) {
+    return { ok: false, available: true, remainingMs: 0 };
+  }
+
+  const usedAt = Date.now();
+  await chrome.storage.local.set({ emergencyExitLastUsedAt: usedAt });
+  await endDeepWork("emergency_exit");
+  return { ok: true, available: false, remainingMs: EMERGENCY_EXIT_COOLDOWN_MS, lastUsedAt: usedAt };
 }
 
 function isBlockedByRules(url, settings, meta) {

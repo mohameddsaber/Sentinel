@@ -89,28 +89,12 @@
     focusBtn.style.color = "#fff";
     focusBtn.style.cursor = "pointer";
 
-    const breakBtn = document.createElement("button");
-    breakBtn.textContent = "Take 5-minute break";
-    breakBtn.style.flex = "1";
-    breakBtn.style.padding = "10px";
-    breakBtn.style.borderRadius = "8px";
-    breakBtn.style.border = "1px solid #2c2a27";
-    breakBtn.style.background = "#f8f1e8";
-    breakBtn.style.color = "#2c2a27";
-    breakBtn.style.cursor = "pointer";
-
     focusBtn.addEventListener("click", async () => {
       await chrome.runtime.sendMessage({ type: "prompt_response", choice: "focus" });
       overlay.remove();
     });
 
-    breakBtn.addEventListener("click", async () => {
-      await chrome.runtime.sendMessage({ type: "prompt_response", choice: "break" });
-      overlay.remove();
-    });
-
     buttons.appendChild(focusBtn);
-    buttons.appendChild(breakBtn);
 
     card.appendChild(title);
     card.appendChild(subtitle);
