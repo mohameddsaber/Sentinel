@@ -1,52 +1,85 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Deep Work</title>
+  <title>Sentinel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>Deep Work</h1>
-      <p class="subtitle">Behavior-aware focus mode</p>
-    </header>
+  <div class="popup">
+    <div class="header">
+      <div class="logo">SENTINEL</div>
+      <button id="statusBadge" class="status-badge" type="button">
+        <div class="dot" id="dot"></div>
+        <span class="badge-label" id="badgeLabel">ACTIVE</span>
+        <div class="caret"></div>
+      </button>
+    </div>
 
-    <section class="panel">
-      <div class="row">
-        <div>
-          <div class="label">Status</div>
-          <div id="status">Loading...</div>
+    <div class="subtitle">Focus Defense System</div>
+
+    <div class="cards">
+      <section class="card">
+        <div class="card-title">SESSION CONTROL</div>
+        <div class="card-body">
+          <div class="mode-row">
+            <span class="mode-key">MODE</span>
+            <span class="mode-val" id="modeVal">IDLE</span>
+          </div>
+          <button class="session-btn inactive" id="sessionBtn" type="button">START SESSION</button>
         </div>
-        <button id="toggleBtn" class="primary">Toggle</button>
-      </div>
+      </section>
 
-      <div class="row">
-        <div class="label">Timer (25–90 min)</div>
-        <div class="timer-row">
-          <input id="timerRange" type="range" min="25" max="90" step="5" />
-          <span id="timerValue">50</span>
+      <section class="card">
+        <div class="card-title">TIMER</div>
+        <div class="card-body">
+          <div class="timer-val" id="timerVal">50m</div>
+          <div class="slider-outer">
+            <div class="slider-track-bg"></div>
+            <div class="slider-track-fill" id="sliderFill"></div>
+            <input type="range" id="timerSlider" min="5" max="120" step="5" value="50" />
+          </div>
         </div>
-        <label class="checkbox">
-          <input id="timerEnabled" type="checkbox" />
-          Use timer
-        </label>
-      </div>
-    </section>
+      </section>
 
-    <section class="panel">
-      <div class="label">Blocking Rules</div>
-      <div class="rules">
-        <div>Automatic entertainment blocklist is enabled.</div>
-        <div class="muted">Rules are managed by the extension.</div>
-      </div>
-    </section>
+      <section class="card">
+        <div class="card-title">ACTIVITY MONITOR</div>
+        <div class="card-body">
+          <div class="sig-label">SIGNAL LEVEL</div>
+          <div class="bars" id="signalBars">
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+            <div class="bar off"></div>
+          </div>
+          <div class="act-row">
+            <span class="act-key">ACTIVITY</span>
+            <span class="act-val" id="activityVal">OFFLINE</span>
+          </div>
+        </div>
+      </section>
 
-    <section class="panel" id="reportPanel">
-      <div class="label">Last Session Report</div>
-      <div id="report">No session yet.</div>
-    </section>
+      <section class="card">
+        <div class="card-title">SESSION REPORT</div>
+        <div class="card-body">
+          <div class="report-list" id="reportList">
+            <div class="report-row">
+              <span>No session yet.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script src="popup.js"></script>
