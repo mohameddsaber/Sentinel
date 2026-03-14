@@ -8,15 +8,54 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Blocked for deep work</h1>
-    <p class="subtitle">You’re protecting focus time.</p>
-    <p id="url" class="url"></p>
 
-    <div class="actions">
-      <button id="back" class="primary">Back to work</button>
-      <button id="break" class="secondary">Take 5-minute break</button>
+    <!-- HEADER -->
+    <div class="panel-header">
+      <div class="logo">SENTINEL</div>
+      <div class="status-badge">
+        <div class="dot"></div>
+        <span class="badge-label">BLOCKED</span>
+      </div>
+    </div>
+
+    <div class="subtitle-strip">Focus Defense System</div>
+
+    <div class="panel-body">
+
+      <!-- BLOCKED MESSAGE -->
+      <div class="card">
+        <div class="card-title">ACCESS DENIED</div>
+        <div class="card-body">
+          <div class="blocked-title">BLOCKED FOR DEEP WORK</div>
+          <div class="blocked-sub">You're protecting focus time.</div>
+        </div>
+      </div>
+
+      <!-- URL -->
+      <div class="card">
+        <div class="card-title">TARGET URL</div>
+        <div class="card-body">
+          <div class="url-row">
+            <span class="url-label">URL</span>
+            <span id="url" class="url">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="card">
+        <div class="card-title">ACTIONS</div>
+        <div class="card-body">
+          <div class="actions">
+            <button id="back"  class="primary">BACK TO WORK</button>
+            <button id="break" class="secondary">5-MINUTE BREAK</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+
   <script src="blocked.js"></script>
 </body>
 </html>
