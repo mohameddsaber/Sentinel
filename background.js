@@ -252,14 +252,15 @@ async function startDeepWork(durationMin) {
     const when = now + durationMin * 60 * 1000;
     await chrome.alarms.create("deepwork_end", { when });
   }
-  await refreshActiveTab();
+  await enforceActiveTabAtSessionStart();
 }
 
-async function refreshActiveTab() {
+async function enforceActiveTabAtSessionStart() {
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length && tabs[0].id) {
-      await chrome.tabs.reload(tabs[0].id);
+    const activeTab = tabs[0];
+    if (activeTab?.id && activeTab.url) {
+      await handleActiveTabSwitch(activeTab.id, activeTab.url);
     }
   } catch {
     // ignore
@@ -360,9 +361,11 @@ async function handleActiveTabSwitch(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, deepWorkActive } = await chrome.storage.local.get([
+  const { settings, deepWorkActive, startTime, stats } = await chrome.storage.local.get([
     "settings",
-    "deepWorkActive"
+    "deepWorkActive",
+    "startTime",
+    "stats"
   ]);
   if (!deepWorkActive) return;
 
@@ -371,6 +374,12 @@ async function handleActiveTabSwitch(tabId, url) {
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
   await detectQuickSwitch(tabId, isDistracting);
   await updateLastActiveCategory(isDistracting ? "distracting" : "work");
+
+  if (isDistracting) {
+    await recordDistraction(url, startTime, stats || DEFAULT_STATS);
+    await maybeTriggerLoop(tabId, url, startTime, stats || DEFAULT_STATS);
+    await redirectToBlocked(tabId, url);
+  }
 }
 
 async function updateLastActiveCategory(category) {
