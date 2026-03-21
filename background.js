@@ -3,31 +3,28 @@ const DEFAULT_SETTINGS = {
   blockedPatterns: [],
   allowPatterns: [],
   blockShorts: true,
-  timerMinutes: 50
+  timerMinutes: 50,
+  dailyMinutesGoal: 180,
 };
 
 const DEFAULT_STATE = {
   deepWorkActive: false,
   startTime: null,
   durationMin: 0,
-  breakUntil: null,
-  lastActiveCategory: null,
-  lastActiveAt: null
+  currentTask: null,
+
 };
 
-const DEFAULT_STATS = {
-  firstDistractionAt: null,
-  interruptionAttempts: 0,
-  attemptsByBucket: {},
-  attemptsByDomain: {},
-  distractionTimestamps: []
+const DEFAULT_PROGRESS = {
+  sessions: [],
 };
 
-const BUCKET_MINUTES = 5;
-const LOOP_WINDOW_MINUTES = 10;
-const SWITCH_WINDOW_MS = 2 * 60 * 1000;
-const REPEAT_DOMAIN_WINDOW_MS = 5 * 60 * 1000;
-const REPEAT_DOMAIN_THRESHOLD = 3;
+// const BUCKET_MINUTES = 5;
+// const LOOP_WINDOW_MINUTES = 10;
+// const SWITCH_WINDOW_MS = 2 * 60 * 1000;
+// const REPEAT_DOMAIN_WINDOW_MS = 5 * 60 * 1000;
+// const REPEAT_DOMAIN_THRESHOLD = 3;
+
 const EMERGENCY_EXIT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 const ALWAYS_BLOCK_DOMAINS = [
@@ -141,10 +138,14 @@ const STRICT_UNKNOWN_MEDIA_BLOCK = true;
 const tabMeta = new Map();
 
 chrome.runtime.onInstalled.addListener(async () => {
-  const { settings } = await chrome.storage.local.get("settings");
-  if (!settings) {
-    await chrome.storage.local.set({ settings: DEFAULT_SETTINGS });
-  }
+  const { settings, progress } = await chrome.storage.local.get([
+    "settings",
+    "progress"
+  ]);
+  const updates = {};
+  if (!settings) updates.settings = DEFAULT_SETTINGS;
+  if (!progress) updates.progress = DEFAULT_PROGRESS;
+  if (Object.keys(updates).length > 0) await chrome.storage.local.set(updates);
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -180,7 +181,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message.type === "toggle_deepwork") {
-    toggleDeepWork(message.enabled, message.durationMin).then(sendResponse);
+    toggleDeepWork(message.enabled, message.durationMin,message.currentTask).then(sendResponse);
     return true;
   }
   if (message.type === "get_emergency_exit_status") {
@@ -204,48 +205,54 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ ok: true });
     return true;
   }
-  if (message.type === "request_report") {
-    chrome.storage.local.get("lastReport").then(sendResponse);
-    return true;
-  }
+  if (message.type === "set_daily_goal") {
+  setDailyGoal(message.dailyMinutesGoal).then(sendResponse);
+  return true;
+}
 });
 
 async function getStateForPopup() {
-  const { settings, deepWorkActive, startTime, durationMin, breakUntil, lastReport } = await chrome.storage.local.get([
+  const { settings, state,progress } = await chrome.storage.local.get([
     "settings",
-    "deepWorkActive",
-    "startTime",
-    "durationMin",
-    "breakUntil",
-    "lastReport"
+    "state",
+    "progress"
   ]);
+  const activeSettings = settings || DEFAULT_SETTINGS;
+  const activeState = state || DEFAULT_STATE;
+  const activeProgress = progress || DEFAULT_PROGRESS;
+  const todayMinutes = getTodayMinutes(activeProgress.sessions);
+  const goal = activeSettings.dailyMinutesGoal || 0;
+  const progressPercent = goal > 0
+  ? Math.min(100, Math.round((todayMinutes / goal) * 100))
+  : 0;
   return {
-    settings: settings || DEFAULT_SETTINGS,
-    deepWorkActive: deepWorkActive || false,
-    startTime: startTime || null,
-    durationMin: durationMin || 0,
-    sentinelState: deepWorkActive ? "SESSION_ACTIVE" : "IDLE",
-    breakUntil: breakUntil || null,
-    lastReport: lastReport || null
-  };
+    sentinelState: activeState.deepWorkActive ? "SESSION_ACTIVE" : "IDLE",
+    currentTask: activeState.currentTask,
+    durationMin: activeState.durationMin,
+    todayMinutes:todayMinutes,
+    goal:goal,
+    progressPercent:progressPercent,
+    };
 }
 
 
-async function toggleDeepWork(enabled, durationMin) {
+async function toggleDeepWork(enabled, durationMin, currentTask) {
   if (enabled) {
-    await startDeepWork(durationMin);
+    await startDeepWork(durationMin,currentTask);
   }
   return { ok: true };
 }
 
-async function startDeepWork(durationMin) {
+async function startDeepWork(durationMin,currentTask) {
   const now = Date.now();
   await chrome.storage.local.set({
-    deepWorkActive: true,
-    startTime: now,
-    durationMin: durationMin || 0,
-    breakUntil: null,
-    stats: { ...DEFAULT_STATS }
+    state: 
+    {
+      deepWorkActive: true,
+      startTime: now,
+      durationMin: durationMin || 0,
+      currentTask: currentTask || null,
+    }
   });
   await chrome.alarms.clear("deepwork_end");
   if (durationMin && durationMin > 0) {
@@ -268,172 +275,117 @@ async function enforceActiveTabAtSessionStart() {
 }
 
 async function endDeepWork(reason) {
-  const { deepWorkActive, startTime, stats } = await chrome.storage.local.get([
-    "deepWorkActive",
-    "startTime",
-    "stats"
+  const { state, progress } = await chrome.storage.local.get([
+    "state",
+    "progress",
   ]);
-  if (!deepWorkActive || !startTime) return;
-
+  const activeState = state || DEFAULT_STATE;
+  const activeProgress = progress || DEFAULT_PROGRESS;
+  const { deepWorkActive, startTime, currentTask } = activeState;
+    if (!deepWorkActive || !startTime) return;
   const endTime = Date.now();
-  const report = buildReport(startTime, endTime, stats || DEFAULT_STATS, reason);
-
+  const actualDurationMin = Math.max(
+  1,
+  Math.round((endTime - startTime) / 60000)
+);
+  const newSession = {
+    startTime,
+    endTime,
+    durationMin: actualDurationMin,
+    reason,
+    task: currentTask,
+  };
   await chrome.storage.local.set({
-    deepWorkActive: false,
-    startTime: null,
-    durationMin: 0,
-    breakUntil: null,
-    stats: { ...DEFAULT_STATS },
-    lastReport: report
+    state: 
+    { ...DEFAULT_STATE},
+    progress: { ...activeProgress,sessions:[...activeProgress.sessions,newSession] },
   });
   await chrome.alarms.clear("deepwork_end");
 }
+function getTodayMinutes(sessions) 
+{
+  const now=new Date();
+  let total=0;
+  for(let session of sessions)
+    {
+      const endDate = new Date(session.endTime);
+      let isToday=endDate.getFullYear()===now.getFullYear() && 
+      endDate.getMonth()===now.getMonth() && 
+      endDate.getDate()===now.getDate()
+      if(isToday)
+        {
+          total+=session.durationMin
+        }
+    }
+    return total
 
-function buildReport(startTime, endTime, stats, reason) {
-  const durationMs = endTime - startTime;
-  const durationMin = Math.max(1, Math.round(durationMs / 60000));
-  let firstDistraction = null;
-  if (stats.firstDistractionAt) {
-    const minutesIn = Math.round((stats.firstDistractionAt - startTime) / 60000);
-    firstDistraction = {
-      at: new Date(stats.firstDistractionAt).toLocaleTimeString(),
-      minutesIn
-    };
-  }
-
-  const { windowLabel, windowCount } = strongestVulnerabilityWindow(startTime, stats.attemptsByBucket);
-
-  return {
-    reason,
-    durationMin,
-    firstDistraction,
-    interruptionAttempts: stats.interruptionAttempts || 0,
-    strongestWindow: windowCount > 0 ? windowLabel : "No clear window"
-  };
 }
 
-function strongestVulnerabilityWindow(startTime, buckets) {
-  let maxCount = 0;
-  let maxIndex = null;
-  Object.entries(buckets || {}).forEach(([idx, count]) => {
-    if (count > maxCount) {
-      maxCount = count;
-      maxIndex = Number(idx);
+async function setDailyGoal(dailyMinutesGoal) {
+  const { settings } = await chrome.storage.local.get("settings");
+  const activeSettings = settings || DEFAULT_SETTINGS;
+
+  await chrome.storage.local.set({
+    settings: {
+      ...activeSettings,
+      dailyMinutesGoal
     }
   });
-  if (maxIndex === null) {
-    return { windowLabel: null, windowCount: 0 };
-  }
-  const windowStart = new Date(startTime + maxIndex * BUCKET_MINUTES * 60 * 1000);
-  const windowEnd = new Date(startTime + (maxIndex + 1) * BUCKET_MINUTES * 60 * 1000);
-  const windowLabel = `${windowStart.toLocaleTimeString()} – ${windowEnd.toLocaleTimeString()} (minute ${maxIndex * BUCKET_MINUTES}–${(maxIndex + 1) * BUCKET_MINUTES})`;
-  return { windowLabel, windowCount: maxCount };
+
+  return { ok: true };
 }
 
 async function handleUrlChange(tabId, url, isActive) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, deepWorkActive, startTime, stats } = await chrome.storage.local.get([
+  const { settings, state, progress } = await chrome.storage.local.get([
     "settings",
-    "deepWorkActive",
-    "startTime",
-    "stats"
+    "state",
+    "progress"
   ]);
   const activeSettings = settings || DEFAULT_SETTINGS;
+  const activeState = state || DEFAULT_STATE;
+  const activeProgress = progress || DEFAULT_PROGRESS;
+  const deepWorkActive = activeState.deepWorkActive;
+  const startTime = activeState.startTime;
   const meta = tabMeta.get(tabId);
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
 
   if (deepWorkActive) {
     if (isDistracting) {
-      await recordDistraction(url, startTime, stats || DEFAULT_STATS);
-      await maybeTriggerLoop(tabId, url, startTime, stats || DEFAULT_STATS);
       await redirectToBlocked(tabId, url);
     }
   }
 
-  if (isActive) {
-    await updateLastActiveCategory(isDistracting ? "distracting" : "work");
-  }
 }
 
 async function handleActiveTabSwitch(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, deepWorkActive, startTime, stats } = await chrome.storage.local.get([
+  const { settings, state, progress } = await chrome.storage.local.get([
     "settings",
-    "deepWorkActive",
-    "startTime",
-    "stats"
+    "state",
+    "progress"
   ]);
+  const activeState = state || DEFAULT_STATE;
+  const deepWorkActive = activeState.deepWorkActive;
   if (!deepWorkActive) return;
 
   const activeSettings = settings || DEFAULT_SETTINGS;
   const meta = tabMeta.get(tabId);
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
-  await detectQuickSwitch(tabId, isDistracting);
-  await updateLastActiveCategory(isDistracting ? "distracting" : "work");
-
   if (isDistracting) {
-    await recordDistraction(url, startTime, stats || DEFAULT_STATS);
-    await maybeTriggerLoop(tabId, url, startTime, stats || DEFAULT_STATS);
+
     await redirectToBlocked(tabId, url);
   }
 }
 
-async function updateLastActiveCategory(category) {
-  await chrome.storage.local.set({
-    lastActiveCategory: category,
-    lastActiveAt: Date.now()
-  });
-}
-
-async function detectQuickSwitch(tabId, isDistracting) {
-  const { lastActiveCategory, lastActiveAt } = await chrome.storage.local.get([
-    "lastActiveCategory",
-    "lastActiveAt"
-  ]);
-  if (lastActiveCategory === "work" && isDistracting && lastActiveAt && Date.now() - lastActiveAt <= SWITCH_WINDOW_MS) {
-    await triggerPrompt(tabId, "switching quickly from work to entertainment");
-  }
-}
-
-async function recordDistraction(url, startTime, stats) {
-  const now = Date.now();
-  if (!stats.firstDistractionAt) {
-    stats.firstDistractionAt = now;
-  }
-  stats.interruptionAttempts = (stats.interruptionAttempts || 0) + 1;
-  const bucketIndex = Math.floor((now - startTime) / (BUCKET_MINUTES * 60 * 1000));
-  stats.attemptsByBucket[bucketIndex] = (stats.attemptsByBucket[bucketIndex] || 0) + 1;
-
-  const domain = extractDomain(url);
-  if (!stats.attemptsByDomain[domain]) {
-    stats.attemptsByDomain[domain] = { count: 0, firstAt: now };
-  }
-  stats.attemptsByDomain[domain].count += 1;
-
-  stats.distractionTimestamps = (stats.distractionTimestamps || []).filter(ts => now - ts <= LOOP_WINDOW_MINUTES * 60 * 1000);
-  stats.distractionTimestamps.push(now);
-
-  await chrome.storage.local.set({ stats });
-}
-
-async function maybeTriggerLoop(tabId, url, startTime, stats) {
-  const now = Date.now();
-  const recent = (stats.distractionTimestamps || []).filter(ts => now - ts <= LOOP_WINDOW_MINUTES * 60 * 1000);
-  if (recent.length >= 3) {
-    await triggerPrompt(tabId, "3 distractions in 10 minutes");
-    return;
-  }
-
-  const domain = extractDomain(url);
-  const info = stats.attemptsByDomain?.[domain];
-  if (info && info.count >= REPEAT_DOMAIN_THRESHOLD && now - info.firstAt <= REPEAT_DOMAIN_WINDOW_MS) {
-    await triggerPrompt(tabId, "repeated attempts on the same site");
-  }
-}
+//TODO: add an agent layer where if the user is stuck the agent can help them get unstuck instead of just blocking.
+// For example if they are on youtube shorts the agent can ask them 
+// if they want to watch a specific educational video instead 
+// and then take them there if they say yes.
 
 async function triggerPrompt(tabId, reason) {
   try {
@@ -481,11 +433,12 @@ async function useEmergencyExit() {
     return { ok: false, ...status };
   }
 
-  const { deepWorkActive } = await chrome.storage.local.get("deepWorkActive");
-  if (!deepWorkActive) {
-    return { ok: false, available: true, remainingMs: 0 };
-  }
+const { state } = await chrome.storage.local.get("state");
+const activeState = state || DEFAULT_STATE;
 
+if (!activeState.deepWorkActive) {
+  return { ok: false, available: true, remainingMs: 0 };
+}
   const usedAt = Date.now();
   await chrome.storage.local.set({ emergencyExitLastUsedAt: usedAt });
   await endDeepWork("emergency_exit");

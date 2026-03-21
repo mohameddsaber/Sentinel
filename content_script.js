@@ -3,13 +3,13 @@
   const YT_STYLE_ID = "deepwork-youtube-focus-style";
   let lastUrl = "";
   let lastTitle = "";
-
+//this does not happen
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === "distraction_prompt") {
       showPrompt(message.reason || "You might be drifting");
     }
   });
-
+// send url and title to background every 2 seconds or on change, whichever is sooner
   const sendMeta = () => {
     const url = window.location.href;
     const title = document.title || "";
@@ -22,17 +22,25 @@
   const observeTitle = () => {
     const titleEl = document.querySelector("title");
     if (!titleEl) return;
+    // Observe changes to the title element to catch dynamic title updates (e.g., YouTube video titles)
     const observer = new MutationObserver(() => sendMeta());
     observer.observe(titleEl, { childList: true });
   };
 
   sendMeta();
   observeTitle();
+// send meta when tab becomes active
+  document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    sendMeta();
+  }
+  });
   setInterval(sendMeta, 2000);
   syncYouTubeFocusUI();
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
+    // If the deep work active state changes, update the YouTube focus UI accordingly
     if (changes.deepWorkActive) {
       syncYouTubeFocusUI();
     }
@@ -112,7 +120,7 @@
     }
     removeYouTubeFocusUI();
   }
-
+// remove recommendations and related videos from youtube homepage and watch page.
   function enforceYouTubeFocusUI() {
     if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
     if (document.getElementById(YT_STYLE_ID)) return;
@@ -142,7 +150,7 @@
     `;
     document.documentElement.appendChild(style);
   }
-
+// remove the style when the session is inactive
   function removeYouTubeFocusUI() {
     const style = document.getElementById(YT_STYLE_ID);
     if (style) style.remove();

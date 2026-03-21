@@ -5,11 +5,29 @@ const sessionBtn = document.getElementById("sessionBtn");
 const timerSlider = document.getElementById("timerSlider");
 const timerValEl = document.getElementById("timerVal");
 const sliderFillEl = document.getElementById("sliderFill");
-const signalBars = Array.from(document.querySelectorAll("#signalBars .bar"));
-const activityValEl = document.getElementById("activityVal");
-const reportListEl = document.getElementById("reportList");
+const todayValEl = document.getElementById("todayVal");
+const goalValEl = document.getElementById("goalVal");
+const progressValEl = document.getElementById("progressVal");
+const taskInput = document.getElementById("taskInput");
+const goalInput = document.getElementById("goalInput");
+const saveGoalBtn = document.getElementById("saveGoalBtn");
 
 let currentState = null;
+
+if (saveGoalBtn && goalInput) {
+  saveGoalBtn.addEventListener("click", async () => {
+    const goal = Math.max(0, Number(goalInput.value) || 0);
+
+    await chrome.runtime.sendMessage({
+      type: "set_daily_goal",
+      dailyMinutesGoal: goal
+    });
+
+    const state = await chrome.runtime.sendMessage({ type: "get_state" });
+    currentState = state;
+    renderState(state);
+  });
+}
 
 init();
 
@@ -19,13 +37,20 @@ async function init() {
   });
 
   sessionBtn.addEventListener("click", async () => {
-    if (!currentState || currentState.deepWorkActive) return;
+    if (!currentState || currentState.sentinelState === "SESSION_ACTIVE") return;
 
     sessionBtn.disabled = true;
     sessionBtn.textContent = "STARTING...";
 
     const durationMin = Number(timerSlider.value);
-    await chrome.runtime.sendMessage({ type: "toggle_deepwork", enabled: true, durationMin });
+    const task = taskInput ? taskInput.value.trim() || null : null;
+
+    await chrome.runtime.sendMessage({
+      type: "toggle_deepwork",
+      enabled: true,
+      durationMin,
+      currentTask: task
+    });
 
     const state = await chrome.runtime.sendMessage({ type: "get_state" });
     currentState = state;
@@ -39,9 +64,9 @@ async function init() {
 }
 
 function renderState(state) {
-  const active = state.deepWorkActive;
+  const active = state.sentinelState === "SESSION_ACTIVE";
   const sentinelState = getDisplayState(state);
-  const timer = clampTimer(state.durationMin || state.settings?.timerMinutes || 50);
+  const timer = clampTimer(state.durationMin || 50);
 
   popupEl.classList.toggle("inactive", !active);
   badgeLabelEl.textContent = active ? "ACTIVE" : "INACTIVE";
@@ -52,11 +77,14 @@ function renderState(state) {
   sessionBtn.disabled = active;
   timerSlider.disabled = active;
 
+  todayValEl.textContent = `${state.todayMinutes || 0}m`;
+  goalValEl.textContent = `${state.goal || 0}m`;
+  progressValEl.textContent = `${state.progressPercent || 0}%`;
+
+  if (goalInput) goalInput.value = state.goal || 0;
+
   timerSlider.value = String(timer);
   updateTimer(timer);
-
-  renderActivity(state);
-  renderReport(state.lastReport);
 }
 
 function updateTimer(value) {
@@ -68,44 +96,6 @@ function updateTimer(value) {
   sliderFillEl.style.width = `${percentage}%`;
 }
 
-function renderActivity(state) {
-  const sentinelState = getDisplayState(state);
-  const level = signalLevelForState(sentinelState);
-  signalBars.forEach((bar, index) => {
-    bar.classList.toggle("on", index < level);
-    bar.classList.toggle("off", index >= level);
-  });
-  activityValEl.textContent = activityLabelForState(sentinelState);
-}
-
-function renderReport(report) {
-  if (!report) {
-    reportListEl.innerHTML = '<div class="report-row empty"><span>No session yet.</span></div>';
-    return;
-  }
-
-  const rows = [
-    ["Focus duration", `${report.durationMin}m`],
-    ["Distraction attempts", String(report.interruptionAttempts)],
-    [
-      "First distraction",
-      report.firstDistraction ? `${report.firstDistraction.minutesIn}m` : "None"
-    ]
-  ];
-
-  const strongestWindow = formatStrongestWindow(report.strongestWindow);
-  if (strongestWindow) {
-    rows.push(["Vulnerability window", strongestWindow]);
-  }
-
-  reportListEl.innerHTML = rows
-    .map(
-      ([label, value]) =>
-        `<div class="report-row"><span>${escapeHtml(label)}</span><span class="sep"></span><span class="rval">${escapeHtml(value)}</span></div>`
-    )
-    .join("");
-}
-
 function clampTimer(value) {
   const min = Number(timerSlider.min);
   const max = Number(timerSlider.max);
@@ -113,70 +103,15 @@ function clampTimer(value) {
 }
 
 function getDisplayState(state) {
-  if (!state?.deepWorkActive) return "IDLE";
-  return state.sentinelState || "SESSION_ACTIVE";
+  return state?.sentinelState || "IDLE";
 }
 
 function formatState(rawState) {
-  if (!rawState) return "MONITORING";
+  if (!rawState) return "Idle";
 
   return rawState
     .toLowerCase()
     .split("_")
     .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
     .join(" ");
-}
-
-function activityLabelForState(rawState) {
-  switch (rawState) {
-    case "LOCKDOWN":
-      return "CRITICAL";
-    case "SESSION_ESCALATED":
-      return "ELEVATED";
-    case "BREAK":
-      return "RECOVERY";
-    case "COOLDOWN":
-      return "COOLDOWN";
-    case "SESSION_ACTIVE":
-      return "NORMAL";
-    default:
-      return "OFFLINE";
-  }
-}
-
-function signalLevelForState(rawState) {
-  switch (rawState) {
-    case "LOCKDOWN":
-      return 7;
-    case "SESSION_ESCALATED":
-      return 5;
-    case "SESSION_ACTIVE":
-      return 4;
-    case "BREAK":
-      return 2;
-    case "COOLDOWN":
-      return 1;
-    default:
-      return 0;
-  }
-}
-
-function formatStrongestWindow(value) {
-  if (!value || value === "No clear window") {
-    return null;
-  }
-
-  const minuteMatch = String(value).match(/minute\s+(\d+-\d+)/i);
-  if (minuteMatch) {
-    return minuteMatch[1];
-  }
-
-  return String(value);
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
 }

@@ -33,6 +33,15 @@
             <span class="mode-key">MODE</span>
             <span class="mode-val" id="modeVal">IDLE</span>
           </div>
+          <div class="mode-row" style="margin-bottom:8px;">
+            <span class="mode-key">TASK</span>
+          </div>
+          <input id="taskInput" placeholder="What are you working on?" />
+          <div class="mode-row" style="margin-bottom:8px;">
+            <span class="mode-key">DAILY GOAL</span>
+          </div>
+          <input id="goalInput" type="number" min="0" step="5" placeholder="Minutes" />
+          <button id="saveGoalBtn" type="button">Save Goal</button>
           <button class="session-btn inactive" id="sessionBtn" type="button">START SESSION</button>
         </div>
       </section>
@@ -44,41 +53,29 @@
           <div class="slider-outer">
             <div class="slider-track-bg"></div>
             <div class="slider-track-fill" id="sliderFill"></div>
-            <input type="range" id="timerSlider" min="5" max="120" step="5" value="50" />
+            <input type="range" id="timerSlider" min="25" max="90" step="5" value="50" />
           </div>
         </div>
       </section>
 
       <section class="card">
-        <div class="card-title">ACTIVITY MONITOR</div>
+        <div class="card-title">PROGRESS</div>
         <div class="card-body">
-          <div class="sig-label">SIGNAL LEVEL</div>
-          <div class="bars" id="signalBars">
-            <div class="bar off"></div>
-            <div class="bar off"></div>
-            <div class="bar off"></div>
-            <div class="bar off"></div>
-            <div class="bar off"></div>
-            <div class="bar off"></div>
-            <div class="bar off"></div>
+          <div class="mode-row">
+            <span class="mode-key">TODAY</span>
+            <span class="mode-val" id="todayVal">0m</span>
           </div>
-          <div class="act-row">
-            <span class="act-key">ACTIVITY</span>
-            <span class="act-val" id="activityVal">OFFLINE</span>
+          <div class="mode-row">
+            <span class="mode-key">GOAL</span>
+            <span class="mode-val" id="goalVal">0m</span>
+          </div>
+          <div class="mode-row">
+            <span class="mode-key">PROGRESS</span>
+            <span class="mode-val" id="progressVal">0%</span>
           </div>
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-title">SESSION REPORT</div>
-        <div class="card-body">
-          <div class="report-list" id="reportList">
-            <div class="report-row">
-              <span>No session yet.</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
 
