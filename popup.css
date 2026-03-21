@@ -350,14 +350,13 @@ input[type="range"]::-moz-range-thumb {
   cursor: grab;
 }
 
-/* Task & Goal Inputs */
-#taskInput,
-#goalInput {
+/* Task Input */
+#taskInput {
   width: 100%;
   background: var(--bg-body);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 8px 11px;
+  padding: 7px 10px;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 1.2px;
@@ -369,13 +368,45 @@ input[type="range"]::-moz-range-thumb {
   appearance: none;
 }
 
-#taskInput::placeholder,
-#goalInput::placeholder {
+#taskInput::placeholder {
   color: var(--text-lo);
   letter-spacing: 0.8px;
 }
 
-#taskInput:focus,
+#taskInput:focus {
+  border-color: rgba(24, 212, 245, 0.45);
+  box-shadow: 0 0 0 2px rgba(24, 212, 245, 0.08);
+}
+
+/* Goal inline inside PROGRESS card */
+.goal-inline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+}
+
+#goalInput {
+  width: 52px;
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-hi);
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#goalInput::placeholder {
+  color: var(--text-lo);
+}
+
 #goalInput:focus {
   border-color: rgba(24, 212, 245, 0.45);
   box-shadow: 0 0 0 2px rgba(24, 212, 245, 0.08);
@@ -388,18 +419,18 @@ input[type="range"]::-moz-range-thumb {
 
 /* Save Goal Button */
 #saveGoalBtn {
-  width: 100%;
-  padding: 7px 0;
-  margin-bottom: 8px;
+  flex-shrink: 0;
+  padding: 3px 7px;
   border: 1px solid rgba(24, 212, 245, 0.25);
   border-radius: 4px;
   background: rgba(24, 212, 245, 0.06);
   color: var(--cyan);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 2.5px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
   cursor: pointer;
   transition: background 0.18s, border-color 0.18s;
+  white-space: nowrap;
 }
 
 #saveGoalBtn:hover {

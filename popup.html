@@ -33,15 +33,7 @@
             <span class="mode-key">MODE</span>
             <span class="mode-val" id="modeVal">IDLE</span>
           </div>
-          <div class="mode-row" style="margin-bottom:8px;">
-            <span class="mode-key">TASK</span>
-          </div>
           <input id="taskInput" placeholder="What are you working on?" />
-          <div class="mode-row" style="margin-bottom:8px;">
-            <span class="mode-key">DAILY GOAL</span>
-          </div>
-          <input id="goalInput" type="number" min="0" step="5" placeholder="Minutes" />
-          <button id="saveGoalBtn" type="button">Save Goal</button>
           <button class="session-btn inactive" id="sessionBtn" type="button">START SESSION</button>
         </div>
       </section>
@@ -67,7 +59,11 @@
           </div>
           <div class="mode-row">
             <span class="mode-key">GOAL</span>
-            <span class="mode-val" id="goalVal">0m</span>
+            <div class="goal-inline">
+              <input id="goalInput" type="number" min="0" step="5" placeholder="—" />
+              <button id="saveGoalBtn" type="button">SET</button>
+              <span class="mode-val" id="goalVal">0m</span>
+            </div>
           </div>
           <div class="mode-row">
             <span class="mode-key">PROGRESS</span>
