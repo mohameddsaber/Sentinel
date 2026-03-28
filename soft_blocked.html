@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Off-Task Search</title>
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="wrap compact">
+    <div class="panel-header">
+      <div class="logo">SENTINEL</div>
+      <div class="status-badge">
+        <div class="dot"></div>
+        <span class="badge-label">BLOCKED</span>
+      </div>
+    </div>
+
+    <div class="subtitle-strip">Focus Defense System</div>
+
+    <div class="panel-body">
+      <div class="card">
+        <div class="card-title">ACCESS DENIED</div>
+        <div class="card-body">
+          <div class="stack">
+            <div>
+              <div class="blocked-title">OFF-TASK SEARCH DETECTED</div>
+              <div class="blocked-sub">Retype the authorization statement exactly to continue.</div>
+            </div>
+            <div class="divider"></div>
+            <div class="info-list">
+              <div class="info-row">
+                <div class="info-label">CURRENT TASK</div>
+                <div class="info-value" id="taskDisplay">--</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">FLAGGED SEARCH</div>
+                <div class="info-value" id="queryDisplay">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">OVERRIDE CHALLENGE</div>
+        <div class="card-body">
+          <div class="stack">
+            <div class="challenge-box" id="challengeText">--</div>
+            <div class="challenge-note">
+              Paste is disabled. Retype the full statement exactly as shown.
+            </div>
+            <textarea
+              id="reasonInput"
+              class="challenge-input"
+              placeholder="Retype the statement exactly as shown above"
+              maxlength="400"
+              spellcheck="false"
+              autocapitalize="off"
+              autocomplete="off"
+              autocorrect="off"
+            ></textarea>
+            <div class="progress-meta">
+              <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="count-label" id="countLabel">0 / 0 matched</div>
+            </div>
+            <div class="match-status" id="matchStatus"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">ACTIONS</div>
+        <div class="card-body">
+          <div class="actions">
+            <div class="emergency-message" id="overrideCount" hidden></div>
+            <button id="backBtn" class="secondary" type="button">GO BACK</button>
+            <button id="overrideBtn" class="primary" type="button" disabled>PROCEED ANYWAY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="soft_blocked.js"></script>
+</body>
+</html>

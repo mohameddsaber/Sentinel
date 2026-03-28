@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search Blocked</title>
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel-header">
+      <div class="logo">SENTINEL</div>
+      <div class="status-badge">
+        <div class="dot"></div>
+        <span class="badge-label">BLOCKED</span>
+      </div>
+    </div>
+
+    <div class="subtitle-strip">Focus Defense System</div>
+
+    <div class="panel-body">
+      <div class="card">
+        <div class="card-title">ACCESS DENIED</div>
+        <div class="card-body">
+          <div class="blocked-title">HARD BLOCK TRIGGERED</div>
+          <div class="blocked-sub">This search matches a pattern that cannot be overridden.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">CONTEXT</div>
+        <div class="card-body">
+          <div class="info-list">
+            <div class="info-row">
+              <div class="info-label">CURRENT TASK</div>
+              <div class="info-value dim" id="taskLine">No active task provided.</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">BLOCKED SEARCH</div>
+              <div class="info-value" id="queryDisplay">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">WHY IT WAS BLOCKED</div>
+        <div class="card-body">
+          <div class="reason-list">
+            <div class="reason-item">This query matches a hard-blocked distraction pattern.</div>
+            <div class="reason-item">Hard-blocked searches are treated as never task-relevant during deep work.</div>
+            <div class="reason-item">Return to YouTube and search for something directly tied to the active task.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">ACTIONS</div>
+        <div class="card-body">
+          <div class="actions">
+            <button id="backBtn" class="secondary" type="button">GO BACK TO YOUTUBE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="hard_blocked.js"></script>
+</body>
+</html>

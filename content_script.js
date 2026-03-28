@@ -4,6 +4,7 @@
   window[INIT_FLAG] = true;
 
   const OVERLAY_ID = "deepwork-distraction-overlay";
+  const CHANNEL_PROMPT_ID = "deepwork-channel-approval-overlay";
   const YT_STYLE_ID = "deepwork-youtube-focus-style";
   let lastUrl = "";
   let lastTitle = "";
@@ -11,6 +12,8 @@
   let metaIntervalId = null;
   let titleObserver = null;
   let navigationObserver = null;
+  let lastPromptedChannelKey = "";
+  let pendingChannelNavigationUrl = null;
 
   const teardown = () => {
     if (metaIntervalId) {
@@ -93,6 +96,54 @@
       .toLowerCase()
       .replace(/\s+/g, " ");
 
+  const isYouTubeChannelPath = (pathname) =>
+    pathname.startsWith("/@") ||
+    pathname.startsWith("/channel/") ||
+    pathname.startsWith("/c/") ||
+    pathname.startsWith("/user/");
+
+  const removeChannelApprovalPrompt = () => {
+    const overlay = document.getElementById(CHANNEL_PROMPT_ID);
+    if (overlay) overlay.remove();
+    pendingChannelNavigationUrl = null;
+  };
+
+  const getAbsoluteUrl = (value) => {
+    try {
+      return new URL(value, window.location.href).href;
+    } catch {
+      return null;
+    }
+  };
+
+  const isPlainPrimaryClick = (event) =>
+    event.button === 0 &&
+    !event.defaultPrevented &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey;
+
+  const shouldInterceptChannelUrl = (url) => {
+    if (!url) return false;
+    try {
+      const parsed = new URL(url);
+      return /^(www\.)?youtube\.com$/i.test(parsed.hostname) && isYouTubeChannelPath(parsed.pathname);
+    } catch {
+      return false;
+    }
+  };
+
+  const getChannelDestinationFromEvent = (event) => {
+    const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!anchor) return null;
+    if (anchor.target && anchor.target !== "_self") return null;
+
+    const destinationUrl = getAbsoluteUrl(anchor.getAttribute("href"));
+    if (!shouldInterceptChannelUrl(destinationUrl)) return null;
+    return destinationUrl;
+  };
+
   const checkYouTubeSearch = async (url) => {
     if (!isContextAlive()) return;
     try {
@@ -113,17 +164,101 @@
         query,
       });
 
+      if (response?.verdict === "hard_block") {
+        window.location.href = chrome.runtime.getURL(
+          `hard_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}`
+        );
+        return;
+      }
+
       if (response?.verdict === "prompt") {
-        showSearchPrompt(response.query, response.currentTask);
+        window.location.href = chrome.runtime.getURL(
+          `soft_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}&tabId=${encodeURIComponent(String(response.tabId || ""))}`
+        );
+        return;
       }
     } catch {
       // ignore — extension context may be invalidated
     }
   };
 
+  const checkYouTubeChannelApproval = async (url) => {
+    if (!isContextAlive()) return;
+
+    try {
+      const parsed = new URL(url);
+      if (!/^(www\.)?youtube\.com$/i.test(parsed.hostname) || !isYouTubeChannelPath(parsed.pathname)) {
+        lastPromptedChannelKey = "";
+        removeChannelApprovalPrompt();
+        return;
+      }
+
+      const response = await safeSendMessage({
+        type: "youtube_channel_check",
+        url,
+      });
+
+      if (response?.verdict === "allow") {
+        lastPromptedChannelKey = "";
+        removeChannelApprovalPrompt();
+        return;
+      }
+
+      if (response?.verdict === "block") {
+        removeChannelApprovalPrompt();
+        window.location.href = chrome.runtime.getURL(
+          `blocked.html?url=${encodeURIComponent(window.location.href)}`
+        );
+        return;
+      }
+
+      if (response?.verdict === "prompt") {
+        if (response.channelKey === lastPromptedChannelKey &&
+            document.getElementById(CHANNEL_PROMPT_ID)) {
+          return;
+        }
+        lastPromptedChannelKey = response.channelKey || "";
+        showChannelApprovalPrompt({
+          channelLabel: response.channelLabel || "this channel",
+          currentTask: response.currentTask || null,
+          url,
+        });
+        return;
+      }
+
+      lastPromptedChannelKey = "";
+      removeChannelApprovalPrompt();
+    } catch {
+      // ignore
+    }
+  };
+
   sendMeta();
   observeTitle();
   checkYouTubeSearch(window.location.href);
+  checkYouTubeChannelApproval(window.location.href);
+
+  document.addEventListener("click", (event) => {
+    if (!isPlainPrimaryClick(event)) return;
+    const destinationUrl = getChannelDestinationFromEvent(event);
+    if (!destinationUrl) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    void maybeGateYouTubeChannelNavigation(destinationUrl);
+  }, true);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" || event.defaultPrevented) return;
+    const destinationUrl = getChannelDestinationFromEvent(event);
+    if (!destinationUrl) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    void maybeGateYouTubeChannelNavigation(destinationUrl);
+  }, true);
 
   // send meta when tab becomes active
   document.addEventListener("visibilitychange", () => {
@@ -143,6 +278,7 @@
       lastHref = newHref;
       // Check search query before the results page renders
       void checkYouTubeSearch(newHref);
+      void checkYouTubeChannelApproval(newHref);
       // Small delay so YouTube has rendered the new page's DOM before we hide elements
       setTimeout(() => {
         void syncYouTubeFocusUI();
@@ -157,188 +293,159 @@
     // If the deep work active state changes, update the YouTube focus UI accordingly
     if (changes.state) {
       void syncYouTubeFocusUI();
+      if (!changes.state.newValue?.deepWorkActive) {
+        lastPromptedChannelKey = "";
+        removeChannelApprovalPrompt();
+      } else {
+        void checkYouTubeChannelApproval(window.location.href);
+      }
+    }
+    if (changes.settings) {
+      void checkYouTubeChannelApproval(window.location.href);
     }
   });
 
-  function showPrompt(reason) {
-    if (document.getElementById(OVERLAY_ID)) return;
+  async function maybeGateYouTubeChannelNavigation(destinationUrl) {
+    const response = await safeSendMessage({
+      type: "youtube_channel_check",
+      url: destinationUrl,
+    });
+
+    if (!response || response.verdict === "allow") {
+      window.location.href = destinationUrl;
+      return;
+    }
+
+    if (response.verdict === "block") {
+      removeChannelApprovalPrompt();
+      window.location.href = chrome.runtime.getURL(
+        `blocked.html?url=${encodeURIComponent(destinationUrl)}`
+      );
+      return;
+    }
+
+    if (response.verdict === "prompt") {
+      if (response.channelKey === lastPromptedChannelKey &&
+          document.getElementById(CHANNEL_PROMPT_ID)) {
+        pendingChannelNavigationUrl = destinationUrl;
+        return;
+      }
+
+      lastPromptedChannelKey = response.channelKey || "";
+      showChannelApprovalPrompt({
+        channelLabel: response.channelLabel || "this channel",
+        currentTask: response.currentTask || null,
+        url: destinationUrl,
+        denyBehavior: "stay",
+      });
+    }
+  }
+
+  function showChannelApprovalPrompt({ channelLabel, currentTask, url, denyBehavior = "block" }) {
+    removeChannelApprovalPrompt();
+    pendingChannelNavigationUrl = url;
 
     const overlay = document.createElement("div");
-    overlay.id = OVERLAY_ID;
+    overlay.id = CHANNEL_PROMPT_ID;
     overlay.style.position = "fixed";
     overlay.style.inset = "0";
-    overlay.style.background = "rgba(0,0,0,0.45)";
+    overlay.style.background = "rgba(0,0,0,0.62)";
     overlay.style.zIndex = "2147483647";
     overlay.style.display = "flex";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
+    overlay.style.padding = "20px";
+    overlay.style.boxSizing = "border-box";
     overlay.style.fontFamily = "Georgia, 'Times New Roman', serif";
 
     const card = document.createElement("div");
     card.style.background = "#f8f1e8";
     card.style.color = "#2c2a27";
-    card.style.padding = "20px";
+    card.style.padding = "22px";
     card.style.borderRadius = "14px";
-    card.style.maxWidth = "360px";
+    card.style.maxWidth = "420px";
+    card.style.width = "100%";
     card.style.boxShadow = "0 20px 50px rgba(0,0,0,0.25)";
 
     const title = document.createElement("h2");
-    title.textContent = "You’re entering a distraction loop.";
-    title.style.margin = "0 0 8px";
-    title.style.fontSize = "18px";
+    title.textContent = "Allow this channel?";
+    title.style.margin = "0 0 10px";
+    title.style.fontSize = "20px";
 
-    const subtitle = document.createElement("p");
-    subtitle.textContent = "Stay in deep work?";
-    subtitle.style.margin = "0 0 6px";
+    const body = document.createElement("p");
+    body.textContent = `You opened ${channelLabel}. Add it to your allowed channels to continue browsing it during deep work.`;
+    body.style.margin = "0 0 10px";
+    body.style.fontSize = "14px";
+    body.style.lineHeight = "1.5";
 
-    const detail = document.createElement("p");
-    detail.textContent = `Detected: ${reason}.`;
-    detail.style.margin = "0 0 14px";
-    detail.style.fontSize = "13px";
-    detail.style.opacity = "0.8";
+    const taskLine = document.createElement("p");
+    taskLine.textContent = `Current task: ${currentTask || "none set"}`;
+    taskLine.style.margin = "0 0 18px";
+    taskLine.style.fontSize = "13px";
+    taskLine.style.opacity = "0.78";
 
     const buttons = document.createElement("div");
     buttons.style.display = "flex";
     buttons.style.gap = "10px";
+    buttons.style.flexWrap = "wrap";
 
-    const focusBtn = document.createElement("button");
-    focusBtn.textContent = "Stay focused";
-    focusBtn.style.flex = "1";
-    focusBtn.style.padding = "10px";
-    focusBtn.style.borderRadius = "8px";
-    focusBtn.style.border = "1px solid #2c2a27";
-    focusBtn.style.background = "#2c2a27";
-    focusBtn.style.color = "#fff";
-    focusBtn.style.cursor = "pointer";
+    const allowBtn = document.createElement("button");
+    allowBtn.type = "button";
+    allowBtn.textContent = "Add to allowed channels";
+    allowBtn.style.flex = "1 1 200px";
+    allowBtn.style.padding = "11px 12px";
+    allowBtn.style.borderRadius = "8px";
+    allowBtn.style.border = "1px solid #2c2a27";
+    allowBtn.style.background = "#2c2a27";
+    allowBtn.style.color = "#fff";
+    allowBtn.style.cursor = "pointer";
 
-    focusBtn.addEventListener("click", async () => {
-      await safeSendMessage({ type: "prompt_response", choice: "focus" });
-      overlay.remove();
-    });
+    const denyBtn = document.createElement("button");
+    denyBtn.type = "button";
+    denyBtn.textContent = "Deny access";
+    denyBtn.style.flex = "1 1 140px";
+    denyBtn.style.padding = "11px 12px";
+    denyBtn.style.borderRadius = "8px";
+    denyBtn.style.border = "1px solid #b9a98f";
+    denyBtn.style.background = "transparent";
+    denyBtn.style.color = "#2c2a27";
+    denyBtn.style.cursor = "pointer";
 
-    buttons.appendChild(focusBtn);
-
-    card.appendChild(title);
-    card.appendChild(subtitle);
-    card.appendChild(detail);
-    card.appendChild(buttons);
-    overlay.appendChild(card);
-    document.documentElement.appendChild(overlay);
-  }
-
-  // Shown when a YouTube search query doesn't match the current task.
-  // Lets the user refine the search, proceed anyway, or cancel.
-  function showSearchPrompt(query, currentTask) {
-    if (document.getElementById(OVERLAY_ID)) return;
-
-    const overlay = document.createElement("div");
-    overlay.id = OVERLAY_ID;
-    overlay.style.cssText = [
-      "position:fixed", "inset:0", "background:rgba(0,0,0,0.55)",
-      "z-index:2147483647", "display:flex", "align-items:center",
-      "justify-content:center", "font-family:Georgia,'Times New Roman',serif"
-    ].join(";");
-
-    const card = document.createElement("div");
-    card.style.cssText = [
-      "background:#f8f1e8", "color:#2c2a27", "padding:24px",
-      "border-radius:14px", "max-width:400px", "width:90%",
-      "box-shadow:0 20px 50px rgba(0,0,0,0.3)"
-    ].join(";");
-
-    const heading = document.createElement("h2");
-    heading.textContent = "Off-task search detected";
-    heading.style.cssText = "margin:0 0 6px;font-size:17px;";
-
-    const taskLine = document.createElement("p");
-    taskLine.style.cssText = "margin:0 0 14px;font-size:13px;opacity:0.7;";
-    taskLine.textContent = `Your task: "${currentTask || "none set"}"`;
-
-    const queryLine = document.createElement("p");
-    queryLine.style.cssText = "margin:0 0 16px;font-size:14px;";
-    queryLine.innerHTML = `Your search <strong>"${query}"</strong> doesn't seem related.`;
-
-    // Refined search input
-    const inputLabel = document.createElement("p");
-    inputLabel.textContent = "Search for something related instead:";
-    inputLabel.style.cssText = "margin:0 0 6px;font-size:13px;";
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = `e.g. ${currentTask ? currentTask.split(" ").slice(0,3).join(" ") + " tutorial" : "your topic"}`;
-    input.style.cssText = [
-      "width:100%", "box-sizing:border-box", "padding:9px 12px",
-      "border-radius:8px", "border:1px solid #ccc", "font-size:14px",
-      "margin-bottom:14px", "background:#fff", "color:#2c2a27"
-    ].join(";");
-
-    // Buttons row
-    const buttons = document.createElement("div");
-    buttons.style.cssText = "display:flex;gap:10px;";
-
-    const searchBtn = document.createElement("button");
-    searchBtn.textContent = "Search this instead";
-    searchBtn.style.cssText = [
-      "flex:1", "padding:10px", "border-radius:8px",
-      "border:1px solid #2c2a27", "background:#2c2a27",
-      "color:#fff", "cursor:pointer", "font-size:13px"
-    ].join(";");
-
-    const proceedBtn = document.createElement("button");
-    proceedBtn.textContent = "Proceed anyway";
-    proceedBtn.style.cssText = [
-      "flex:1", "padding:10px", "border-radius:8px",
-      "border:1px solid #999", "background:transparent",
-      "color:#2c2a27", "cursor:pointer", "font-size:13px"
-    ].join(";");
-
-    const cancelBtn = document.createElement("button");
-    cancelBtn.textContent = "Cancel";
-    cancelBtn.style.cssText = [
-      "padding:10px 14px", "border-radius:8px",
-      "border:1px solid #ccc", "background:transparent",
-      "color:#666", "cursor:pointer", "font-size:13px"
-    ].join(";");
-
-    searchBtn.addEventListener("click", () => {
-      const refined = input.value.trim();
-      if (!refined) return;
-      lastCheckedSearchHref = "";
-      overlay.remove();
-      window.location.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(refined)}`;
-    });
-
-    // Allow pressing Enter in the input to trigger the search
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") searchBtn.click();
-    });
-
-    proceedBtn.addEventListener("click", async () => {
-      await safeSendMessage({
-        type: "approve_search_query",
-        query,
+    allowBtn.addEventListener("click", async () => {
+      allowBtn.disabled = true;
+      denyBtn.disabled = true;
+      const response = await safeSendMessage({
+        type: "approve_youtube_channel",
+        url,
       });
-      lastCheckedSearchHref = window.location.href;
-      overlay.remove();
-    });
 
-    cancelBtn.addEventListener("click", () => {
-      lastCheckedSearchHref = "";
-      overlay.remove();
-      if (window.history.length > 1) {
-        window.history.back();
+      if (response?.ok) {
+        const approvedUrl = pendingChannelNavigationUrl || url;
+        removeChannelApprovalPrompt();
+        if (approvedUrl !== window.location.href) {
+          window.location.href = approvedUrl;
+        }
         return;
       }
-      window.location.href = "https://www.youtube.com/";
+
+      allowBtn.disabled = false;
+      denyBtn.disabled = false;
     });
 
-    buttons.append(searchBtn, proceedBtn, cancelBtn);
-    card.append(heading, taskLine, queryLine, inputLabel, input, buttons);
+    denyBtn.addEventListener("click", () => {
+      lastPromptedChannelKey = "";
+      removeChannelApprovalPrompt();
+      if (denyBehavior === "block") {
+        window.location.href = chrome.runtime.getURL(
+          `blocked.html?url=${encodeURIComponent(url)}`
+        );
+      }
+    });
+
+    buttons.append(allowBtn, denyBtn);
+    card.append(title, body, taskLine, buttons);
     overlay.appendChild(card);
     document.documentElement.appendChild(overlay);
-
-    // Focus the input so the user can type immediately
-    setTimeout(() => input.focus(), 50);
   }
 
   async function syncYouTubeFocusUI() {

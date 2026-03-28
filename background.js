@@ -2,6 +2,7 @@ const DEFAULT_SETTINGS = {
   blockedDomains: [],
   blockedPatterns: [],
   allowPatterns: [],
+  allowedYouTubeChannels: [],
   blockShorts: true,
   timerMinutes: 50,
   dailyMinutesGoal: 180,
@@ -181,6 +182,40 @@ const ENTERTAINMENT_YT_CHANNELS = new Set([
   "@5MinuteCrafts",
 ]);
 
+const YOUTUBE_SEARCH_HARD_BLOCK_PATTERNS = [
+  // Ultra-passive / dopamine
+  "asmr", "mukbang", "satisfying", "oddly satisfying",
+
+  // Pranks / reactions / memes
+  "prank", "reaction", "reacts", "meme", "memes",
+  "funny moments", "best moments", "compilation", "try not to laugh",
+
+  // Short-form / algorithm bait
+  "shorts", "reels", "tiktok", "clips", "clip", "edit", "edits",
+
+  // Celebrity / drama / gossip
+  "celebrity", "drama", "gossip", "exposed", "beef", "controversy",
+
+  // Gaming binge content
+  "gameplay", "lets play", "let's play", "livestream", "stream highlights",
+
+  // Music consumption
+  "lyrics", "music video", "official video", "audio", "live concert", "music mix", "playlist",
+
+  // Lifestyle / vlog / day content
+  "vlog", "day in the life", "morning routine", "night routine", "daily routine",
+
+  // Clickbait formats
+  "you won't believe", "insane", "crazy", "shocking",
+  "top 10", "top 5", "must watch", "gone wrong",
+
+  // Podcasts / long passive listening
+  "podcast", "interview highlights",
+
+  // Commentary / commentary drama
+  "commentary", "rant", "hot take"
+];
+
 const ADULT_DOMAIN_KEYWORDS = [
   "porn", "sex", "xxx", "xvideos", "xhamster", "xnxx", "redtube", "youporn", "hentai", "cam", "cams",
   "onlyfans", "erotic", "nsfw", "milf", "anal", "bdsm", "escort", "fuck", "boobs"
@@ -287,8 +322,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleSearchQueryCheck(message.query, sender?.tab?.id).then(sendResponse);
     return true;
   }
+  if (message.type === "youtube_channel_check") {
+    handleYouTubeChannelCheck(message.url).then(sendResponse);
+    return true;
+  }
+  if (message.type === "approve_youtube_channel") {
+    approveYouTubeChannel(message.url).then(sendResponse);
+    return true;
+  }
   if (message.type === "approve_search_query") {
     approveSearchQuery(sender?.tab?.id, message.query).then(sendResponse);
+    return true;
+  }
+  // Sent by soft_blocked.html after the user provides a written reason.
+  // tabId comes from the page's query param since extension pages have no sender tab context.
+  if (message.type === "approve_search_query_with_reason") {
+    const tabId = message.tabId ?? sender?.tab?.id;
+    approveSearchQueryWithReason(tabId, message.query, message.reason).then(sendResponse);
+    return true;
+  }
+  // Used by soft_blocked.html to display the running session override count.
+  if (message.type === "get_override_count") {
+    getTodayOverrideCount().then(sendResponse);
     return true;
   }
 });
@@ -305,16 +360,18 @@ async function getStateForPopup() {
   const todayMinutes = getTodayMinutes(activeProgress.sessions);
   const goal = activeSettings.dailyMinutesGoal || 0;
   const progressPercent = goal > 0
-  ? Math.min(100, Math.round((todayMinutes / goal) * 100))
-  : 0;
+    ? Math.min(100, Math.round((todayMinutes / goal) * 100))
+    : 0;
+  const { count: searchOverridesToday } = await getTodayOverrideCount();
   return {
     sentinelState: activeState.deepWorkActive ? "SESSION_ACTIVE" : "IDLE",
     currentTask: activeState.currentTask,
     durationMin: activeState.durationMin,
-    todayMinutes:todayMinutes,
-    goal:goal,
-    progressPercent:progressPercent,
-    };
+    todayMinutes,
+    goal,
+    progressPercent,
+    searchOverridesToday,
+  };
 }
 
 
@@ -325,12 +382,19 @@ async function toggleDeepWork(enabled, durationMin, currentTask) {
   return { ok: true };
 }
 
-async function startDeepWork(durationMin,currentTask) {
+async function startDeepWork(durationMin, currentTask) {
   const now = Date.now();
   await clearAllApprovedSearches();
+
+  // Reset the override log at the start of each new session
+  const { progress } = await chrome.storage.local.get("progress");
+  const activeProgress = progress || DEFAULT_PROGRESS;
   await chrome.storage.local.set({
-    state: 
-    {
+    progress: { ...activeProgress, searchOverrides: [] },
+  });
+
+  await chrome.storage.local.set({
+    state: {
       deepWorkActive: true,
       startTime: now,
       durationMin: durationMin || 0,
@@ -379,9 +443,8 @@ async function endDeepWork(reason) {
     task: currentTask,
   };
   await chrome.storage.local.set({
-    state: 
-    { ...DEFAULT_STATE},
-    progress: { ...activeProgress,sessions:[...activeProgress.sessions,newSession] },
+    state: { ...DEFAULT_STATE },
+    progress: { ...activeProgress, sessions: [...activeProgress.sessions, newSession] },
   });
   await clearAllApprovedSearches();
   await chrome.alarms.clear("deepwork_end");
@@ -423,35 +486,28 @@ async function handleUrlChange(tabId, url, isActive) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, state, progress } = await chrome.storage.local.get([
+  const { settings, state } = await chrome.storage.local.get([
     "settings",
     "state",
-    "progress"
   ]);
   const activeSettings = settings || DEFAULT_SETTINGS;
   const activeState = state || DEFAULT_STATE;
-  const activeProgress = progress || DEFAULT_PROGRESS;
   const deepWorkActive = activeState.deepWorkActive;
-  const startTime = activeState.startTime;
   const meta = tabMeta.get(tabId);
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
 
-  if (deepWorkActive) {
-    if (isDistracting) {
-      await redirectToBlocked(tabId, url);
-    }
+  if (deepWorkActive && isDistracting) {
+    await redirectToBlocked(tabId, url);
   }
-
 }
 
 async function handleActiveTabSwitch(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
-  const { settings, state, progress } = await chrome.storage.local.get([
+  const { settings, state } = await chrome.storage.local.get([
     "settings",
     "state",
-    "progress"
   ]);
   const activeState = state || DEFAULT_STATE;
   const deepWorkActive = activeState.deepWorkActive;
@@ -461,14 +517,13 @@ async function handleActiveTabSwitch(tabId, url) {
   const meta = tabMeta.get(tabId);
   const isDistracting = isBlockedByRules(url, activeSettings, meta);
   if (isDistracting) {
-
     await redirectToBlocked(tabId, url);
   }
 }
 
 //TODO: add an agent layer where if the user is stuck the agent can help them get unstuck instead of just blocking.
-// For example if they are on youtube shorts the agent can ask them 
-// if they want to watch a specific educational video instead 
+// For example if they are on youtube shorts the agent can ask them
+// if they want to watch a specific educational video instead
 // and then take them there if they say yes.
 
 async function triggerPrompt(tabId, reason) {
@@ -539,12 +594,12 @@ async function useEmergencyExit() {
     return { ok: false, ...status };
   }
 
-const { state } = await chrome.storage.local.get("state");
-const activeState = state || DEFAULT_STATE;
+  const { state } = await chrome.storage.local.get("state");
+  const activeState = state || DEFAULT_STATE;
 
-if (!activeState.deepWorkActive) {
-  return { ok: false, available: true, remainingMs: 0 };
-}
+  if (!activeState.deepWorkActive) {
+    return { ok: false, available: true, remainingMs: 0 };
+  }
   const usedAt = Date.now();
   await chrome.storage.local.set({ emergencyExitLastUsedAt: usedAt });
   await endDeepWork("emergency_exit");
@@ -598,6 +653,49 @@ async function clearAllApprovedSearches() {
   if (keysToRemove.length === 0) return;
   await chrome.storage.session.remove(keysToRemove);
 }
+
+// ---------------------------------------------------------------------------
+// Override logging
+// Persists each override with its written reason to progress.searchOverrides
+// so the popup can surface the running count and session history.
+// ---------------------------------------------------------------------------
+
+/**
+ * Approves a query for the tab session AND logs the override + written reason.
+ */
+async function approveSearchQueryWithReason(tabId, query, reason) {
+  await approveSearchQuery(tabId, query);
+
+  const { progress } = await chrome.storage.local.get("progress");
+  const activeProgress = progress || DEFAULT_PROGRESS;
+  const overrides = activeProgress.searchOverrides || [];
+
+  overrides.push({
+    query: normalizeSearchQuery(query),
+    reason: String(reason || "").trim(),
+    timestamp: Date.now(),
+  });
+
+  await chrome.storage.local.set({
+    progress: { ...activeProgress, searchOverrides: overrides },
+  });
+
+  return { ok: true };
+}
+
+/**
+ * Returns the number of search overrides recorded in the current session.
+ * The override log is reset to [] in startDeepWork, so this is a per-session count.
+ */
+async function getTodayOverrideCount() {
+  const { progress } = await chrome.storage.local.get("progress");
+  const overrides = (progress || DEFAULT_PROGRESS).searchOverrides || [];
+  return { count: overrides.length };
+}
+
+// ---------------------------------------------------------------------------
+// URL / domain classification helpers
+// ---------------------------------------------------------------------------
 
 function isBlockedByRules(url, settings, meta) {
   if (isAllowlisted(url, settings.allowPatterns || [])) return false;
@@ -683,6 +781,15 @@ function isKnownSafeYouTubeIntent(url) {
   return false;
 }
 
+function isYouTubeChannelPath(path) {
+  return (
+    path.startsWith("/@") ||
+    path.startsWith("/channel/") ||
+    path.startsWith("/c/") ||
+    path.startsWith("/user/")
+  );
+}
+
 function isAllowedYouTubeRoute(url, title = "") {
   if (!isYouTubeDomain(url)) return false;
   const parsed = parseUrl(url);
@@ -693,14 +800,8 @@ function isAllowedYouTubeRoute(url, title = "") {
   if (path === "/results") return parsed.searchParams.has("search_query");
 
   // Channel pages — check against allow/block lists
-  if (
-    path.startsWith("/@") ||
-    path.startsWith("/channel/") ||
-    path.startsWith("/c/") ||
-    path.startsWith("/user/")
-  ) {
+  if (isYouTubeChannelPath(path)) {
     if (isEntertainmentChannel(url)) return false;
-    // Educational channels (and unknown channels) are allowed to browse
     return true;
   }
 
@@ -735,26 +836,21 @@ function isAllowedYouTubeVideo(url, title = "") {
   return true; // ambiguous — default allow
 }
 
-/**
- * Returns true if the URL references a known educational YouTube channel.
- */
 function isEducationalChannel(url) {
   return matchesYouTubeChannelSet(url, EDUCATIONAL_YT_CHANNELS);
 }
 
-/**
- * Returns true if the URL references a known entertainment YouTube channel.
- */
 function isEntertainmentChannel(url) {
   return matchesYouTubeChannelSet(url, ENTERTAINMENT_YT_CHANNELS);
 }
 
-/**
- * Checks whether any channel identifier in the URL (handle, channel ID, slug)
- * appears in the given Set. Handles /@handle, /channel/ID, /c/slug, /user/slug,
- * and also the channel that "owns" a /watch?v= URL when stored in tabMeta title
- * (best-effort; exact channel matching requires the page_meta message).
- */
+function isUserAllowedYouTubeChannel(url, allowedChannels = []) {
+  if (!Array.isArray(allowedChannels) || allowedChannels.length === 0) return false;
+  const channelInfo = extractYouTubeChannelInfo(url);
+  if (!channelInfo) return false;
+  return allowedChannels.includes(channelInfo.key);
+}
+
 function matchesYouTubeChannelSet(url, channelSet) {
   if (!isYouTubeDomain(url)) return false;
   const parsed = parseUrl(url);
@@ -772,14 +868,60 @@ function matchesYouTubeChannelSet(url, channelSet) {
 
     for (const entry of channelSet) {
       const e = entry.toLowerCase();
-      if (handle && e === handle.toLowerCase()) return true;
+      if (handle    && e === handle.toLowerCase())    return true;
       if (channelId && e === channelId.toLowerCase()) return true;
-      if (cSlug && e === cSlug.toLowerCase()) return true;
-      if (userSlug && e === userSlug.toLowerCase()) return true;
+      if (cSlug     && e === cSlug.toLowerCase())     return true;
+      if (userSlug  && e === userSlug.toLowerCase())  return true;
     }
   }
 
   return false;
+}
+
+function extractYouTubeChannelInfo(url) {
+  if (!isYouTubeDomain(url)) return null;
+  const parsed = parseUrl(url);
+  if (!parsed || !isYouTubeChannelPath(parsed.pathname)) return null;
+
+  const pathMatch = parsed.pathname.match(
+    /^\/((@[^/]+)|(channel\/([^/]+))|(c\/([^/]+))|(user\/([^/]+)))/i
+  );
+  if (!pathMatch) return null;
+
+  const handle = pathMatch[2];
+  const channelId = pathMatch[4];
+  const customSlug = pathMatch[6];
+  const userSlug = pathMatch[8];
+
+  if (handle) {
+    return {
+      key: `handle:${handle.toLowerCase()}`,
+      label: handle,
+    };
+  }
+
+  if (channelId) {
+    return {
+      key: `channel:${channelId.toLowerCase()}`,
+      label: channelId,
+    };
+  }
+
+  if (customSlug) {
+    return {
+      key: `custom:${customSlug.toLowerCase()}`,
+      label: customSlug,
+    };
+  }
+
+  if (userSlug) {
+    return {
+      key: `user:${userSlug.toLowerCase()}`,
+      label: userSlug,
+    };
+  }
+
+  return null;
 }
 
 function isHttpUrl(url) {
@@ -898,18 +1040,8 @@ function keywordScore(url, title) {
     }
   }
 
-  if (isYouTubeHomeOrTrending(url)) {
-    total -= 2;
-    negativeHits += 1;
-  }
-
   return { total, negativeHits };
 }
-
-function isYouTubeHomeOrTrending(url) {
-  return /https?:\/\/(www\.)?youtube\.com\/(feed\/|$)/i.test(url);
-}
-
 
 // Words too common to be meaningful for task overlap matching
 const FILLER_WORDS = new Set([
@@ -920,9 +1052,6 @@ const FILLER_WORDS = new Set([
   "help", "fix", "build", "create", "work", "working"
 ]);
 
-/**
- * Tokenises a string into meaningful lowercase words, stripping filler.
- */
 function tokenise(text) {
   return text
     .toLowerCase()
@@ -956,8 +1085,12 @@ function taskOverlapScore(query, currentTask) {
 
 /**
  * Called when the content script intercepts a YouTube search.
- * Returns { verdict: "allow" } or { verdict: "prompt", query, currentTask }
- * so the content script can either proceed or show the friction prompt.
+ * The content script owns all navigation — this function only classifies.
+ *
+ * Returns one of:
+ *   { verdict: "allow" }
+ *   { verdict: "hard_block", query, currentTask }  → content script → hard_blocked.html
+ *   { verdict: "prompt",     query, currentTask }  → content script → soft_blocked.html
  */
 async function handleSearchQueryCheck(query, tabId) {
   const { state } = await chrome.storage.local.get("state");
@@ -968,12 +1101,20 @@ async function handleSearchQueryCheck(query, tabId) {
   if (!activeState.deepWorkActive) return { verdict: "allow" };
   if (!normalizedQuery) return { verdict: "allow" };
 
+  const currentTask = activeState.currentTask || "";
+
+  // Hard block — matches a pattern that is never task-relevant, no override path
+  const isHardBlocked = YOUTUBE_SEARCH_HARD_BLOCK_PATTERNS.some(
+    (p) => normalizedQuery.includes(p)
+  );
+  if (isHardBlocked) return { verdict: "hard_block", query, currentTask, tabId };
+
+  // Already approved for this tab session → allow through
   const approvedSearches = await getApprovedSearchesForTab(tabId);
   if (approvedSearches.includes(normalizedQuery)) {
     return { verdict: "allow" };
   }
 
-  const currentTask = activeState.currentTask || "";
   const overlap = taskOverlapScore(query, currentTask);
 
   // Strong task overlap → always allow
@@ -988,6 +1129,57 @@ async function handleSearchQueryCheck(query, tabId) {
   const score = keywordScore("", query);
   if (score.total >= SCORE_ALLOW_THRESHOLD) return { verdict: "allow" };
 
-  // Ambiguous or clearly off-task → ask for confirmation
-  return { verdict: "prompt", query, currentTask };
+  // Ambiguous or clearly off-task → require a written reason to proceed
+  return { verdict: "prompt", query, currentTask, tabId };
+}
+
+async function handleYouTubeChannelCheck(url) {
+  const { settings, state } = await chrome.storage.local.get(["settings", "state"]);
+  const activeSettings = settings || DEFAULT_SETTINGS;
+  const activeState = state || DEFAULT_STATE;
+
+  if (!activeState.deepWorkActive) return { verdict: "allow" };
+  if (!url || !isYouTubeDomain(url)) return { verdict: "allow" };
+
+  const parsed = parseUrl(url);
+  if (!parsed || !isYouTubeChannelPath(parsed.pathname)) return { verdict: "allow" };
+  if (isEntertainmentChannel(url)) return { verdict: "block" };
+  if (isEducationalChannel(url)) return { verdict: "allow" };
+  if (isUserAllowedYouTubeChannel(url, activeSettings.allowedYouTubeChannels || [])) {
+    return { verdict: "allow" };
+  }
+
+  const channelInfo = extractYouTubeChannelInfo(url);
+  if (!channelInfo) return { verdict: "allow" };
+
+  return {
+    verdict: "prompt",
+    channelKey: channelInfo.key,
+    channelLabel: channelInfo.label,
+    currentTask: activeState.currentTask || null,
+  };
+}
+
+async function approveYouTubeChannel(url) {
+  const channelInfo = extractYouTubeChannelInfo(url);
+  if (!channelInfo) return { ok: false };
+
+  const { settings } = await chrome.storage.local.get("settings");
+  const activeSettings = settings || DEFAULT_SETTINGS;
+  const allowedChannels = Array.isArray(activeSettings.allowedYouTubeChannels)
+    ? activeSettings.allowedYouTubeChannels
+    : [];
+
+  if (allowedChannels.includes(channelInfo.key)) {
+    return { ok: true, channelKey: channelInfo.key };
+  }
+
+  await chrome.storage.local.set({
+    settings: {
+      ...activeSettings,
+      allowedYouTubeChannels: [...allowedChannels, channelInfo.key],
+    }
+  });
+
+  return { ok: true, channelKey: channelInfo.key };
 }
