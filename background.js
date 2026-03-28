@@ -110,6 +110,77 @@ const KEYWORD_WEIGHTS = [
 const SCORE_ALLOW_THRESHOLD = 2;
 const SCORE_BLOCK_THRESHOLD = -2;
 
+// YouTube channel handles (@handle), channel IDs (UC...), and /c/ or /user/ slugs.
+// Any video whose URL contains one of these identifiers is treated as educational and allowed.
+const EDUCATIONAL_YT_CHANNELS = new Set([
+  // Science & Engineering
+  "@3blue1brown", "UCYO_jab_esuFRV4b17AJtAw",
+  "@veritasium", "UCHnyfMqiRRG1u-2MsSQLbXA",
+  "@SmarterEveryDay", "UC6107grRI4m0o2-emgoDnAA",
+  "@Kurzgesagt", "UCsXVk37bltHxD1rDPwtNM8Q",
+  "@PBS_Spacetime", "UC7_gcs09iThXybpVgjHZ_7g",
+  "@numberphile", "UCoxcjq-8xIDTYp3uz647V5A",
+  "@minutephysics", "UCUHW94eEFW7hkUMVaZz4eDg",
+  "@TED", "UCAuUUnT6oDeKwE6v1NGQxug",
+  "@TEDx", "UCsT0YIqwnpJCM-mx7-gSA4Q",
+  "@lexfridman", "UCSHZKyawb77ixDdsGog4iWA",
+  "@andrewhubermanlab", "UC2D2CMWXMOVWx7giW1n3LIg",
+  "@pbsspacetime",
+
+  // CS / Programming
+  "@ThePrimeagen", "UCVMe_QbS3OA1lRIBLKFDikg",
+  "@Fireship", "UCsBjURrPoezykLs9EqgamOA",
+  "@TechWithTim", "UC4JX40jDee_tINbkjycV4Sg",
+  "@NetworkChuck", "UCVeW9qkBjo3zosnqUbG7CFw",
+  "@BroCodez", "UC-yuWVUplUJZvieEligKBkA",
+  "@TheCodingTrain", "UCvjgXvBlbQiydffZU7m1_aw",
+  "@MITOpenCourseWare", "UCEBb1b_L6zDS3xTUrIALZOw",
+  "@StanfordOnline",
+  "@YaleCourses",
+  "@HarvardX",
+  "@freeCodeCamp", "UC8butISFwT-Wl7EV0hUK0BQ",
+  "@Reducible",
+  "@NeetCode", "UC_mYaQAE6-71rjSN6CeCA-g",
+  "@AbdulBari1",
+  "@CS50", "UCcabW7890RKJzL968QWEykA",
+
+  // Math
+  "@blackpenredpen", "UC_SvYP0k05UKiJ_2ndB02IA",
+  "@patrickjmt",
+  "@ProfessorLeonard", "UCoHhuummRZaIVAxzHU3GXrw",
+  "@mathsaurus",
+  "@TheOrganicChemistryTutor", "UCEWpbFLzoYGPfuWUMFPSaoA",
+
+  // History / Humanities
+  "@OverSimplified", "UCNIuvl7V8zACPpTmmNIqP2A",
+  "@HistoryMatters", "UC22BdTgxefuvUivrjesETjg",
+  "@CrashCourse", "UCX6b17PVsYBQ0ip5gyeme-Q",
+  "@TomScottGo", "UCBa659QWEk1AI4Tg--mrJ2A",
+  "@Wendoverproductions", "UC9RM-iSvTu1uPJb8X5yp3EQ",
+  "@RealEngineering", "UCR1IuLEqb6UEA_zQ81kwXfg",
+  "@HalfAsInteresting", "UCuCkxoKLYO_EQ2GeFtbM_bw",
+]);
+
+// Videos from these channels are blocked regardless of title score.
+const ENTERTAINMENT_YT_CHANNELS = new Set([
+  // Reaction / commentary
+  "@IShowSpeed", "UCnYMl8hHKkELSmg6QkwRNEg",
+  "@MrBeast", "UCX6OQ3DkcsbYNE6H8uQQuVA",
+  "@Sidemen", "UCiWLfSweyRNmLpgEHekhoAg",
+  "@PewDiePie", "UC-lHJZR3Gqxm24_Vd_AJ5Yw",
+  "@Markiplier", "UCfAPTv1LgeEWevG8X_6PUOQ",
+  "@jacksepticeye", "UCYzPXprvl5Y-Sf0g4vX-m6g",
+  "@jaidenanimations", "UCGwu0nbY2wSkW8N-cghnLpA",
+  "@ksi", "UCWX3yGbODI3HLz839YbWCHg",
+  "@NickEh30", "UCVGthgSXmCEHF6htAASiR1Q",
+  "@Typical_Gamer", "UCpvg0uZH-J2oJQXXeKZAVqg",
+  "@FaZeRug", "UCH_0SCoGQhFSNFQ-R1H9crQ",
+  "@SSundee", "UCVv8HgBFZsBnKGqr9EGVK3A",
+  "@Dude Perfect", "UCRijo3ddMTht_IHyNSNXpNQ",
+  "@TreyKennedy",
+  "@5MinuteCrafts",
+]);
+
 const ADULT_DOMAIN_KEYWORDS = [
   "porn", "sex", "xxx", "xvideos", "xhamster", "xnxx", "redtube", "youporn", "hentai", "cam", "cams",
   "onlyfans", "erotic", "nsfw", "milf", "anal", "bdsm", "escort", "fuck", "boobs"
@@ -136,6 +207,7 @@ const KNOWN_SAFE_STREAMING_DOMAINS = [
 const STRICT_UNKNOWN_MEDIA_BLOCK = true;
 
 const tabMeta = new Map();
+const APPROVED_SEARCH_KEY_PREFIX = "approved_searches:";
 
 chrome.runtime.onInstalled.addListener(async () => {
   const { settings, progress } = await chrome.storage.local.get([
@@ -146,6 +218,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   if (!settings) updates.settings = DEFAULT_SETTINGS;
   if (!progress) updates.progress = DEFAULT_PROGRESS;
   if (Object.keys(updates).length > 0) await chrome.storage.local.set(updates);
+  await injectContentScriptIntoExistingTabs();
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -173,6 +246,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   tabMeta.delete(tabId);
+  clearApprovedSearchesForTab(tabId).catch(() => {});
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -206,9 +280,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message.type === "set_daily_goal") {
-  setDailyGoal(message.dailyMinutesGoal).then(sendResponse);
-  return true;
-}
+    setDailyGoal(message.dailyMinutesGoal).then(sendResponse);
+    return true;
+  }
+  if (message.type === "search_query_check") {
+    handleSearchQueryCheck(message.query, sender?.tab?.id).then(sendResponse);
+    return true;
+  }
+  if (message.type === "approve_search_query") {
+    approveSearchQuery(sender?.tab?.id, message.query).then(sendResponse);
+    return true;
+  }
 });
 
 async function getStateForPopup() {
@@ -245,6 +327,7 @@ async function toggleDeepWork(enabled, durationMin, currentTask) {
 
 async function startDeepWork(durationMin,currentTask) {
   const now = Date.now();
+  await clearAllApprovedSearches();
   await chrome.storage.local.set({
     state: 
     {
@@ -300,6 +383,7 @@ async function endDeepWork(reason) {
     { ...DEFAULT_STATE},
     progress: { ...activeProgress,sessions:[...activeProgress.sessions,newSession] },
   });
+  await clearAllApprovedSearches();
   await chrome.alarms.clear("deepwork_end");
 }
 function getTodayMinutes(sessions) 
@@ -406,9 +490,31 @@ async function redirectToBlocked(tabId, originalUrl) {
 
 async function handlePromptResponse(choice, tabId) {
   if (choice === "focus" && tabId) {
-    await chrome.tabs.update(tabId, { url: "about:blank" });
+    const tab = await chrome.tabs.get(tabId).catch(() => null);
+    const currentUrl = tab?.url && isHttpUrl(tab.url) ? tab.url : "https://www.youtube.com/";
+    const blockedUrl = chrome.runtime.getURL(`blocked.html?url=${encodeURIComponent(currentUrl)}`);
+    await chrome.tabs.update(tabId, { url: blockedUrl });
   }
   return { ok: true };
+}
+
+async function injectContentScriptIntoExistingTabs() {
+  try {
+    const tabs = await chrome.tabs.query({ url: ["http://*/*", "https://*/*"] });
+    for (const tab of tabs) {
+      if (!tab.id || !tab.url || isExtensionUrl(tab.url)) continue;
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ["content_script.js"],
+        });
+      } catch {
+        // ignore restricted pages or tabs where injection is unavailable
+      }
+    }
+  } catch {
+    // ignore
+  }
 }
 
 async function getEmergencyExitStatus() {
@@ -445,11 +551,59 @@ if (!activeState.deepWorkActive) {
   return { ok: true, available: false, remainingMs: EMERGENCY_EXIT_COOLDOWN_MS, lastUsedAt: usedAt };
 }
 
+function getApprovedSearchStorageKey(tabId) {
+  return `${APPROVED_SEARCH_KEY_PREFIX}${tabId}`;
+}
+
+function normalizeSearchQuery(query) {
+  return String(query || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+async function getApprovedSearchesForTab(tabId) {
+  if (!tabId) return [];
+  const storageKey = getApprovedSearchStorageKey(tabId);
+  const stored = await chrome.storage.session.get(storageKey);
+  return Array.isArray(stored[storageKey]) ? stored[storageKey] : [];
+}
+
+async function approveSearchQuery(tabId, query) {
+  const normalizedQuery = normalizeSearchQuery(query);
+  if (!tabId || !normalizedQuery) return { ok: false };
+
+  const storageKey = getApprovedSearchStorageKey(tabId);
+  const approvedSearches = await getApprovedSearchesForTab(tabId);
+  if (approvedSearches.includes(normalizedQuery)) {
+    return { ok: true };
+  }
+
+  await chrome.storage.session.set({
+    [storageKey]: [...approvedSearches, normalizedQuery].slice(-25),
+  });
+  return { ok: true };
+}
+
+async function clearApprovedSearchesForTab(tabId) {
+  if (!tabId) return;
+  await chrome.storage.session.remove(getApprovedSearchStorageKey(tabId));
+}
+
+async function clearAllApprovedSearches() {
+  const sessionState = await chrome.storage.session.get(null);
+  const keysToRemove = Object.keys(sessionState).filter((key) =>
+    key.startsWith(APPROVED_SEARCH_KEY_PREFIX)
+  );
+  if (keysToRemove.length === 0) return;
+  await chrome.storage.session.remove(keysToRemove);
+}
+
 function isBlockedByRules(url, settings, meta) {
   if (isAllowlisted(url, settings.allowPatterns || [])) return false;
   if (isYouTubeDomain(url)) {
     if (settings.blockShorts && isYouTubeShorts(url)) return true;
-    return !isAllowedYouTubeRoute(url);
+    return !isAllowedYouTubeRoute(url, meta?.title || "");
   }
   if (matchesDomain(url, settings.blockedDomains || [])) return true;
   if (matchesPatterns(url, settings.blockedPatterns || [])) return true;
@@ -522,23 +676,109 @@ function isKnownSafeYouTubeIntent(url) {
   if (path === "/playlist" && parsed.searchParams.has("list")) return true;
   if (path === "/feed/playlists") return true;
   if (path === "/feed/library") return true;
-  if (path.startsWith("/@")) return true;
-  if (path.startsWith("/channel/")) return true;
-  if (path.startsWith("/c/")) return true;
-  if (path.startsWith("/user/")) return true;
+  // Channel pages: only safe if NOT a known entertainment channel
+  if (path.startsWith("/@") || path.startsWith("/channel/") || path.startsWith("/c/") || path.startsWith("/user/")) {
+    return !isEntertainmentChannel(url);
+  }
   return false;
 }
 
-function isAllowedYouTubeRoute(url) {
+function isAllowedYouTubeRoute(url, title = "") {
   if (!isYouTubeDomain(url)) return false;
   const parsed = parseUrl(url);
   if (!parsed) return false;
   const path = parsed.pathname;
 
   if (path === "/") return true;
-  if (isKnownSafeYouTubeIntent(url)) return true;
   if (path === "/results") return parsed.searchParams.has("search_query");
-  if (path === "/watch") return parsed.searchParams.has("v");
+
+  // Channel pages — check against allow/block lists
+  if (
+    path.startsWith("/@") ||
+    path.startsWith("/channel/") ||
+    path.startsWith("/c/") ||
+    path.startsWith("/user/")
+  ) {
+    if (isEntertainmentChannel(url)) return false;
+    // Educational channels (and unknown channels) are allowed to browse
+    return true;
+  }
+
+  if (path === "/feed/playlists" || path === "/feed/library") return true;
+  if (path === "/playlist" && parsed.searchParams.has("list")) return true;
+
+  // Individual video — apply full channel + keyword scoring
+  if (path === "/watch" && parsed.searchParams.has("v")) {
+    return isAllowedYouTubeVideo(url, title);
+  }
+
+  return false;
+}
+
+/**
+ * Decides whether a specific YouTube video URL + title should be allowed.
+ * Priority order:
+ *   1. Known entertainment channel → block
+ *   2. Known educational channel  → allow
+ *   3. Keyword score >= ALLOW threshold → allow
+ *   4. Keyword score <= BLOCK threshold with negative hits → block
+ *   5. Ambiguous → allow (avoid false positives for genuine work)
+ */
+function isAllowedYouTubeVideo(url, title = "") {
+  if (isEntertainmentChannel(url)) return false;
+  if (isEducationalChannel(url)) return true;
+
+  const score = keywordScore(url, title);
+  if (score.total >= SCORE_ALLOW_THRESHOLD) return true;
+  if (score.total <= SCORE_BLOCK_THRESHOLD && score.negativeHits > 0) return false;
+
+  return true; // ambiguous — default allow
+}
+
+/**
+ * Returns true if the URL references a known educational YouTube channel.
+ */
+function isEducationalChannel(url) {
+  return matchesYouTubeChannelSet(url, EDUCATIONAL_YT_CHANNELS);
+}
+
+/**
+ * Returns true if the URL references a known entertainment YouTube channel.
+ */
+function isEntertainmentChannel(url) {
+  return matchesYouTubeChannelSet(url, ENTERTAINMENT_YT_CHANNELS);
+}
+
+/**
+ * Checks whether any channel identifier in the URL (handle, channel ID, slug)
+ * appears in the given Set. Handles /@handle, /channel/ID, /c/slug, /user/slug,
+ * and also the channel that "owns" a /watch?v= URL when stored in tabMeta title
+ * (best-effort; exact channel matching requires the page_meta message).
+ */
+function matchesYouTubeChannelSet(url, channelSet) {
+  if (!isYouTubeDomain(url)) return false;
+  const parsed = parseUrl(url);
+  if (!parsed) return false;
+
+  const pathMatch = parsed.pathname.match(
+    /^\/((@[^/]+)|(channel\/([^/]+))|(c\/([^/]+))|(user\/([^/]+)))/i
+  );
+  if (pathMatch) {
+    // Grab just the handle/ID portion
+    const handle = pathMatch[2]; // e.g. "@3blue1brown"
+    const channelId = pathMatch[4]; // e.g. "UC..."
+    const cSlug = pathMatch[6];
+    const userSlug = pathMatch[8];
+
+    for (const entry of channelSet) {
+      const e = entry.toLowerCase();
+      if (handle && e === handle.toLowerCase()) return true;
+      if (channelId && e === channelId.toLowerCase()) return true;
+      if (cSlug && e === cSlug.toLowerCase()) return true;
+      if (userSlug && e === userSlug.toLowerCase()) return true;
+    }
+  }
+
   return false;
 }
 
@@ -668,4 +908,86 @@ function keywordScore(url, title) {
 
 function isYouTubeHomeOrTrending(url) {
   return /https?:\/\/(www\.)?youtube\.com\/(feed\/|$)/i.test(url);
+}
+
+
+// Words too common to be meaningful for task overlap matching
+const FILLER_WORDS = new Set([
+  "a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for",
+  "of", "with", "by", "from", "is", "it", "be", "as", "this", "that",
+  "was", "are", "how", "what", "why", "when", "do", "i", "my", "me",
+  "using", "use", "make", "get", "learn", "learning", "understand", "need",
+  "help", "fix", "build", "create", "work", "working"
+]);
+
+/**
+ * Tokenises a string into meaningful lowercase words, stripping filler.
+ */
+function tokenise(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 1 && !FILLER_WORDS.has(w));
+}
+
+/**
+ * Returns the number of tokens the query shares with the current task.
+ * Also does a substring check so "nextjs" matches a task containing "next.js".
+ */
+function taskOverlapScore(query, currentTask) {
+  if (!currentTask) return 0;
+  const queryTokens = tokenise(query);
+  const taskTokens = tokenise(currentTask);
+  if (queryTokens.length === 0 || taskTokens.length === 0) return 0;
+
+  const taskStr = currentTask.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  let overlap = 0;
+
+  for (const qt of queryTokens) {
+    if (taskTokens.includes(qt)) { overlap++; continue; }
+    if (taskStr.includes(qt) || qt.length > 4 && taskTokens.some(tt => tt.includes(qt) || qt.includes(tt))) {
+      overlap++;
+    }
+  }
+
+  return overlap;
+}
+
+/**
+ * Called when the content script intercepts a YouTube search.
+ * Returns { verdict: "allow" } or { verdict: "prompt", query, currentTask }
+ * so the content script can either proceed or show the friction prompt.
+ */
+async function handleSearchQueryCheck(query, tabId) {
+  const { state } = await chrome.storage.local.get("state");
+  const activeState = state || DEFAULT_STATE;
+  const normalizedQuery = normalizeSearchQuery(query);
+
+  // Only enforce during deep work
+  if (!activeState.deepWorkActive) return { verdict: "allow" };
+  if (!normalizedQuery) return { verdict: "allow" };
+
+  const approvedSearches = await getApprovedSearchesForTab(tabId);
+  if (approvedSearches.includes(normalizedQuery)) {
+    return { verdict: "allow" };
+  }
+
+  const currentTask = activeState.currentTask || "";
+  const overlap = taskOverlapScore(query, currentTask);
+
+  // Strong task overlap → always allow
+  if (overlap >= 2) return { verdict: "allow" };
+  if (overlap === 1) {
+    // Single-word overlap: allow if the query also looks educational
+    const score = keywordScore("", query);
+    if (score.total >= 0) return { verdict: "allow" };
+  }
+
+  // No task overlap — check if the query is strongly educational on its own
+  const score = keywordScore("", query);
+  if (score.total >= SCORE_ALLOW_THRESHOLD) return { verdict: "allow" };
+
+  // Ambiguous or clearly off-task → ask for confirmation
+  return { verdict: "prompt", query, currentTask };
 }

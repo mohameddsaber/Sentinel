@@ -1,48 +1,162 @@
 (() => {
+  const INIT_FLAG = "__sentinelContentScriptInitialized__";
+  if (window[INIT_FLAG]) return;
+  window[INIT_FLAG] = true;
+
   const OVERLAY_ID = "deepwork-distraction-overlay";
   const YT_STYLE_ID = "deepwork-youtube-focus-style";
   let lastUrl = "";
   let lastTitle = "";
-//this does not happen
+  let extensionContextAlive = true;
+  let metaIntervalId = null;
+  let titleObserver = null;
+  let navigationObserver = null;
+
+  const teardown = () => {
+    if (metaIntervalId) {
+      clearInterval(metaIntervalId);
+      metaIntervalId = null;
+    }
+    titleObserver?.disconnect();
+    navigationObserver?.disconnect();
+  };
+
+  const markContextInvalidated = () => {
+    extensionContextAlive = false;
+    teardown();
+  };
+
+  const isContextAlive = () => {
+    if (!extensionContextAlive) return false;
+    try {
+      return Boolean(chrome.runtime?.id);
+    } catch {
+      markContextInvalidated();
+      return false;
+    }
+  };
+
+  const safeSendMessage = async (message) => {
+    if (!isContextAlive()) return null;
+    try {
+      return await chrome.runtime.sendMessage(message);
+    } catch {
+      markContextInvalidated();
+      return null;
+    }
+  };
+
+  const safeGetLocal = async (keys) => {
+    if (!isContextAlive()) return null;
+    try {
+      return await chrome.storage.local.get(keys);
+    } catch {
+      markContextInvalidated();
+      return null;
+    }
+  };
+
   chrome.runtime.onMessage.addListener((message) => {
+    if (!isContextAlive()) return;
     if (message.type === "distraction_prompt") {
       showPrompt(message.reason || "You might be drifting");
     }
   });
-// send url and title to background every 2 seconds or on change, whichever is sooner
+
+  // send url and title to background every 2 seconds or on change, whichever is sooner
   const sendMeta = () => {
+    if (!isContextAlive()) return;
     const url = window.location.href;
     const title = document.title || "";
     if (url === lastUrl && title === lastTitle) return;
     lastUrl = url;
     lastTitle = title;
-    chrome.runtime.sendMessage({ type: "page_meta", url, title }).catch(() => {});
+    void safeSendMessage({ type: "page_meta", url, title });
   };
 
   const observeTitle = () => {
     const titleEl = document.querySelector("title");
     if (!titleEl) return;
     // Observe changes to the title element to catch dynamic title updates (e.g., YouTube video titles)
-    const observer = new MutationObserver(() => sendMeta());
-    observer.observe(titleEl, { childList: true });
+    titleObserver = new MutationObserver(() => sendMeta());
+    titleObserver.observe(titleEl, { childList: true });
+  };
+
+  // Intercept YouTube searches before they execute.
+  // Watches for URL changes to /results?search_query=... and checks with
+  // the background whether the query is on-task before allowing it through.
+  let lastCheckedSearchHref = "";
+
+  const normalizeSearchQuery = (query) =>
+    String(query || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+
+  const checkYouTubeSearch = async (url) => {
+    if (!isContextAlive()) return;
+    try {
+      const parsed = new URL(url);
+      if (parsed.pathname !== "/results") {
+        lastCheckedSearchHref = "";
+        return;
+      }
+      const query = parsed.searchParams.get("search_query") || "";
+      const normalizedQuery = normalizeSearchQuery(query);
+      const searchHref = `${parsed.origin}${parsed.pathname}?search_query=${encodeURIComponent(normalizedQuery)}`;
+      // Skip if no query or exact same URL check we already handled
+      if (!normalizedQuery || searchHref === lastCheckedSearchHref) return;
+      lastCheckedSearchHref = searchHref;
+
+      const response = await safeSendMessage({
+        type: "search_query_check",
+        query,
+      });
+
+      if (response?.verdict === "prompt") {
+        showSearchPrompt(response.query, response.currentTask);
+      }
+    } catch {
+      // ignore — extension context may be invalidated
+    }
   };
 
   sendMeta();
   observeTitle();
-// send meta when tab becomes active
+  checkYouTubeSearch(window.location.href);
+
+  // send meta when tab becomes active
   document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    sendMeta();
-  }
+    if (document.visibilityState === "visible") {
+      sendMeta();
+    }
   });
-  setInterval(sendMeta, 2000);
-  syncYouTubeFocusUI();
+  metaIntervalId = setInterval(sendMeta, 2000);
+  void syncYouTubeFocusUI();
+
+  // Re-sync focus UI on YouTube SPA navigations (URL changes without a full page load)
+  // Also intercepts search navigations for off-task query checking.
+  let lastHref = location.href;
+  navigationObserver = new MutationObserver(() => {
+    if (location.href !== lastHref) {
+      const newHref = location.href;
+      lastHref = newHref;
+      // Check search query before the results page renders
+      void checkYouTubeSearch(newHref);
+      // Small delay so YouTube has rendered the new page's DOM before we hide elements
+      setTimeout(() => {
+        void syncYouTubeFocusUI();
+      }, 300);
+    }
+  });
+  navigationObserver.observe(document.body, { childList: true, subtree: true });
 
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (!isContextAlive()) return;
     if (area !== "local") return;
     // If the deep work active state changes, update the YouTube focus UI accordingly
-    if (changes.deepWorkActive) {
-      syncYouTubeFocusUI();
+    if (changes.state) {
+      void syncYouTubeFocusUI();
     }
   });
 
@@ -98,7 +212,7 @@
     focusBtn.style.cursor = "pointer";
 
     focusBtn.addEventListener("click", async () => {
-      await chrome.runtime.sendMessage({ type: "prompt_response", choice: "focus" });
+      await safeSendMessage({ type: "prompt_response", choice: "focus" });
       overlay.remove();
     });
 
@@ -112,9 +226,124 @@
     document.documentElement.appendChild(overlay);
   }
 
+  // Shown when a YouTube search query doesn't match the current task.
+  // Lets the user refine the search, proceed anyway, or cancel.
+  function showSearchPrompt(query, currentTask) {
+    if (document.getElementById(OVERLAY_ID)) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = OVERLAY_ID;
+    overlay.style.cssText = [
+      "position:fixed", "inset:0", "background:rgba(0,0,0,0.55)",
+      "z-index:2147483647", "display:flex", "align-items:center",
+      "justify-content:center", "font-family:Georgia,'Times New Roman',serif"
+    ].join(";");
+
+    const card = document.createElement("div");
+    card.style.cssText = [
+      "background:#f8f1e8", "color:#2c2a27", "padding:24px",
+      "border-radius:14px", "max-width:400px", "width:90%",
+      "box-shadow:0 20px 50px rgba(0,0,0,0.3)"
+    ].join(";");
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Off-task search detected";
+    heading.style.cssText = "margin:0 0 6px;font-size:17px;";
+
+    const taskLine = document.createElement("p");
+    taskLine.style.cssText = "margin:0 0 14px;font-size:13px;opacity:0.7;";
+    taskLine.textContent = `Your task: "${currentTask || "none set"}"`;
+
+    const queryLine = document.createElement("p");
+    queryLine.style.cssText = "margin:0 0 16px;font-size:14px;";
+    queryLine.innerHTML = `Your search <strong>"${query}"</strong> doesn't seem related.`;
+
+    // Refined search input
+    const inputLabel = document.createElement("p");
+    inputLabel.textContent = "Search for something related instead:";
+    inputLabel.style.cssText = "margin:0 0 6px;font-size:13px;";
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = `e.g. ${currentTask ? currentTask.split(" ").slice(0,3).join(" ") + " tutorial" : "your topic"}`;
+    input.style.cssText = [
+      "width:100%", "box-sizing:border-box", "padding:9px 12px",
+      "border-radius:8px", "border:1px solid #ccc", "font-size:14px",
+      "margin-bottom:14px", "background:#fff", "color:#2c2a27"
+    ].join(";");
+
+    // Buttons row
+    const buttons = document.createElement("div");
+    buttons.style.cssText = "display:flex;gap:10px;";
+
+    const searchBtn = document.createElement("button");
+    searchBtn.textContent = "Search this instead";
+    searchBtn.style.cssText = [
+      "flex:1", "padding:10px", "border-radius:8px",
+      "border:1px solid #2c2a27", "background:#2c2a27",
+      "color:#fff", "cursor:pointer", "font-size:13px"
+    ].join(";");
+
+    const proceedBtn = document.createElement("button");
+    proceedBtn.textContent = "Proceed anyway";
+    proceedBtn.style.cssText = [
+      "flex:1", "padding:10px", "border-radius:8px",
+      "border:1px solid #999", "background:transparent",
+      "color:#2c2a27", "cursor:pointer", "font-size:13px"
+    ].join(";");
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.style.cssText = [
+      "padding:10px 14px", "border-radius:8px",
+      "border:1px solid #ccc", "background:transparent",
+      "color:#666", "cursor:pointer", "font-size:13px"
+    ].join(";");
+
+    searchBtn.addEventListener("click", () => {
+      const refined = input.value.trim();
+      if (!refined) return;
+      lastCheckedSearchHref = "";
+      overlay.remove();
+      window.location.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(refined)}`;
+    });
+
+    // Allow pressing Enter in the input to trigger the search
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") searchBtn.click();
+    });
+
+    proceedBtn.addEventListener("click", async () => {
+      await safeSendMessage({
+        type: "approve_search_query",
+        query,
+      });
+      lastCheckedSearchHref = window.location.href;
+      overlay.remove();
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      lastCheckedSearchHref = "";
+      overlay.remove();
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+      window.location.href = "https://www.youtube.com/";
+    });
+
+    buttons.append(searchBtn, proceedBtn, cancelBtn);
+    card.append(heading, taskLine, queryLine, inputLabel, input, buttons);
+    overlay.appendChild(card);
+    document.documentElement.appendChild(overlay);
+
+    // Focus the input so the user can type immediately
+    setTimeout(() => input.focus(), 50);
+  }
+
   async function syncYouTubeFocusUI() {
-    const state = await chrome.storage.local.get(["deepWorkActive"]);
-    if (state.deepWorkActive) {
+    const state = await safeGetLocal(["state"]);
+    if (state?.state?.deepWorkActive) {
       enforceYouTubeFocusUI();
       return;
     }
@@ -123,7 +352,8 @@
 // remove recommendations and related videos from youtube homepage and watch page.
   function enforceYouTubeFocusUI() {
     if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
-    if (document.getElementById(YT_STYLE_ID)) return;
+    // Remove existing style so re-injection after SPA navigation is clean
+    removeYouTubeFocusUI();
 
     const style = document.createElement("style");
     style.id = YT_STYLE_ID;
@@ -142,9 +372,29 @@
       #secondary,
       ytd-compact-video-renderer,
       ytd-reel-shelf-renderer,
-      #related,
+      #related {
+        display: none !important;
+      }
+
+      /* Autoplay — button in the player controls and the autonav pause screen */
+      .ytp-autonav-toggle-button-container,
+      ytd-toggle-button-renderer.ytd-autonav-pause-renderer,
+      ytd-autonav-pause-renderer {
+        display: none !important;
+      }
+
+      /* End-screen cards and info cards overlaid on the video */
       .ytp-endscreen-content,
-      .ytp-ce-element {
+      .ytp-ce-element,
+      .ytp-cards-teaser,
+      .ytp-cards-button,
+      ytd-endscreen-element-renderer {
+        display: none !important;
+      }
+
+      /* Comments */
+      ytd-comments,
+      #comments {
         display: none !important;
       }
     `;
