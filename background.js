@@ -357,7 +357,7 @@ async function getStateForPopup() {
   const activeSettings = settings || DEFAULT_SETTINGS;
   const activeState = state || DEFAULT_STATE;
   const activeProgress = progress || DEFAULT_PROGRESS;
-  const todayMinutes = getTodayMinutes(activeProgress.sessions);
+  const todayMinutes = getTodayMinutes(activeProgress.sessions, activeState);
   const goal = activeSettings.dailyMinutesGoal || 0;
   const progressPercent = goal > 0
     ? Math.min(100, Math.round((todayMinutes / goal) * 100))
@@ -449,23 +449,35 @@ async function endDeepWork(reason) {
   await clearAllApprovedSearches();
   await chrome.alarms.clear("deepwork_end");
 }
-function getTodayMinutes(sessions) 
-{
-  const now=new Date();
-  let total=0;
-  for(let session of sessions)
-    {
-      const endDate = new Date(session.endTime);
-      let isToday=endDate.getFullYear()===now.getFullYear() && 
-      endDate.getMonth()===now.getMonth() && 
-      endDate.getDate()===now.getDate()
-      if(isToday)
-        {
-          total+=session.durationMin
-        }
-    }
-    return total
+function getTodayMinutes(sessions, activeState = DEFAULT_STATE) {
+  const now = new Date();
+  let total = 0;
 
+  for (const session of sessions) {
+    const endDate = new Date(session.endTime);
+    const isToday =
+      endDate.getFullYear() === now.getFullYear() &&
+      endDate.getMonth() === now.getMonth() &&
+      endDate.getDate() === now.getDate();
+
+    if (isToday) {
+      total += session.durationMin;
+    }
+  }
+
+  if (activeState.deepWorkActive && activeState.startTime) {
+    const startedAt = new Date(activeState.startTime);
+    const startedToday =
+      startedAt.getFullYear() === now.getFullYear() &&
+      startedAt.getMonth() === now.getMonth() &&
+      startedAt.getDate() === now.getDate();
+
+    if (startedToday) {
+      total += Math.max(1, Math.floor((Date.now() - activeState.startTime) / 60000));
+    }
+  }
+
+  return total;
 }
 
 async function setDailyGoal(dailyMinutesGoal) {

@@ -442,6 +442,50 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(24, 212, 245, 0.18);
 }
 
+.progress-meter {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(7, 16, 28, 0.92) 0%, rgba(11, 19, 31, 0.98) 100%);
+  border: 1px solid rgba(24, 212, 245, 0.14);
+  box-shadow:
+    inset 0 1px 4px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(24, 212, 245, 0.03);
+}
+
+.progress-meter-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0da4c0 0%, #18d4f5 58%, #8ff3ff 100%);
+  box-shadow:
+    0 0 18px rgba(24, 212, 245, 0.28),
+    inset 0 0 10px rgba(255, 255, 255, 0.18);
+  transition: width 0.25s ease;
+}
+
+.progress-caption {
+  margin-top: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: var(--text-mid);
+}
+
+.progress-caption span:first-child {
+  font-family: var(--font-mono);
+  color: var(--text-hi);
+}
+
+.progress-caption span:last-child {
+  color: var(--text-lo);
+  text-align: right;
+}
+
 
 
 .sep {

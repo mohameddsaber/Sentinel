@@ -8,11 +8,14 @@ const sliderFillEl = document.getElementById("sliderFill");
 const todayValEl = document.getElementById("todayVal");
 const goalValEl = document.getElementById("goalVal");
 const progressValEl = document.getElementById("progressVal");
+const progressBarFillEl = document.getElementById("progressBarFill");
+const progressSummaryEl = document.getElementById("progressSummary");
 const taskInput = document.getElementById("taskInput");
 const goalInput = document.getElementById("goalInput");
 const saveGoalBtn = document.getElementById("saveGoalBtn");
 
 let currentState = null;
+let refreshTimerId = null;
 
 if (saveGoalBtn && goalInput) {
   saveGoalBtn.addEventListener("click", async () => {
@@ -23,9 +26,7 @@ if (saveGoalBtn && goalInput) {
       dailyMinutesGoal: goal
     });
 
-    const state = await chrome.runtime.sendMessage({ type: "get_state" });
-    currentState = state;
-    renderState(state);
+    await refreshState();
   });
 }
 
@@ -52,15 +53,25 @@ async function init() {
       currentTask: task
     });
 
-    const state = await chrome.runtime.sendMessage({ type: "get_state" });
-    currentState = state;
-    renderState(state);
+    await refreshState();
     sessionBtn.disabled = false;
   });
 
+  await refreshState();
+  startAutoRefresh();
+}
+
+async function refreshState() {
   const state = await chrome.runtime.sendMessage({ type: "get_state" });
   currentState = state;
   renderState(state);
+}
+
+function startAutoRefresh() {
+  if (refreshTimerId) clearInterval(refreshTimerId);
+  refreshTimerId = window.setInterval(() => {
+    refreshState().catch(() => {});
+  }, 30000);
 }
 
 function renderState(state) {
@@ -80,6 +91,8 @@ function renderState(state) {
   todayValEl.textContent = `${state.todayMinutes || 0}m`;
   goalValEl.textContent = `${state.goal || 0}m`;
   progressValEl.textContent = `${state.progressPercent || 0}%`;
+  progressBarFillEl.style.width = `${Math.max(0, Math.min(100, state.progressPercent || 0))}%`;
+  progressSummaryEl.textContent = `${state.todayMinutes || 0}m / ${state.goal || 0}m`;
 
   if (goalInput) goalInput.value = state.goal || 0;
 
