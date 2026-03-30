@@ -1,0 +1,182 @@
+[
+  {
+    "task": "learn node js authentication",
+    "candidate": "Node.js authentication with JWT and refresh tokens tutorial",
+    "label": "allow"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "Express session vs JWT auth explained",
+    "label": "allow"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "Passport.js local strategy login example for Node backend",
+    "label": "allow"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "OAuth 2.0 vs session cookies for node auth systems",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "BFS vs DFS graph traversal interview problems walkthrough",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "Breadth first search and depth first search explained with examples",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "NeetCode graph problems BFS DFS patterns",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "Shortest path and graph traversal patterns for coding interviews",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "REST API design best practices for backend services",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "Designing versioned backend APIs and error contracts",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "System design for scalable backend APIs",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "API pagination filtering and idempotency guide",
+    "label": "allow"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "MrBeast gaming challenge highlights",
+    "label": "block"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "lofi hip hop radio beats to relax and study to",
+    "label": "block"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "funny cat compilation",
+    "label": "block"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "Top 10 celebrity drama moments",
+    "label": "block"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "Fortnite live stream with friends",
+    "label": "block"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "official music video lyrics",
+    "label": "block"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "best prank reactions 2026",
+    "label": "block"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "asmr keyboard sounds for coding",
+    "label": "block"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "IShowSpeed reacts to viral clips",
+    "label": "block"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "movie recap and ending explained",
+    "label": "block"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "crypto price prediction today",
+    "label": "block"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "travel vlog day in tokyo",
+    "label": "block"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "JavaScript backend guide for authentication systems",
+    "label": "uncertain"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "OAuth explained without code",
+    "label": "uncertain"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "Node backend authentication interview prep",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "Graph theory basics for bfs dfs interview prep",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "Binary tree traversal patterns overview",
+    "label": "allow"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "Study with me graph algorithm practice session",
+    "label": "uncertain"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "Backend architecture interview questions",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "API tradeoffs microservices vs monolith for backend design",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "Productivity routine for backend developers",
+    "label": "uncertain"
+  },
+  {
+    "task": "learn node js authentication",
+    "candidate": "build a login form and auth flow with vanilla javascript",
+    "label": "uncertain"
+  },
+  {
+    "task": "study bfs and dfs graph problems",
+    "candidate": "graph traversal patterns beyond bfs and dfs",
+    "label": "allow"
+  },
+  {
+    "task": "work on backend api design",
+    "candidate": "career advice for junior backend engineers",
+    "label": "uncertain"
+  }
+]
