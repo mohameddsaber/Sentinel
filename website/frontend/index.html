@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel - Deep Work Mode</title>
+    <meta name="description" content="Deep work mode with distraction loop detection and session reports.">
+    <link rel="stylesheet" href="css/output.css">
+    <link rel="icon" type="image/png" href="assets/favicon.svg">
+</head>
+
+<body class="bg-slate-950 bg-grid-pattern text-slate-100 font-sans antialiased flex flex-col min-h-screen relative">
+    <!-- Navbar -->
+    <nav
+        class="bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 border-b border-primary-500/20 shadow-[0_4px_30px_rgba(6,182,212,0.05)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-3">
+                        <img class="h-8 w-auto filter drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]"
+                            src="assets/favicon.svg" alt="Sentinel Logo">
+                        <span
+                            class="font-mono font-bold text-xl tracking-widest text-white uppercase shadow-primary-500">Sentinel</span>
+                    </a>
+                </div>
+                <!-- Desktop menu -->
+                <div class="hidden sm:flex sm:items-center sm:space-x-8 font-mono text-sm uppercase tracking-wider">
+                    <a href="index.html"
+                        class="text-primary-400 font-bold px-3 py-2 transition drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]">Home</a>
+                    <a href="features.html"
+                        class="text-slate-400 hover:text-primary-300 px-3 py-2 transition">Features</a>
+                    <a href="privacy.html"
+                        class="text-slate-400 hover:text-primary-300 px-3 py-2 transition">Privacy</a>
+                    <a href="#"
+                        class="bg-primary-600/20 border border-primary-500 hover:bg-primary-500/30 text-primary-300 px-5 py-2 rounded-sm font-bold transition shadow-[0_0_10px_rgba(6,182,212,0.2)] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">Initialize</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="flex items-center sm:hidden">
+                    <button id="mobile-menu-button" type="button"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none border border-transparent focus:border-primary-500/50"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="sm:hidden hidden bg-slate-950/95 backdrop-blur-xl border-b border-primary-500/20 font-mono text-sm uppercase tracking-widest"
+            id="mobile-menu">
+            <div class="px-2 pt-2 pb-4 space-y-1">
+                <a href="index.html"
+                    class="bg-primary-900/30 text-primary-400 block px-3 py-3 border-l-2 border-primary-500 font-bold">Home</a>
+                <a href="features.html"
+                    class="text-slate-400 hover:bg-slate-900 hover:text-primary-300 block px-3 py-3 border-l-2 border-transparent">Features</a>
+                <a href="privacy.html"
+                    class="text-slate-400 hover:bg-slate-900 hover:text-primary-300 block px-3 py-3 border-l-2 border-transparent">Privacy</a>
+                <a href="#"
+                    class="bg-primary-600/20 border border-primary-500 text-primary-300 block px-3 py-3 text-center mt-4 shadow-[0_0_10px_rgba(6,182,212,0.2)]">Initialize</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow relative">
+        <!-- Ambient Background Glow -->
+        <div
+            class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[120px] pointer-events-none">
+        </div>
+
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div
+                    class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32 pt-10 sm:pt-16 lg:pt-20">
+                    <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+                        <div class="sm:text-center lg:text-left relative z-20">
+                            <h1
+                                class="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl uppercase">
+                                <span class="block xl:inline">Override</span>
+                                <span
+                                    class="block text-primary-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">Distraction.</span>
+                            </h1>
+                            <p class="mt-4 font-mono text-sm tracking-widest text-primary-500 uppercase mb-2">System >
+                                Deep_Work_Mode</p>
+                            <p
+                                class="text-base text-slate-400 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0 font-light">
+                                Sentinel utilizes local heuristics to detect distraction loops. Activate absolute focus
+                                protocols to reclaim your cognitive bandwidth.
+                            </p>
+                            <div class="mt-8 sm:flex sm:justify-center lg:justify-start gap-4">
+                                <a href="#"
+                                    class="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-primary-400 text-base font-mono font-bold rounded-sm text-primary-950 bg-primary-400 hover:bg-primary-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.6)] md:py-4 md:text-lg transition-all duration-300 uppercase tracking-wider">
+                                    Execute Install
+                                </a>
+                                <a href="features.html"
+                                    class="mt-3 sm:mt-0 w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-slate-700 text-base font-mono rounded-sm text-slate-300 bg-slate-900/50 hover:bg-slate-800 hover:text-white md:py-4 md:text-lg transition-all duration-300 uppercase tracking-wider backdrop-blur-sm">
+                                    View Docs
+                                </a>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+            <div
+                class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 flex items-center justify-center p-10 hidden lg:flex">
+                <div class="relative group">
+                    <div
+                        class="absolute inset-0 bg-primary-500/20 blur-[80px] rounded-full group-hover:bg-primary-400/30 transition-all duration-700">
+                    </div>
+                    <img class="w-72 h-auto drop-shadow-[0_0_25px_rgba(6,182,212,0.4)] rounded-2xl relative z-10 border border-primary-500/20 group-hover:border-primary-400/50 transition-colors duration-500"
+                        src="assets/favicon.svg" alt="Sentinel Core Interface">
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Feature Section -->
+        <div class="py-16 relative border-t border-slate-800/50 bg-slate-950/50 backdrop-blur-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:text-center">
+                    <h2 class="font-mono text-sm text-primary-500 font-bold tracking-widest uppercase mb-2">Protocol
+                        Specifications</h2>
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl uppercase">
+                        Smarter Intervention
+                    </p>
+                    <p class="mt-4 max-w-2xl text-xl text-slate-400 lg:mx-auto font-light">
+                        Real-time behavioral analysis without compromising local data integrity.
+                    </p>
+                </div>
+
+                <div class="mt-16">
+                    <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
+                        <!-- Feature 1 -->
+                        <div
+                            class="relative bg-slate-950/80 backdrop-blur-md p-8 rounded-md border border-slate-800 border-l-2 border-l-primary-500 shadow-[0_0_15px_rgba(6,182,212,0.05)] hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-l-primary-400 transition-all duration-300 group">
+                            <div
+                                class="flex items-center justify-center h-12 w-12 rounded-sm bg-primary-900/30 border border-primary-500/30 text-primary-400 shadow-[0_0_10px_rgba(6,182,212,0.2)] mb-6 group-hover:scale-110 transition-transform">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-wide">Loop Detection</h3>
+                            <p class="mt-3 text-base text-slate-400 font-light leading-relaxed">
+                                Automatically detects when you're caught in a mindless scrolling loop and intervenes to
+                                bring you back on track.
+                            </p>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div
+                            class="relative bg-slate-950/80 backdrop-blur-md p-8 rounded-md border border-slate-800 border-l-2 border-l-primary-500 shadow-[0_0_15px_rgba(6,182,212,0.05)] hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-l-primary-400 transition-all duration-300 group">
+                            <div
+                                class="flex items-center justify-center h-12 w-12 rounded-sm bg-primary-900/30 border border-primary-500/30 text-primary-400 shadow-[0_0_10px_rgba(6,182,212,0.2)] mb-6 group-hover:scale-110 transition-transform">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-wide">Deep Work Mode</h3>
+                            <p class="mt-3 text-base text-slate-400 font-light leading-relaxed">
+                                Activate deep work to aggressively block distracting domains and focus entirely on your
+                                active terminal.
+                            </p>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div
+                            class="relative bg-slate-950/80 backdrop-blur-md p-8 rounded-md border border-slate-800 border-l-2 border-l-primary-500 shadow-[0_0_15px_rgba(6,182,212,0.05)] hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-l-primary-400 transition-all duration-300 group">
+                            <div
+                                class="flex items-center justify-center h-12 w-12 rounded-sm bg-primary-900/30 border border-primary-500/30 text-primary-400 shadow-[0_0_10px_rgba(6,182,212,0.2)] mb-6 group-hover:scale-110 transition-transform">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-wide">Telemetry Data</h3>
+                            <p class="mt-3 text-base text-slate-400 font-light leading-relaxed">
+                                Get secure insights into your focus habits. Review distraction vectors and optimize your
+                                workflows.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="assets/favicon.svg" alt="Sentinel Icon"
+                        class="h-6 w-6 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all drop-shadow-[0_0_5px_rgba(6,182,212,0.8)]">
+                    <span class="text-slate-500 font-mono text-sm tracking-widest uppercase">Sentinel_Core</span>
+                </div>
+                <div class="flex space-x-8 text-xs font-mono uppercase tracking-widest">
+                    <a href="features.html" class="text-slate-500 hover:text-primary-400 transition-colors">Features</a>
+                    <a href="privacy.html"
+                        class="text-slate-500 hover:text-primary-400 transition-colors">Privacy_Policy</a>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-slate-800/50 pt-8 flex justify-center">
+                <p class="text-xs text-slate-600 font-mono tracking-widest uppercase">
+                    &copy; <span id="year"></span> Sentinel Extension. V 0.1.0_Alpha.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+
+</html>

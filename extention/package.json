@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "scripts": {
+    "scorer:ui": "node scorer/playground-server.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  }
+}

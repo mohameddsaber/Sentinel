@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Sentinel</title>
+    <meta name="description" content="Sentinel Privacy Policy. We value your privacy and process all data locally.">
+    <link rel="stylesheet" href="css/output.css">
+    <link rel="icon" type="image/png" href="assets/favicon-96x96.png">
+</head>
+<body class="bg-slate-950 bg-grid-pattern text-slate-100 font-sans antialiased flex flex-col min-h-screen relative">
+    <!-- Navbar -->
+    <nav class="bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 border-b border-primary-500/20 shadow-[0_4px_30px_rgba(6,182,212,0.05)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex-shrink-0 flex items-center gap-3">
+                        <img class="h-8 w-auto filter drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" src="assets/icon32.png" alt="Sentinel Logo">
+                        <span class="font-mono font-bold text-xl tracking-widest text-white uppercase shadow-primary-500">Sentinel</span>
+                    </a>
+                </div>
+                <!-- Desktop menu -->
+                <div class="hidden sm:flex sm:items-center sm:space-x-8 font-mono text-sm uppercase tracking-wider">
+                    <a href="index.html" class="text-slate-400 hover:text-primary-300 px-3 py-2 transition">Home</a>
+                    <a href="features.html" class="text-slate-400 hover:text-primary-300 px-3 py-2 transition">Features</a>
+                    <a href="privacy.html" class="text-primary-400 font-bold px-3 py-2 transition drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]">Privacy</a>
+                    <a href="#" class="bg-primary-600/20 border border-primary-500 hover:bg-primary-500/30 text-primary-300 px-5 py-2 rounded-sm font-bold transition shadow-[0_0_10px_rgba(6,182,212,0.2)] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">Initialize</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="flex items-center sm:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none border border-transparent focus:border-primary-500/50" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="sm:hidden hidden bg-slate-950/95 backdrop-blur-xl border-b border-primary-500/20 font-mono text-sm uppercase tracking-widest" id="mobile-menu">
+            <div class="px-2 pt-2 pb-4 space-y-1">
+                <a href="index.html" class="text-slate-400 hover:bg-slate-900 hover:text-primary-300 block px-3 py-3 border-l-2 border-transparent">Home</a>
+                <a href="features.html" class="text-slate-400 hover:bg-slate-900 hover:text-primary-300 block px-3 py-3 border-l-2 border-transparent">Features</a>
+                <a href="privacy.html" class="bg-primary-900/30 text-primary-400 block px-3 py-3 border-l-2 border-primary-500 font-bold">Privacy</a>
+                <a href="#" class="bg-primary-600/20 border border-primary-500 text-primary-300 block px-3 py-3 text-center mt-4 shadow-[0_0_10px_rgba(6,182,212,0.2)]">Initialize</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto bg-slate-950/80 backdrop-blur-md p-10 rounded-md shadow-[0_0_25px_rgba(6,182,212,0.08)] border border-slate-800 border-t-2 border-t-primary-500 relative z-10">
+            <h1 class="text-white text-3xl font-bold mb-2 uppercase font-mono tracking-tight">Privacy_Policy.md</h1>
+            <p class="font-mono text-xs text-primary-500 tracking-widest uppercase mb-10 border-b border-slate-800/80 pb-6">Last compiled: <span id="current-date"></span></p>
+
+            <div class="prose prose-invert prose-slate max-w-none prose-headings:font-mono prose-headings:uppercase prose-headings:tracking-wide prose-a:text-primary-400 hover:prose-a:text-primary-300">
+                <p class="text-slate-300 font-light leading-relaxed">Your privacy is structurally guaranteed. Sentinel operates on a local-first node architecture, ensuring your browsing vectors never leave your terminal.</p>
+
+                <h2 class="text-white text-xl mt-12 mb-4 border-l-2 border-primary-500 pl-4">Data Collection & Usage</h2>
+                <p class="text-slate-300 font-light mb-4">Sentinel requires specific browser API access to function. Operations are scoped strictly:</p>
+                <ul class="text-slate-300 font-light list-disc pl-6 space-y-3 marker:text-primary-600">
+                    <li><strong class="text-white font-normal">Tabs & URL Access:</strong> We parse active URLs to evaluate heuristic rules against your Deep Work state. This calculation occurs entirely <strong class="text-primary-400 font-normal">locally</strong> using an embedded AI scorer. Zero URLs are transmitted externally.</li>
+                    <li><strong class="text-white font-normal">Storage:</strong> Focus policies, blacklists, and session logs are written directly to local browser storage APIs.</li>
+                    <li><strong class="text-white font-normal">Scripting:</strong> Executed uniquely to render intervention UI elements (Hard/Soft blocks) on active DOMs.</li>
+                </ul>
+
+                <h2 class="text-white text-xl mt-12 mb-4 border-l-2 border-primary-500 pl-4">Local ML Processing</h2>
+                <p class="text-slate-300 font-light leading-relaxed">Sentinel distributes a lightweight tensor model upon installation. This model evaluates page vectors and context locally within the V8 engine constraints. Cloud inference is strictly prohibited.</p>
+
+                <h2 class="text-white text-xl mt-12 mb-4 border-l-2 border-primary-500 pl-4">Data Sovereignty</h2>
+                <p class="text-slate-300 font-light leading-relaxed">Sentinel does not extract, rent, or vend personal identifiers. Session telemetry and focus metrics are generated exclusively for local review.</p>
+
+                <h2 class="text-white text-xl mt-12 mb-4 border-l-2 border-primary-500 pl-4">Protocol Updates</h2>
+                <p class="text-slate-300 font-light leading-relaxed">We may update this policy document to reflect architectural or regulatory patches. Material state changes will be documented on this domain endpoint.</p>
+
+                <h2 class="text-white text-xl mt-12 mb-4 border-l-2 border-primary-500 pl-4">Establish Contact</h2>
+                <p class="text-slate-300 font-light leading-relaxed">For operational inquiries or audits, ping our support endpoint listed on the official extension registry.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 relative z-20">
+        <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="assets/icon32.png" alt="Sentinel Icon" class="h-6 w-6 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all drop-shadow-[0_0_5px_rgba(6,182,212,0.8)]">
+                    <span class="text-slate-500 font-mono text-sm tracking-widest uppercase">Sentinel_Core</span>
+                </div>
+                <div class="flex space-x-8 text-xs font-mono uppercase tracking-widest">
+                    <a href="features.html" class="text-slate-500 hover:text-primary-400 transition-colors">Features</a>
+                    <a href="privacy.html" class="text-slate-500 hover:text-primary-400 transition-colors">Privacy_Policy</a>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-slate-800/50 pt-8 flex justify-center">
+                <p class="text-xs text-slate-600 font-mono tracking-widest uppercase">
+                    &copy; <span id="year"></span> Sentinel Extension. V 0.1.0_Alpha.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

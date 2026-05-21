@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentinel Scorer Playground</title>
+    <link rel="stylesheet" href="./scorer-playground.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Sentinel</p>
+          <h1>Scorer Playground</h1>
+          <p class="subtitle">
+            Test the ONNX scorer outside the extension and inspect the score,
+            decision, reasons, and raw debug payload.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="warmup-button" type="button">Warm up model</button>
+          <span id="status-badge" class="badge idle">Idle</span>
+        </div>
+      </section>
+
+      <section class="panel controls">
+        <div class="field">
+          <label for="mode-select">Mode</label>
+          <select id="mode-select">
+            <option value="text">Plain candidate</option>
+            <option value="youtube">YouTube candidate</option>
+          </select>
+        </div>
+
+        <div class="field field-wide">
+          <label for="task-input">Task</label>
+          <textarea
+            id="task-input"
+            rows="3"
+            placeholder="Describe the kind of content you want to stay focused on."
+          >machine learning research papers and transformer architecture deep dives</textarea>
+        </div>
+
+        <div id="text-fields" class="mode-fields">
+          <div class="field field-wide">
+            <label for="candidate-input">Candidate text</label>
+            <textarea
+              id="candidate-input"
+              rows="4"
+              placeholder="Paste a page title, URL text, search result, or any content you want to score."
+            >attention is all you need explained with annotated transformer diagrams</textarea>
+          </div>
+        </div>
+
+        <div id="youtube-fields" class="mode-fields hidden">
+          <div class="field field-wide">
+            <label for="youtube-title-input">Video title</label>
+            <input
+              id="youtube-title-input"
+              type="text"
+              value="study with me for 4 hours deep work session"
+            />
+          </div>
+
+          <div class="field">
+            <label for="youtube-channel-input">Channel</label>
+            <input
+              id="youtube-channel-input"
+              type="text"
+              value="Focus Lab"
+            />
+          </div>
+
+          <div class="field">
+            <label for="youtube-query-input">Search query</label>
+            <input
+              id="youtube-query-input"
+              type="text"
+              value="transformer architecture lecture"
+            />
+          </div>
+
+          <div class="field">
+            <label for="youtube-site-input">Site label</label>
+            <input
+              id="youtube-site-input"
+              type="text"
+              value="youtube"
+            />
+          </div>
+
+          <div class="field field-wide">
+            <label for="youtube-url-input">URL</label>
+            <input
+              id="youtube-url-input"
+              type="text"
+              value="https://www.youtube.com/watch?v=demo"
+            />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="score-button" type="button" class="primary">Score</button>
+          <button id="fill-allowed-button" type="button">Load allow example</button>
+          <button id="fill-blocked-button" type="button">Load block example</button>
+          <button id="clear-button" type="button">Clear output</button>
+        </div>
+      </section>
+
+      <section class="results-grid">
+        <article class="panel summary">
+          <div class="summary-head">
+            <h2>Summary</h2>
+            <span id="decision-badge" class="badge idle">No result</span>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="stat-label">Similarity</span>
+              <strong id="similarity-value">-</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Selected form</span>
+              <strong id="selected-form-value">-</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Allow threshold</span>
+              <strong id="allow-threshold-value">-</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Block threshold</span>
+              <strong id="block-threshold-value">-</strong>
+            </div>
+          </div>
+
+          <div class="text-block">
+            <span class="text-label">Normalized task</span>
+            <pre id="normalized-task-output">-</pre>
+          </div>
+
+          <div class="text-block">
+            <span class="text-label">Normalized candidate</span>
+            <pre id="normalized-candidate-output">-</pre>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Reasons</h2>
+          <ol id="reasons-list" class="reason-list">
+            <li>No result yet.</li>
+          </ol>
+        </article>
+
+        <article class="panel">
+          <h2>Scored Forms</h2>
+          <div id="forms-output" class="forms-output">No result yet.</div>
+        </article>
+
+        <article class="panel raw-panel">
+          <h2>Raw Debug</h2>
+          <pre id="raw-output" class="raw-output">No result yet.</pre>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./scorer-playground.js"></script>
+  </body>
+</html>

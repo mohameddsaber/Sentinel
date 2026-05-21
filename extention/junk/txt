@@ -1,0 +1,12 @@
+//TODO: add an agent layer where if the user is stuck the agent can help them get unstuck instead of just blocking.
+// For example if they are on youtube shorts the agent can ask them 
+// if they want to watch a specific educational video instead 
+// and then take them there if they say yes.
+
+// TODO: Improve the youtube blocking rules to allow educational content and block entertainment content more effectively.
+//  For example, allow videos from known educational channels, or videos that have certain keywords in the title, 
+// and block videos that have entertainment keywords in the title.
+//TODO: add a progress bar in the popup that shows the user's progress towards their daily deep work goal.
+//TODO: enhance the task input to have a completed task management system where users can create, edit, and track their tasks and link them to their deep work sessions for better focus and motivation.
+//TODO: create a prototype site for sentinel where we can educate users about deep work and how to use the extension effectively, 
+// and also share tips and motivational content to help them stay focused, and visualize their progress and stats in a more engaging way, and the site should have a similar design aesthetics as the chrome extension.
