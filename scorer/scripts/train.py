@@ -1,25 +1,55 @@
 import json
 import os
+import re
+
+# --- Mac Safety Settings ---
+# Prevents mutex locks and freezes on macOS (especially Apple Silicon)
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from optimum.onnxruntime import ORTModelForSequenceClassification
+from transformers import EarlyStoppingCallback
 import numpy as np
+
+def normalize_text(text):
+    if not isinstance(text, str):
+        return ""
+    
+    # Lowercase and trim
+    text = text.normalize("NFKC").lower().strip() if hasattr(text, "normalize") else text.lower().strip()
+    
+    # Replace & with and
+    text = text.replace("&", " and ")
+    
+    # Replace common separators with spaces
+    text = re.sub(r'[`"\'“”‘’()[\]{}<>|]', ' ', text)
+    
+    # Replace non-alphanumeric (keeping some technical chars)
+    text = re.sub(r'[^a-z0-9+#./_\-\s]', ' ', text)
+    
+    # Split technical separators (approximate JS splitTechnicalSeparators)
+    text = re.sub(r'([a-z0-9+#])([./_\-])([a-z0-9+#])', r'\1 \3', text)
+    
+    # Clean up whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    return text
 
 # 1. Load Data
 dataset_path = "../data/scorer_dataset.json"
 with open(dataset_path, "r") as f:
     raw_data = json.load(f)
 
-# The dataset currently has "allow", "block", "uncertain"
-# Let's map them to: 0 -> block, 1 -> allow, 2 -> uncertain (optional)
-# But actually, the JS scorer expects a confidence score for "productive" vs "unproductive".
-# Let's simplify and drop "uncertain", or map "allow" -> 1, "block" -> 0, "uncertain" -> 0 (or drop them)
-# For simplicity, let's keep all 3 classes:
 label_map = {"block": 0, "allow": 1, "uncertain": 2}
 id2label = {0: "block", 1: "allow", 2: "uncertain"}
 label2id = {"block": 0, "allow": 1, "uncertain": 2}
 
-texts = [item["candidate"] for item in raw_data]
+# Apply normalization during data loading to match browser preprocessing
+texts = [normalize_text(item["candidate"]) for item in raw_data]
 labels = [label_map[item["label"]] for item in raw_data]
 
 dataset = Dataset.from_dict({"text": texts, "label": labels})
@@ -44,8 +74,8 @@ tokenized_datasets = dataset.map(tokenize_function, batched=True)
 # 3. Train
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=10, 
-    per_device_train_batch_size=8,
+    num_train_epochs=15, 
+    per_device_train_batch_size=16,
     learning_rate=3e-5,
     logging_steps=10,
     eval_strategy="epoch",
@@ -54,8 +84,6 @@ training_args = TrainingArguments(
     metric_for_best_model="eval_loss",
     save_total_limit=2
 )
-
-from transformers import EarlyStoppingCallback
 
 trainer = Trainer(
     model=model,
@@ -81,17 +109,20 @@ from optimum.onnxruntime.configuration import AutoQuantizationConfig
 onnx_output_dir = "../src/custom-model"
 print("Exporting to ONNX and Quantizing...")
 
-# Export
+# Export Full Precision
 ort_model = ORTModelForSequenceClassification.from_pretrained(output_dir, export=True)
 ort_model.save_pretrained(onnx_output_dir)
 
-# Quantize
+# Quantize to INT8
 quantizer = ORTQuantizer.from_pretrained(onnx_output_dir)
 dqconfig = AutoQuantizationConfig.avx512_vnni(is_static=False, per_channel=False)
 quantizer.quantize(
-    save_dir=onnx_output_dir,
+    save_dir=os.path.join(onnx_output_dir, "onnx"),
     quantization_config=dqconfig,
 )
 
+# Save tokenizer to both locations
 tokenizer.save_pretrained(onnx_output_dir)
-print(f"Quantized ONNX model saved to {onnx_output_dir}")
+tokenizer.save_pretrained(os.path.join(onnx_output_dir, "onnx"))
+
+print(f"Full and Quantized ONNX models saved to {onnx_output_dir}")

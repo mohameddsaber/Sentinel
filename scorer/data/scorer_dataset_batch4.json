@@ -1,0 +1,1402 @@
+[
+    {
+        "candidate": "Postmortem: How a Single Deadlock Cascaded Through Our Microservices",
+        "label": "allow"
+    },
+    {
+        "candidate": "Anatomy of a Cloud Outage: The 2021 Fastly CDN Failure",
+        "label": "allow"
+    },
+    {
+        "candidate": "Debugging Kernel Panics in Production Linux Clusters",
+        "label": "allow"
+    },
+    {
+        "candidate": "Why We Migrated Away From Kubernetes to Bare Metal",
+        "label": "allow"
+    },
+    {
+        "candidate": "Handling 10 Million Websocket Connections with Erlang/OTP",
+        "label": "allow"
+    },
+    {
+        "candidate": "Zero-Downtime Database Migrations at Enterprise Scale",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Thundering Herd Problem: Caching Architectures Explained",
+        "label": "allow"
+    },
+    {
+        "candidate": "Tracing Network Latency Spikes with eBPF and BCC",
+        "label": "allow"
+    },
+    {
+        "candidate": "How Discord Transitioned from MongoDB to Cassandra to ScyllaDB",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing Distributed Locks using Redis Redlock",
+        "label": "allow"
+    },
+    {
+        "candidate": "Byzantine Fault Tolerance in Decentralized Networks",
+        "label": "allow"
+    },
+    {
+        "candidate": "Circuit Breakers and Retry Backoffs in Envoy Proxy",
+        "label": "allow"
+    },
+    {
+        "candidate": "Reverse Engineering the Nintendo 64 Memory Controller",
+        "label": "allow"
+    },
+    {
+        "candidate": "Cache Coherence: MESI Protocol Deep Dive",
+        "label": "allow"
+    },
+    {
+        "candidate": "Writing a Custom UEFI Bootloader in Rust",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Out-of-Order Execution in Modern CPUs",
+        "label": "allow"
+    },
+    {
+        "candidate": "SIMD Vectorization for High-Frequency Trading Systems",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Mechanics of Page Faults and Virtual Memory",
+        "label": "allow"
+    },
+    {
+        "candidate": "An Introduction to Lock-Free Data Structures",
+        "label": "allow"
+    },
+    {
+        "candidate": "Compiling C to x86 Assembly: Stack Frames Explained",
+        "label": "allow"
+    },
+    {
+        "candidate": "Designing a Threat Model for a Fintech API",
+        "label": "allow"
+    },
+    {
+        "candidate": "Defeating Return-Oriented Programming (ROP) with Control Flow Integrity",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing Mutual TLS (mTLS) in a Service Mesh",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Cryptography Behind the Signal Protocol",
+        "label": "allow"
+    },
+    {
+        "candidate": "Securing CI/CD Pipelines Against Supply Chain Attacks",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Rowhammer and Hardware-Level Mitigations",
+        "label": "allow"
+    },
+    {
+        "candidate": "Fuzz Testing C++ Applications with libFuzzer",
+        "label": "allow"
+    },
+    {
+        "candidate": "OAuth 2.1 vs 2.0: What Changed and Why",
+        "label": "allow"
+    },
+    {
+        "candidate": "Hardening AWS IAM Policies with Attribute-Based Access Control",
+        "label": "allow"
+    },
+    {
+        "candidate": "How WebAuthn and FIDO2 Actually Work Under the Hood",
+        "label": "allow"
+    },
+    {
+        "candidate": "Event Sourcing and CQRS with Apache Kafka",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Real-Time OLAP Cube with ClickHouse",
+        "label": "allow"
+    },
+    {
+        "candidate": "Exactly-Once Processing Semantics in Apache Flink",
+        "label": "allow"
+    },
+    {
+        "candidate": "Delta Lake vs Apache Iceberg: Open Table Formats Compared",
+        "label": "allow"
+    },
+    {
+        "candidate": "Optimizing Snowflake Queries: Clustering Keys and Pruning",
+        "label": "allow"
+    },
+    {
+        "candidate": "Change Data Capture (CDC) using Debezium",
+        "label": "allow"
+    },
+    {
+        "candidate": "Vectorizing Python Data Workloads with Apache Arrow",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Architecture of a Massive Scale Recommendation Engine",
+        "label": "allow"
+    },
+    {
+        "candidate": "Handling Data Skew in Distributed MapReduce Jobs",
+        "label": "allow"
+    },
+    {
+        "candidate": "Designing a Multi-Tenant Data Warehouse",
+        "label": "allow"
+    },
+    {
+        "candidate": "Mamba and State Space Models: Beyond Transformers",
+        "label": "allow"
+    },
+    {
+        "candidate": "Direct Preference Optimization (DPO) Explained Mathematically",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Mixture of Experts (MoE) Routing Mechanisms",
+        "label": "allow"
+    },
+    {
+        "candidate": "CUDA Programming for Deep Learning: Custom Kernels",
+        "label": "allow"
+    },
+    {
+        "candidate": "FlashAttention 2: Optimizing GPU Memory Bandwidth",
+        "label": "allow"
+    },
+    {
+        "candidate": "Contrastive Language-Image Pretraining (CLIP) Architecture",
+        "label": "allow"
+    },
+    {
+        "candidate": "Low-Rank Adaptation (LoRA) for Parameter-Efficient Fine-Tuning",
+        "label": "allow"
+    },
+    {
+        "candidate": "Evaluating Hallucinations in RAG using TruthfulQA",
+        "label": "allow"
+    },
+    {
+        "candidate": "Latent Diffusion Models: The Math Behind Stable Diffusion",
+        "label": "allow"
+    },
+    {
+        "candidate": "Graph Neural Networks (GNNs) for Fraud Detection",
+        "label": "allow"
+    },
+    {
+        "candidate": "Multi-Agent Reinforcement Learning in StarCraft II",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Swarm of AI Agents with LangGraph",
+        "label": "allow"
+    },
+    {
+        "candidate": "Semantic Routing and Intent Classification in LLM Pipelines",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing DSPy for Automated Prompt Optimization",
+        "label": "allow"
+    },
+    {
+        "candidate": "How Autonomous Driving Agents Handle Edge Cases",
+        "label": "allow"
+    },
+    {
+        "candidate": "Constitutional AI and the Alignment Problem",
+        "label": "allow"
+    },
+    {
+        "candidate": "Federated Learning for Privacy-Preserving Health AI",
+        "label": "allow"
+    },
+    {
+        "candidate": "Neuromorphic Computing: Spiking Neural Networks",
+        "label": "allow"
+    },
+    {
+        "candidate": "Explainable AI (XAI): SHAP Values and LIME",
+        "label": "allow"
+    },
+    {
+        "candidate": "Vision-Language Models (VLMs) and Grounding",
+        "label": "allow"
+    },
+    {
+        "candidate": "Fermat's Last Theorem: A History of the Proof",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Homology in Algebraic Topology",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Banach-Tarski Paradox and Axiom of Choice",
+        "label": "allow"
+    },
+    {
+        "candidate": "Non-Euclidean Geometry and the Shape of the Universe",
+        "label": "allow"
+    },
+    {
+        "candidate": "Measure Theory: Lebesgue Integration Explained",
+        "label": "allow"
+    },
+    {
+        "candidate": "Galois Theory: Why Quintic Equations Are Unsolvable",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Millennium Prize Problems: Navier-Stokes Existence",
+        "label": "allow"
+    },
+    {
+        "candidate": "Stochastic Differential Equations in Finance",
+        "label": "allow"
+    },
+    {
+        "candidate": "P-adic Numbers and Advanced Number Theory",
+        "label": "allow"
+    },
+    {
+        "candidate": "Category Theory: Monads in Mathematics",
+        "label": "allow"
+    },
+    {
+        "candidate": "String Landscape vs The Swampland (Theoretical Physics)",
+        "label": "allow"
+    },
+    {
+        "candidate": "Hawking Radiation and the Black Hole Information Paradox",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Physics of Bose-Einstein Condensates",
+        "label": "allow"
+    },
+    {
+        "candidate": "Neutrino Oscillations and the Solar Neutrino Problem",
+        "label": "allow"
+    },
+    {
+        "candidate": "Dark Matter Halos and Galactic Rotation Curves",
+        "label": "allow"
+    },
+    {
+        "candidate": "Quantum Chromodynamics (QCD) and Color Confinement",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Standard Model: Higgs Mechanism Breakdown",
+        "label": "allow"
+    },
+    {
+        "candidate": "Gravitational Waves from Neutron Star Mergers",
+        "label": "allow"
+    },
+    {
+        "candidate": "Exoplanet Atmospheres: Spectroscopy Analysis",
+        "label": "allow"
+    },
+    {
+        "candidate": "Magnetohydrodynamics in Solar Flares",
+        "label": "allow"
+    },
+    {
+        "candidate": "Neuroplasticity: How Brain Trauma Alters Synapses",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Cognitive Science of Language Acquisition",
+        "label": "allow"
+    },
+    {
+        "candidate": "Behavioral Game Theory: The Ultimatum Game",
+        "label": "allow"
+    },
+    {
+        "candidate": "Macroeconomics: Modern Monetary Theory (MMT) Critiques",
+        "label": "allow"
+    },
+    {
+        "candidate": "Kahneman's Thinking, Fast and Slow (Heuristics)",
+        "label": "allow"
+    },
+    {
+        "candidate": "Cultural Anthropology: Gift Economies in the Pacific",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Tragedy of the Anticommons in Patent Law",
+        "label": "allow"
+    },
+    {
+        "candidate": "Structural Linguistics: Saussure and Signifiers",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Neuroscience of Free Will: Libet's Experiment",
+        "label": "allow"
+    },
+    {
+        "candidate": "Microeconomics: Veblen Goods and Conspicuous Consumption",
+        "label": "allow"
+    },
+    {
+        "candidate": "Phenomenology: Husserl and the Intentionality of Consciousness",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Frankfurt School: Adorno and the Culture Industry",
+        "label": "allow"
+    },
+    {
+        "candidate": "Foucauldian Biopolitics in the 21st Century",
+        "label": "allow"
+    },
+    {
+        "candidate": "Nihilism vs Absurdism: Camus and the Myth of Sisyphus",
+        "label": "allow"
+    },
+    {
+        "candidate": "Epistemological Anarchism: Paul Feyerabend",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Hard Problem of Consciousness (David Chalmers)",
+        "label": "allow"
+    },
+    {
+        "candidate": "Rawls vs Nozick: Justice as Fairness vs Libertarianism",
+        "label": "allow"
+    },
+    {
+        "candidate": "Hegelian Dialectics: Thesis, Antithesis, Synthesis",
+        "label": "allow"
+    },
+    {
+        "candidate": "Utilitarian Calculus and Effective Altruism Debates",
+        "label": "allow"
+    },
+    {
+        "candidate": "Spinoza's Ethics and Pantheism Explained",
+        "label": "allow"
+    },
+    {
+        "candidate": "Evo 2024: The Frame Data Behind the Greatest Comeback",
+        "label": "block"
+    },
+    {
+        "candidate": "Why Footsies are the Core of Fighting Games",
+        "label": "block"
+    },
+    {
+        "candidate": "The Fall of the Overwatch League: A Retrospective",
+        "label": "block"
+    },
+    {
+        "candidate": "CS2 Economy Changes: Why the Meta Shifted",
+        "label": "block"
+    },
+    {
+        "candidate": "The Evolution of Jungle Pathing in League of Legends",
+        "label": "block"
+    },
+    {
+        "candidate": "How Daigo Umehara Reads His Opponents' Minds",
+        "label": "block"
+    },
+    {
+        "candidate": "The Micro-Mechanics of StarCraft II Grandmasters",
+        "label": "block"
+    },
+    {
+        "candidate": "Super Smash Bros Melee: The History of the Fox Metagame",
+        "label": "block"
+    },
+    {
+        "candidate": "Valorant VCT Analysis: Breaking Down Paper Rex's Chaos",
+        "label": "block"
+    },
+    {
+        "candidate": "Dota 2: The Genius of OG's TI8 Cinderella Run",
+        "label": "block"
+    },
+    {
+        "candidate": "The Quest to Beat Super Mario Bros. in 4 Minutes and 54 Seconds",
+        "label": "block"
+    },
+    {
+        "candidate": "How Speedrunners Broke The Legend of Zelda: Breath of the Wild",
+        "label": "block"
+    },
+    {
+        "candidate": "TAS (Tool-Assisted Speedrun) Explainers: Arbitrary Code Execution",
+        "label": "block"
+    },
+    {
+        "candidate": "The Absolute Insanity of the Trackmania Speedrun Community",
+        "label": "block"
+    },
+    {
+        "candidate": "Hollow Knight Any% Speedrun World Record Breakdown",
+        "label": "block"
+    },
+    {
+        "candidate": "Half-Life 2 Engine Exploits Used in Speedrunning",
+        "label": "block"
+    },
+    {
+        "candidate": "Portal In-Bounds Speedrun Mechanics Explained",
+        "label": "block"
+    },
+    {
+        "candidate": "The Impossible Geometry Dash Level That Took Years to Verify",
+        "label": "block"
+    },
+    {
+        "candidate": "Speedrunning Minecraft 1.16: RNG and Piglin Barters",
+        "label": "block"
+    },
+    {
+        "candidate": "The Dark Souls Hitbox Mechanics that Make No Hit Runs Possible",
+        "label": "block"
+    },
+    {
+        "candidate": "VRChat Documentaries: Exploring Virtual Rave Culture",
+        "label": "block"
+    },
+    {
+        "candidate": "Skyrim Modding in 2025: Turning it into a Next-Gen RPG",
+        "label": "block"
+    },
+    {
+        "candidate": "Cities: Skylines - Simulating a Dystopian Megacity",
+        "label": "block"
+    },
+    {
+        "candidate": "The Most Disturbing Garry's Mod ARGs Explained",
+        "label": "block"
+    },
+    {
+        "candidate": "Flight Simulator: Experiencing Category 5 Hurricanes in VR",
+        "label": "block"
+    },
+    {
+        "candidate": "RimWorld War Crimes: A Colony Management Experiment",
+        "label": "block"
+    },
+    {
+        "candidate": "Dwarf Fortress: The Insane Depth of its Generation System",
+        "label": "block"
+    },
+    {
+        "candidate": "Kerbal Space Program: Recreating the Apollo Mission Accurately",
+        "label": "block"
+    },
+    {
+        "candidate": "Modding Fallout: New Vegas into a Survival Horror Game",
+        "label": "block"
+    },
+    {
+        "candidate": "I Built a Working CPU inside Terraria's Wiring System",
+        "label": "block"
+    },
+    {
+        "candidate": "The Lost Media Iceberg: From Creepypastas to Erased Shows",
+        "label": "block"
+    },
+    {
+        "candidate": "The Rise and Fall of MLG Montage Parodies",
+        "label": "block"
+    },
+    {
+        "candidate": "Why the 2014 Internet Era Will Never Happen Again",
+        "label": "block"
+    },
+    {
+        "candidate": "The Dead Internet Theory Deep Dive Video Essay",
+        "label": "block"
+    },
+    {
+        "candidate": "Analyzing the Psychology of Lolcow Culture",
+        "label": "block"
+    },
+    {
+        "candidate": "The Bizarre Rabbit Hole of TikTok AI Live Streams",
+        "label": "block"
+    },
+    {
+        "candidate": "Who Actually Created the Backrooms? An Investigation",
+        "label": "block"
+    },
+    {
+        "candidate": "The Dark History of Early YouTube Prank Channels",
+        "label": "block"
+    },
+    {
+        "candidate": "Understanding the Post-Irony Meme Ecosystem",
+        "label": "block"
+    },
+    {
+        "candidate": "The Unsolved Mystery of Cicada 3301",
+        "label": "block"
+    },
+    {
+        "candidate": "Social Media Drama: The Anatomy of a Cancellation",
+        "label": "block"
+    },
+    {
+        "candidate": "Reacting to Defunctland's Disney Channel Theme Video",
+        "label": "block"
+    },
+    {
+        "candidate": "I Created a Fake Influencer and Fooled the Internet",
+        "label": "block"
+    },
+    {
+        "candidate": "The Truth Behind Viral Street Interview TikToks",
+        "label": "block"
+    },
+    {
+        "candidate": "Why Apology Videos Always Feature Ukuleles Now",
+        "label": "block"
+    },
+    {
+        "candidate": "Inside the Fake Mansion Rentals for Content Creators",
+        "label": "block"
+    },
+    {
+        "candidate": "We Paid 100 People on Fiverr to Edit the Same Video",
+        "label": "block"
+    },
+    {
+        "candidate": "The Problem with True Crime YouTubers",
+        "label": "block"
+    },
+    {
+        "candidate": "How Reaction Content is Destroying Original Creators",
+        "label": "block"
+    },
+    {
+        "candidate": "The Fake Guru Scam: Unmasking Dropshipping Ads",
+        "label": "block"
+    },
+    {
+        "candidate": "My 3 AM Aesthetic Notion Setup for Maximum Hustle",
+        "label": "block"
+    },
+    {
+        "candidate": "Waking Up at 4 AM to Code Like a Billionaire",
+        "label": "block"
+    },
+    {
+        "candidate": "Toxic Productivity: Why You Always Feel Lazy",
+        "label": "block"
+    },
+    {
+        "candidate": "I Optimized My Dopamine Receptors for 7 Days",
+        "label": "block"
+    },
+    {
+        "candidate": "The Cult of the Hustle Bro (Sigma Male Grindset)",
+        "label": "block"
+    },
+    {
+        "candidate": "How I Organize My Entire Brain with Obsidian",
+        "label": "block"
+    },
+    {
+        "candidate": "Stop Wasting Your 20s: The Ultimate Glow-Up Guide",
+        "label": "block"
+    },
+    {
+        "candidate": "Andrew Huberman Morning Routine Tested for 30 Days",
+        "label": "block"
+    },
+    {
+        "candidate": "Why I take 14 Supplements Before Writing Code",
+        "label": "block"
+    },
+    {
+        "candidate": "Day in the Life of a Tech CEO (Working 16 Hours)",
+        "label": "block"
+    },
+    {
+        "candidate": "Unboxing the $3,000 Apple Vision Pro at a Coffee Shop",
+        "label": "block"
+    },
+    {
+        "candidate": "Touring a $25 Million Bel Air Mega-Mansion",
+        "label": "block"
+    },
+    {
+        "candidate": "I Flew Private to Monaco Just for Lunch",
+        "label": "block"
+    },
+    {
+        "candidate": "My Patek Philippe and Audemars Piguet Watch Collection",
+        "label": "block"
+    },
+    {
+        "candidate": "The 'Quiet Luxury' Old Money Aesthetic Trend",
+        "label": "block"
+    },
+    {
+        "candidate": "Buying My Dream Porsche 911 GT3 RS at 24",
+        "label": "block"
+    },
+    {
+        "candidate": "Spending $50,000 in Dubai in 24 Hours",
+        "label": "block"
+    },
+    {
+        "candidate": "How the Ultra-Rich Hide Their Wealth in Art",
+        "label": "block"
+    },
+    {
+        "candidate": "I Rented a Superyacht for My Startup Team",
+        "label": "block"
+    },
+    {
+        "candidate": "The Reality of Trust Fund Influencers",
+        "label": "block"
+    },
+    {
+        "candidate": "Why I Walked Away from a $500K FAANG Salary",
+        "label": "block"
+    },
+    {
+        "candidate": "My Journey from College Dropout to YC Founder",
+        "label": "block"
+    },
+    {
+        "candidate": "Vlog: Moving Out of Silicon Valley for Good",
+        "label": "block"
+    },
+    {
+        "candidate": "A Realistic Day in the Life of a Solopreneur",
+        "label": "block"
+    },
+    {
+        "candidate": "Building a Startup in Public: Revenue Reveal",
+        "label": "block"
+    },
+    {
+        "candidate": "Why We Shut Down Our Tech Company After Raising $2M",
+        "label": "block"
+    },
+    {
+        "candidate": "Vlog: Networking at a Tech Conference in Vegas",
+        "label": "block"
+    },
+    {
+        "candidate": "How I Burned Out Managing a Team of 50 Engineers",
+        "label": "block"
+    },
+    {
+        "candidate": "My Coffee Shop Working Routine as a Freelancer",
+        "label": "block"
+    },
+    {
+        "candidate": "The Loneliness of Being a Solo Founder",
+        "label": "block"
+    },
+    {
+        "candidate": "Bulking on 4,000 Calories a Day as a Hardgainer",
+        "label": "block"
+    },
+    {
+        "candidate": "Sam Sulek's Insane Chest Day Routine",
+        "label": "block"
+    },
+    {
+        "candidate": "My 3 Year Natural Bodybuilding Transformation",
+        "label": "block"
+    },
+    {
+        "candidate": "The Liver King Steroid Apology Video Analysis",
+        "label": "block"
+    },
+    {
+        "candidate": "Eating Like Ronnie Coleman for a Day",
+        "label": "block"
+    },
+    {
+        "candidate": "I Trained Like a Navy SEAL for 24 Hours",
+        "label": "block"
+    },
+    {
+        "candidate": "Why Cardio is Killing Your Gains (Fitness Myth)",
+        "label": "block"
+    },
+    {
+        "candidate": "The Fake Natty Epidemic in Fitness Influencers",
+        "label": "block"
+    },
+    {
+        "candidate": "My Hybrid Athlete Marathon and Powerlifting Split",
+        "label": "block"
+    },
+    {
+        "candidate": "Cutting Weight for a Powerlifting Meet Vlog",
+        "label": "block"
+    },
+    {
+        "candidate": "Nobody talks about this in tech interviews",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The hidden reality of FAANG jobs they don't show you",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why I regret learning programming this way",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The truth about becoming a senior engineer",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "You're probably studying LeetCode completely wrong",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The end of junior developers is already here",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Stop building portfolios. Do this instead.",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "What I wish I knew before choosing computer science",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is the tech bubble finally popping in 2025?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The dark side of coding bootcamps exposed",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I was rejected by Google 7 times. Here is why.",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why mastering Python is actually a trap",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The real reason your resume is being ignored by ATS",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why 10x engineers are actually terrible for your team",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The unspoken rule of surviving corporate tech jobs",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is software engineering still a path to wealth?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why learning Git is a waste of time (Controversial)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The biggest lie self-taught programmers believe",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I checked salaries in tech, and it's worse than you think",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why tech leads always seem angry",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "This changed how I think about everything",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I gave up on my dreams and it was the best decision",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The harsh truth about 'following your passion'",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why you feel empty despite being successful",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I stopped talking for a week. This is what I learned.",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The paradox of choice is ruining your 20s",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why being average is actually the ultimate flex",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The illusion of control in your daily life",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Stop trying to optimize every second of your day",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why intelligence is a curse in the modern world",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I realized I was the toxic one.",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The terrifying reality of turning 30",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why you should embrace being a disappointment",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The myth of 'finding yourself' while traveling",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why nostalgia is keeping you stuck in the past",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The trap of constant self-improvement",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why we are all faking it (Imposter Syndrome)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I lost everything and found peace",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The brutal reality of outgrowing your friends",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why you shouldn't care about your legacy",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "AGI is coming sooner than you think. Are we ready?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why OpenAI's new model changes everything (again)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The grim reality of AI girlfriends and loneliness",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Will AI cause a global economic collapse?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the AI hype bubble is mathematically doomed",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I let ChatGPT manage my bank account",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The terrifying truth about AI-generated deepfakes",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is Sam Altman's new crypto project a scam?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why Nvidia's monopoly is dangerous for everyone",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The secret data big tech uses to train AI",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why coding with AI is making us dumber",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The alignment problem: Why we can't control superintelligence",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I tested the worst AI tools on the internet",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why artists are losing the war against Generative AI",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The dark web AI models that have no safety filters",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Are we already living in an AI simulation?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the Turing Test is completely outdated",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I asked an AI the meaning of life and got chills",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The ethical dilemma of autonomous AI weapons",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the next AI winter is inevitable",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is college a scam? A data-driven analysis",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The bizarre economy of digital items in video games",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why everything on the internet feels fake now",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The psychology behind why we love horror movies",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is the attention span crisis real or a myth?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The history of a word you use every day",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why modern pop music all sounds exactly the same",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The architecture of a casino is designed to trap you",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the traditional 9 to 5 was a mistake",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The science of why we procrastinate",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Are we running out of original ideas?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The strange legal loophole of international waters",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why fast fashion is worse than you thought",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The math behind winning the lottery (and why you won't)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "How grocery stores manipulate your brain",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why nobody wants to be a manager anymore",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The secret society that controls the diamond market",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Is space exploration a waste of money?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The psychological impact of always being online",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the open floor plan office failed",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "This strange optical illusion broke the internet",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "What happened to the metaverse?",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why I don't trust modern medicine (A critical look)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The truth about recycling (It's a lie)",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why everyone is suddenly getting ADHD diagnoses",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I lived like a Victorian peasant for a week",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The conspiracy theory that turned out to be true",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why we are collectively losing our minds",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The hidden messages in your favorite childhood cartoons",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I ate nothing but Soylent for 30 days",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The real reason flights are getting worse",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the housing market is completely broken",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The strange phenomenon of Mandela Effects",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "I hired an investigator to find my online stalker",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The dark origins of popular nursery rhymes",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why physical media is making a massive comeback",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The terrifying reality of ocean exploration",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why you should delete your Spotify account",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "The bizarre reason we dream, according to science",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Why the 'American Dream' is statistically dead",
+        "label": "uncertain"
+    },
+    {
+        "candidate": "Micro-Frontends: Anti-Pattern or Architecture of the Future?",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Paxos vs Raft for Distributed Consensus",
+        "label": "allow"
+    },
+    {
+        "candidate": "Debugging Memory Leaks in Node.js using V8 Profiler",
+        "label": "allow"
+    },
+    {
+        "candidate": "Server-Driven UI (SDUI) Implementation Strategies",
+        "label": "allow"
+    },
+    {
+        "candidate": "GraphQL Federation using Apollo Router",
+        "label": "allow"
+    },
+    {
+        "candidate": "Deploying Kubernetes on Bare Metal with K3s",
+        "label": "allow"
+    },
+    {
+        "candidate": "eBPF Tracing: Writing Custom BCC Scripts in Python",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the Rust Borrow Checker Analyzes Lifetimes",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Rate Limiter with Token Bucket Algorithm",
+        "label": "allow"
+    },
+    {
+        "candidate": "WebAssembly System Interface (WASI) Explained",
+        "label": "allow"
+    },
+    {
+        "candidate": "Designing Idempotent APIs for Payment Gateways",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the Linux Completely Fair Scheduler (CFS)",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing JWT Rotation and Revocation Strategies",
+        "label": "allow"
+    },
+    {
+        "candidate": "Zero-Copy Network I/O with sendfile()",
+        "label": "allow"
+    },
+    {
+        "candidate": "Tuning JVM Garbage Collection for Low Latency Trading",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the PostgreSQL Query Planner Evaluates Execution Paths",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Bloom Filter from Scratch in Go",
+        "label": "allow"
+    },
+    {
+        "candidate": "Consistent Hashing and Distributed Ring Architectures",
+        "label": "allow"
+    },
+    {
+        "candidate": "Why Solid State Drives Need Wear Leveling Algorithms",
+        "label": "allow"
+    },
+    {
+        "candidate": "Defeating Cross-Site Request Forgery (CSRF) in SPAs",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Mathematics of RSA Key Generation",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the OSI Model Layer 2: MAC and Ethernet",
+        "label": "allow"
+    },
+    {
+        "candidate": "How B-Trees Optimize Database Indexing",
+        "label": "allow"
+    },
+    {
+        "candidate": "Memory Mapping (mmap) for Large File I/O",
+        "label": "allow"
+    },
+    {
+        "candidate": "Writing a Reverse Proxy in C++",
+        "label": "allow"
+    },
+    {
+        "candidate": "Service Mesh Architecture: Istio vs Linkerd",
+        "label": "allow"
+    },
+    {
+        "candidate": "Eventual Consistency in DynamoDB Global Tables",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing the A* Search Algorithm Visually",
+        "label": "allow"
+    },
+    {
+        "candidate": "How WebRTC Traverses NAT with STUN/TURN Servers",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Out-of-Memory (OOM) Killer Heuristics",
+        "label": "allow"
+    },
+    {
+        "candidate": "Introduction to the TLA+ Specification Language",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the V8 JavaScript Engine Optimizes Hidden Classes",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a JIT Compiler with LLVM",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding IPv6 Subnetting and SLAAC",
+        "label": "allow"
+    },
+    {
+        "candidate": "Log-Structured Merge-Trees (LSM) in RocksDB",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the Git Content-Addressable Storage System Works",
+        "label": "allow"
+    },
+    {
+        "candidate": "Optimizing Docker Image Sizes with Multi-Stage Builds",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the TCP Congestion Control Algorithms",
+        "label": "allow"
+    },
+    {
+        "candidate": "Hardware TEEs: Intel SGX and ARM TrustZone",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Mechanics of Quantum Key Distribution (QKD)",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing Skip Lists in Python",
+        "label": "allow"
+    },
+    {
+        "candidate": "How NGINX Handles Epoll and Async I/O",
+        "label": "allow"
+    },
+    {
+        "candidate": "Compiling Rust to WebAssembly with wasm-pack",
+        "label": "allow"
+    },
+    {
+        "candidate": "The Inner Workings of the Babel JavaScript Compiler",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building an Object Storage Service from Scratch",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the Heartbleed OpenSSL Vulnerability",
+        "label": "allow"
+    },
+    {
+        "candidate": "How DNS over HTTPS (DoH) Enhances Privacy",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing HNSW for Vector Similarity Search",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the CAP Theorem with Zookeeper",
+        "label": "allow"
+    },
+    {
+        "candidate": "How Thread Pools Work in the Java Concurrency API",
+        "label": "allow"
+    },
+    {
+        "candidate": "Analyzing the Specter and Meltdown CPU Vulnerabilities",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Toy Operating System Kernel in C",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the Android Dalvik and ART Runtimes Work",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding Type Erasure in Java Generics",
+        "label": "allow"
+    },
+    {
+        "candidate": "Implementing the Raft Log Replication Mechanism",
+        "label": "allow"
+    },
+    {
+        "candidate": "How Garbage Collection Works in Golang",
+        "label": "allow"
+    },
+    {
+        "candidate": "Optimizing SQL Queries: The Power of Covering Indexes",
+        "label": "allow"
+    },
+    {
+        "candidate": "Understanding the React Fiber Reconciliation Algorithm",
+        "label": "allow"
+    },
+    {
+        "candidate": "How the Let's Encrypt ACME Protocol Works",
+        "label": "allow"
+    },
+    {
+        "candidate": "Building a Custom TCP/IP Stack in Userspace",
+        "label": "allow"
+    }
+]

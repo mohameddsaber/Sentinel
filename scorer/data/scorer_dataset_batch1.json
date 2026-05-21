@@ -1,0 +1,2810 @@
+[
+  {
+    "candidate": "Python for Beginners - Full Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "React Tutorial for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "System Design Interview: Design Facebook",
+    "label": "allow"
+  },
+  {
+    "candidate": "Docker Crash Course for Absolute Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Mastering the JavaScript Event Loop",
+    "label": "allow"
+  },
+  {
+    "candidate": "Learn Rust in 14 Minutes",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a REST API with Node.js and Express",
+    "label": "allow"
+  },
+  {
+    "candidate": "AWS Certified Solutions Architect Associate 2024",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding Kubernetes Networking",
+    "label": "allow"
+  },
+  {
+    "candidate": "Data Structures and Algorithms in C++",
+    "label": "allow"
+  },
+  {
+    "candidate": "Git & GitHub Crash Course For Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to CI/CD pipelines with GitHub Actions",
+    "label": "allow"
+  },
+  {
+    "candidate": "Advanced Django ORM Queries",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to debug a memory leak in Node.js",
+    "label": "allow"
+  },
+  {
+    "candidate": "CSS Grid vs Flexbox: Which one should you use?",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a Microservices Architecture",
+    "label": "allow"
+  },
+  {
+    "candidate": "Go Programming Language Tutorial",
+    "label": "allow"
+  },
+  {
+    "candidate": "PostgreSQL Tutorial for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Object Oriented Programming in Java",
+    "label": "allow"
+  },
+  {
+    "candidate": "Creating a Next.js App from Scratch",
+    "label": "allow"
+  },
+  {
+    "candidate": "Spring Boot Tutorial - Full Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding OAuth 2.0 and OpenID Connect",
+    "label": "allow"
+  },
+  {
+    "candidate": "Linux Command Line Full course",
+    "label": "allow"
+  },
+  {
+    "candidate": "WebSockets in Python with FastAPI",
+    "label": "allow"
+  },
+  {
+    "candidate": "Vue.js 3 Fundamentals",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Machine Learning with Scikit-Learn",
+    "label": "allow"
+  },
+  {
+    "candidate": "TensorFlow 2.0 Complete Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Writing clean code with TypeScript",
+    "label": "allow"
+  },
+  {
+    "candidate": "GraphQL Full Course - Novice to Expert",
+    "label": "allow"
+  },
+  {
+    "candidate": "Redis Crash Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to deploy a React app to Netlify",
+    "label": "allow"
+  },
+  {
+    "candidate": "Using Terraform to provision AWS infrastructure",
+    "label": "allow"
+  },
+  {
+    "candidate": "SvelteKit Crash Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Asynchronous Programming in C#",
+    "label": "allow"
+  },
+  {
+    "candidate": "Nginx Tutorial - Basic to Advanced",
+    "label": "allow"
+  },
+  {
+    "candidate": "Design Patterns in Python",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the Internet Works - Networking Fundamentals",
+    "label": "allow"
+  },
+  {
+    "candidate": "Intro to WebGL and Three.js",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building your first iOS App with Swift",
+    "label": "allow"
+  },
+  {
+    "candidate": "Android Development with Kotlin Full Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding Big O Notation",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use VIM - A beginner's guide",
+    "label": "allow"
+  },
+  {
+    "candidate": "Setting up a homelab server with Proxmox",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Apache Kafka",
+    "label": "allow"
+  },
+  {
+    "candidate": "Mastering Regular Expressions",
+    "label": "allow"
+  },
+  {
+    "candidate": "Unit Testing in Python with PyTest",
+    "label": "allow"
+  },
+  {
+    "candidate": "End to End Testing with Cypress",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a basic compiler",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding Database Indexing",
+    "label": "allow"
+  },
+  {
+    "candidate": "Bash Scripting Full Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "The C Programming Language - Beginner Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a real-time chat app with Socket.io",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to secure your Node.js application",
+    "label": "allow"
+  },
+  {
+    "candidate": "WebAssembly for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Cryptography",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use GDB to debug C programs",
+    "label": "allow"
+  },
+  {
+    "candidate": "Mastering the bash command line",
+    "label": "allow"
+  },
+  {
+    "candidate": "Functional Programming in JavaScript",
+    "label": "allow"
+  },
+  {
+    "candidate": "Learning Haskell - Lesson 1",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to create a VS Code extension",
+    "label": "allow"
+  },
+  {
+    "candidate": "Using Prometheus and Grafana for monitoring",
+    "label": "allow"
+  },
+  {
+    "candidate": "Deep Learning with PyTorch",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Natural Language Processing",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to optimize React performance",
+    "label": "allow"
+  },
+  {
+    "candidate": "Tailwind CSS Full Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding JSON Web Tokens (JWT)",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to write a Makefile",
+    "label": "allow"
+  },
+  {
+    "candidate": "Ansible Tutorial for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Jenkins Pipeline Tutorial",
+    "label": "allow"
+  },
+  {
+    "candidate": "Creating a discord bot with discord.js",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a 2D game in Unity",
+    "label": "allow"
+  },
+  {
+    "candidate": "Unreal Engine 5 Beginner Tutorial",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to gRPC and Protocol Buffers",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Webpack",
+    "label": "allow"
+  },
+  {
+    "candidate": "Elasticsearch Crash Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "MongoDB Tutorial for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to structure a Go application",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the DOM (Document Object Model)",
+    "label": "allow"
+  },
+  {
+    "candidate": "How memory management works in C",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to the Semantic Web",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a load balancer in Python",
+    "label": "allow"
+  },
+  {
+    "candidate": "The SOLID Principles of Object-Oriented Design",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Docker Compose",
+    "label": "allow"
+  },
+  {
+    "candidate": "FORTNITE LIVE EVENT: THE FINAL SHOWDOWN!",
+    "label": "block"
+  },
+  {
+    "candidate": "I Beat Minecraft Without Walking",
+    "label": "block"
+  },
+  {
+    "candidate": "Valorant Radiant Ranked Highlights #45",
+    "label": "block"
+  },
+  {
+    "candidate": "xQc Reacts to FUNNIEST Memes of 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "Let's Play Elden Ring - Episode 1 - THIS IS TOO HARD",
+    "label": "block"
+  },
+  {
+    "candidate": "Super Mario 64 Speedrun in 15 Minutes (WORLD RECORD)",
+    "label": "block"
+  },
+  {
+    "candidate": "100 Players Simulate CIVILIZATION in Minecraft",
+    "label": "block"
+  },
+  {
+    "candidate": "I Survived 100 Days in Hardcore Minecraft...",
+    "label": "block"
+  },
+  {
+    "candidate": "FUNNIEST GAMING MOMENTS OF THE WEEK",
+    "label": "block"
+  },
+  {
+    "candidate": "iShowSpeed plays FIFA 24 and RAGES",
+    "label": "block"
+  },
+  {
+    "candidate": "Beating GTA 5 Without Taking Damage",
+    "label": "block"
+  },
+  {
+    "candidate": "Among Us but it's chaotic proximity chat",
+    "label": "block"
+  },
+  {
+    "candidate": "Roblox Bedwars - IM TOO GOOD AT THIS",
+    "label": "block"
+  },
+  {
+    "candidate": "Call of Duty Warzone: INSANE SNIPER CLIPS",
+    "label": "block"
+  },
+  {
+    "candidate": "The Most Toxic Valorant Player Ever...",
+    "label": "block"
+  },
+  {
+    "candidate": "I Found a SECRET Boss in Hollow Knight",
+    "label": "block"
+  },
+  {
+    "candidate": "Minecraft Manhunt but I have x-ray",
+    "label": "block"
+  },
+  {
+    "candidate": "Apex Legends Season 20 Gameplay",
+    "label": "block"
+  },
+  {
+    "candidate": "Five Nights at Freddy's Jumpscare Compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "Trolling kids in Roblox voice chat",
+    "label": "block"
+  },
+  {
+    "candidate": "Getting UNBANNED from my favorite Minecraft Server",
+    "label": "block"
+  },
+  {
+    "candidate": "The NEW best gun in Modern Warfare 3!",
+    "label": "block"
+  },
+  {
+    "candidate": "I spent $1000 on CS:GO cases",
+    "label": "block"
+  },
+  {
+    "candidate": "Genshin Impact Pulls - GACHA LUCK!",
+    "label": "block"
+  },
+  {
+    "candidate": "Beating Sekiro blindfolded",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to my old Minecraft videos (CRINGE)",
+    "label": "block"
+  },
+  {
+    "candidate": "This indie game will break your brain",
+    "label": "block"
+  },
+  {
+    "candidate": "Only Up! speedrun WR progression",
+    "label": "block"
+  },
+  {
+    "candidate": "Why Overwatch 2 is dying",
+    "label": "block"
+  },
+  {
+    "candidate": "League of Legends Pro Plays Montage",
+    "label": "block"
+  },
+  {
+    "candidate": "I made a Minecraft server for 1000 players",
+    "label": "block"
+  },
+  {
+    "candidate": "Tarkov highlights: Zero to Hero",
+    "label": "block"
+  },
+  {
+    "candidate": "Clash of Clans TH15 Attack Strategies",
+    "label": "block"
+  },
+  {
+    "candidate": "I played 24 hours of Geometry Dash straight",
+    "label": "block"
+  },
+  {
+    "candidate": "Top 10 SCARIEST Horror Games of 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "Mario Kart 8 Deluxe Online - RAGE QUIT",
+    "label": "block"
+  },
+  {
+    "candidate": "Street Fighter 6 EVO Grand Finals",
+    "label": "block"
+  },
+  {
+    "candidate": "I built a working computer IN Minecraft",
+    "label": "block"
+  },
+  {
+    "candidate": "Animal Crossing New Horizons - Island Tour",
+    "label": "block"
+  },
+  {
+    "candidate": "Rust - I betrayed my clan for loot",
+    "label": "block"
+  },
+  {
+    "candidate": "The History of Super Smash Bros Melee",
+    "label": "block"
+  },
+  {
+    "candidate": "Destiny 2 Lightfall Raid Guide",
+    "label": "block"
+  },
+  {
+    "candidate": "I bought every game on Steam",
+    "label": "block"
+  },
+  {
+    "candidate": "World of Warcraft Classic - Leveling to 60",
+    "label": "block"
+  },
+  {
+    "candidate": "PewDiePie plays Happy Wheels",
+    "label": "block"
+  },
+  {
+    "candidate": "Markiplier FNAF Part 1",
+    "label": "block"
+  },
+  {
+    "candidate": "Jacksepticeye plays Happy Room",
+    "label": "block"
+  },
+  {
+    "candidate": "Terraria Expert Mode Playthrough Episode 5",
+    "label": "block"
+  },
+  {
+    "candidate": "Cyberpunk 2077 funny bugs compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "Fall Guys Season 4 Wins",
+    "label": "block"
+  },
+  {
+    "candidate": "Dead by Daylight - Trolling the killer",
+    "label": "block"
+  },
+  {
+    "candidate": "Phasmophobia with the boys is HILARIOUS",
+    "label": "block"
+  },
+  {
+    "candidate": "Lethal Company funniest moments",
+    "label": "block"
+  },
+  {
+    "candidate": "Palworld - Pokemon with Guns is crazy",
+    "label": "block"
+  },
+  {
+    "candidate": "Sims 4 but I ruin their lives",
+    "label": "block"
+  },
+  {
+    "candidate": "Osu! Godmode plays",
+    "label": "block"
+  },
+  {
+    "candidate": "Red Dead Redemption 2 funny moments",
+    "label": "block"
+  },
+  {
+    "candidate": "Bloodborne Lore explained",
+    "label": "block"
+  },
+  {
+    "candidate": "Zelda Tears of the Kingdom glitches",
+    "label": "block"
+  },
+  {
+    "candidate": "Rocket League insane aerial goals",
+    "label": "block"
+  },
+  {
+    "candidate": "Sea of Thieves Pirate Legend Gameplay",
+    "label": "block"
+  },
+  {
+    "candidate": "Mortal Kombat 1 Fatalities compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "Overcooked 2 ruins friendships",
+    "label": "block"
+  },
+  {
+    "candidate": "Halo Infinite Multiplayer Gameplay",
+    "label": "block"
+  },
+  {
+    "candidate": "Monster Hunter World Speedrun",
+    "label": "block"
+  },
+  {
+    "candidate": "Stardew Valley 100 Days Challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "I Spent $1,000,000 on Lottery Tickets",
+    "label": "block"
+  },
+  {
+    "candidate": "TikTok Compilations That Cure My Depression",
+    "label": "block"
+  },
+  {
+    "candidate": "EXTREME Hide and Seek in a Water Park",
+    "label": "block"
+  },
+  {
+    "candidate": "Try Not To Laugh Challenge (IMPOSSIBLE)",
+    "label": "block"
+  },
+  {
+    "candidate": "I Survived 50 Hours In Antarctica",
+    "label": "block"
+  },
+  {
+    "candidate": "Gordon Ramsay SAVAGES Kitchen Nightmares Owners",
+    "label": "block"
+  },
+  {
+    "candidate": "ASMR - Deep Brain Massage (Sleep Fast)",
+    "label": "block"
+  },
+  {
+    "candidate": "We Broke Into A Haunted Asylum at 3 AM",
+    "label": "block"
+  },
+  {
+    "candidate": "Kardashian Drama Explained in 10 Minutes",
+    "label": "block"
+  },
+  {
+    "candidate": "Rating Strangers' Outfits on Campus",
+    "label": "block"
+  },
+  {
+    "candidate": "I ate ONLY spicy food for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to my Haters' Comments",
+    "label": "block"
+  },
+  {
+    "candidate": "Funny Cat Videos Compilation 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "He Paid $50,000 For THIS?!",
+    "label": "block"
+  },
+  {
+    "candidate": "Sidemen Tinder In Real Life 4",
+    "label": "block"
+  },
+  {
+    "candidate": "Will It Blend? - iPhone 15 Pro",
+    "label": "block"
+  },
+  {
+    "candidate": "Oddly Satisfying Videos to watch before sleep",
+    "label": "block"
+  },
+  {
+    "candidate": "Pranking my boyfriend (He got so mad!)",
+    "label": "block"
+  },
+  {
+    "candidate": "100 Layers of Makeup Challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "I Bought The World's Largest Pizza",
+    "label": "block"
+  },
+  {
+    "candidate": "Can You Survive The World's Deadliest Maze?",
+    "label": "block"
+  },
+  {
+    "candidate": "Guess The Price - Luxury Edition",
+    "label": "block"
+  },
+  {
+    "candidate": "Reading Crazy Confessions on Reddit",
+    "label": "block"
+  },
+  {
+    "candidate": "Epic Fail Compilation 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "Dropping a watermelon from 100 ft",
+    "label": "block"
+  },
+  {
+    "candidate": "I ignored my girlfriend for 24 hours prank",
+    "label": "block"
+  },
+  {
+    "candidate": "World's Hottest Chip Challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to British rap for the first time",
+    "label": "block"
+  },
+  {
+    "candidate": "I lived in a Tesla for a week",
+    "label": "block"
+  },
+  {
+    "candidate": "I let my dog decide what we do for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "Most embarrassing celebrity moments caught on camera",
+    "label": "block"
+  },
+  {
+    "candidate": "The TRUTH about Taylor Swift's new album",
+    "label": "block"
+  },
+  {
+    "candidate": "We tested viral TikTok life hacks",
+    "label": "block"
+  },
+  {
+    "candidate": "I asked 100 girls for their number",
+    "label": "block"
+  },
+  {
+    "candidate": "Unboxing mystery dark web packages",
+    "label": "block"
+  },
+  {
+    "candidate": "Top 10 Unbelievable Coincidences",
+    "label": "block"
+  },
+  {
+    "candidate": "I spent a night in the world's worst hotel review",
+    "label": "block"
+  },
+  {
+    "candidate": "Doing everything backwards for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "Eating everything on the McDonald's menu",
+    "label": "block"
+  },
+  {
+    "candidate": "Surprising my best friend with a new car",
+    "label": "block"
+  },
+  {
+    "candidate": "ASMR Mukbang Korean Street Food",
+    "label": "block"
+  },
+  {
+    "candidate": "I hired a private investigator to follow me",
+    "label": "block"
+  },
+  {
+    "candidate": "People are awesome 2024 compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "This video will make you forget your name",
+    "label": "block"
+  },
+  {
+    "candidate": "Sneaking into a VIP party at Coachella",
+    "label": "block"
+  },
+  {
+    "candidate": "I wore a disguise to my own funeral",
+    "label": "block"
+  },
+  {
+    "candidate": "Ultimate Water Bottle Flip Trick Shots",
+    "label": "block"
+  },
+  {
+    "candidate": "Guess the song in 3 seconds",
+    "label": "block"
+  },
+  {
+    "candidate": "The most expensive burger in Dubai",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to terrifying animatronics",
+    "label": "block"
+  },
+  {
+    "candidate": "Couples try yoga for the first time",
+    "label": "block"
+  },
+  {
+    "candidate": "I built a secret room in my house",
+    "label": "block"
+  },
+  {
+    "candidate": "Blind taste test: Cheap vs Expensive Chocolate",
+    "label": "block"
+  },
+  {
+    "candidate": "World's strict parents react to my tattoos",
+    "label": "block"
+  },
+  {
+    "candidate": "Introduction to Quantum Mechanics - Lecture 1",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Black Holes Work - Kurzgesagt",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Fall of Rome - History Documentary",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the 2008 Financial Crisis",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to Build a Second Brain - Productivity Strategy",
+    "label": "allow"
+  },
+  {
+    "candidate": "MIT 18.06 Linear Algebra, Spring 2005",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Neuroscience of Sleep",
+    "label": "allow"
+  },
+  {
+    "candidate": "Investing for Beginners - Index Funds Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Pomodoro Technique - How to study effectively",
+    "label": "allow"
+  },
+  {
+    "candidate": "CRISPR and the Future of Human Editing",
+    "label": "allow"
+  },
+  {
+    "candidate": "The French Revolution - Oversimplified",
+    "label": "allow"
+  },
+  {
+    "candidate": "Calculus 1 Full College Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the Immune System Works",
+    "label": "allow"
+  },
+  {
+    "candidate": "World War 2 in 10 Minutes",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Psychology - Yale Open Courses",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Fermi Paradox - Where Are All The Aliens?",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Do Atomic Clocks Work?",
+    "label": "allow"
+  },
+  {
+    "candidate": "Active Recall and Spaced Repetition Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "Personal Finance Basics - Budgeting",
+    "label": "allow"
+  },
+  {
+    "candidate": "String Theory Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Geography of Spices and World Trade",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Microchips Are Made",
+    "label": "allow"
+  },
+  {
+    "candidate": "The History of the English Language",
+    "label": "allow"
+  },
+  {
+    "candidate": "Macroeconomics Crash Course",
+    "label": "allow"
+  },
+  {
+    "candidate": "Stanford CS229: Machine Learning - Lecture 1",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Biology of Human Behavior",
+    "label": "allow"
+  },
+  {
+    "candidate": "Organic Chemistry Introduction",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to Read a Financial Statement",
+    "label": "allow"
+  },
+  {
+    "candidate": "Cold War Documentary Series - Part 1",
+    "label": "allow"
+  },
+  {
+    "candidate": "Why Are We Aging? And Can We Stop It?",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to take smart notes (Zettelkasten Method)",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Physics of Superconductors",
+    "label": "allow"
+  },
+  {
+    "candidate": "A Brief History of the Universe",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding Relativity - Special and General",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the Stock Market Works",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Renaissance - Art History",
+    "label": "allow"
+  },
+  {
+    "candidate": "Calculus 2 - Integration Techniques",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Philosophy - Ethics",
+    "label": "allow"
+  },
+  {
+    "candidate": "Anatomy and Physiology of the Heart",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Batteries Work",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Scientific Method Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "Why Socrates Hated Democracy",
+    "label": "allow"
+  },
+  {
+    "candidate": "Climate Change - The Science Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Do Submarines Work?",
+    "label": "allow"
+  },
+  {
+    "candidate": "Statistics - A Full University Course on Data Science",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Complete History of the Cold War",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to Read a Book a Week",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding inflation and interest rates",
+    "label": "allow"
+  },
+  {
+    "candidate": "Ancient Egypt - The Great Pyramid",
+    "label": "allow"
+  },
+  {
+    "candidate": "How Do Airplanes Fly?",
+    "label": "allow"
+  },
+  {
+    "candidate": "Why I Quit My $500k Job at Google",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "A Realistic Day in the Life of a Software Engineer",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My $10,000 Productivity Desk Setup 2024",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Tech I Regret Buying in 2023",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is Coding Dead? AI took my job.",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Day in the Life of a Harvard Student",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Watch me build an app in 24 hours (Vlog)",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I tried the Elon Musk morning routine",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Do you need a CS Degree to be a programmer?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I make $50,000 a month with passive income",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The truth about working at Apple",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why you should STOP learning React",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My minimalist apartment tour in Tokyo",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Study with me - 4 hours Pomodoro with Lofi",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to pass any coding interview without trying",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Programming languages tier list",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "What's on my MacBook Pro for coding",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why I moved to Bali to code",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The biggest mistake self-taught developers make",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I asked a millionaire how to get rich",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Day in the life of a cybersecurity analyst",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My developer keyboard collection",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is Web3 actually a scam?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Coding in a coffee shop for 8 hours",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I let AI write my code for a week",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "React developer reacts to terrible code",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why nobody wants to hire junior developers",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Aesthetic notion setup for students",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The dark side of Silicon Valley tech bros",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I reviewed your portfolios and they are BAD",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why I left Seattle for Austin",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Unboxing the new M3 MacBook Air",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Tech lead exposed me in a code review",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I made a viral app in 3 days",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is Data Science still worth it?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to get a job at Meta (Facebook)",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Software engineering vs IT: what's the difference?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I organize my life with an iPad",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Top 5 best laptops for programming in 2024",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why I switched from VS Code to Neovim",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I quit my job to build a startup",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The harsh reality of being an entrepreneur",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Ranking computer science classes from worst to best",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I learned to code in 3 months and got a job",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The truth about coding bootcamps",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: First day as a junior developer",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I tried to build Facebook in a weekend",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why software engineers make so much money",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My 5 AM developer morning routine",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to avoid burnout in tech",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "What I eat in a day as a college student",
+    "label": "block"
+  },
+  {
+    "candidate": "Moving into my new NYC apartment",
+    "label": "block"
+  },
+  {
+    "candidate": "Travel Vlog: 48 Hours in Tokyo",
+    "label": "block"
+  },
+  {
+    "candidate": "My realistic 5 AM morning routine",
+    "label": "block"
+  },
+  {
+    "candidate": "HUGE Zara Summer Clothing Haul",
+    "label": "block"
+  },
+  {
+    "candidate": "Empty House Tour 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "Get ready with me for a date night",
+    "label": "block"
+  },
+  {
+    "candidate": "A weekend in my life / running errands",
+    "label": "block"
+  },
+  {
+    "candidate": "We broke up. (Life Update)",
+    "label": "block"
+  },
+  {
+    "candidate": "Decorating my bedroom Pinterest style",
+    "label": "block"
+  },
+  {
+    "candidate": "I tried the military diet for 3 days",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Getting a puppy!",
+    "label": "block"
+  },
+  {
+    "candidate": "My everyday makeup routine",
+    "label": "block"
+  },
+  {
+    "candidate": "Traveling to Paris for the first time",
+    "label": "block"
+  },
+  {
+    "candidate": "Deep cleaning my entire house vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "Spend a lazy Sunday with me",
+    "label": "block"
+  },
+  {
+    "candidate": "Boyfriend rates my outfits",
+    "label": "block"
+  },
+  {
+    "candidate": "Grocery shopping and meal prep for the week",
+    "label": "block"
+  },
+  {
+    "candidate": "My fitness journey and weight loss transformation",
+    "label": "block"
+  },
+  {
+    "candidate": "Packing for a 2-week Europe trip",
+    "label": "block"
+  },
+  {
+    "candidate": "Day in my life as a stay at home mom",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: I got a new tattoo!",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying viral TikTok makeup hacks",
+    "label": "block"
+  },
+  {
+    "candidate": "Aesthetic Korean cafe hopping vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "Let's talk about my mental health",
+    "label": "block"
+  },
+  {
+    "candidate": "My skincare routine for clear skin",
+    "label": "block"
+  },
+  {
+    "candidate": "I bleached my hair at home (Gone Wrong)",
+    "label": "block"
+  },
+  {
+    "candidate": "Answering your assumptions about me",
+    "label": "block"
+  },
+  {
+    "candidate": "Going thrifting with my best friend",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: My 21st birthday weekend",
+    "label": "block"
+  },
+  {
+    "candidate": "What's in my bag 2024",
+    "label": "block"
+  },
+  {
+    "candidate": "Night routine to unwind and relax",
+    "label": "block"
+  },
+  {
+    "candidate": "I moved across the country alone",
+    "label": "block"
+  },
+  {
+    "candidate": "Recreating celebrity Instagram outfits",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Attending a friend's wedding",
+    "label": "block"
+  },
+  {
+    "candidate": "Doing my own acrylic nails at home",
+    "label": "block"
+  },
+  {
+    "candidate": "I lived like a billionaire for a day",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying weird food combinations",
+    "label": "block"
+  },
+  {
+    "candidate": "Come to work with me vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Snowboarding in Aspen",
+    "label": "block"
+  },
+  {
+    "candidate": "My entire sneaker collection",
+    "label": "block"
+  },
+  {
+    "candidate": "DIY Room decor ideas",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Surprising my mom for her birthday",
+    "label": "block"
+  },
+  {
+    "candidate": "I only ate yellow food for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "Our first family vacation",
+    "label": "block"
+  },
+  {
+    "candidate": "I bought a van to live in",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying on wedding dresses vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "My current favorites - Books, Beauty, Fashion",
+    "label": "block"
+  },
+  {
+    "candidate": "A productive day in my life",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: We are having a baby!",
+    "label": "block"
+  },
+  {
+    "candidate": "How to make a responsive navbar with CSS",
+    "label": "allow"
+  },
+  {
+    "candidate": "Intro to Data Science with Python and Pandas",
+    "label": "allow"
+  },
+  {
+    "candidate": "Setting up a Django project from scratch",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding CORS in web development",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a weather app with Vanilla JavaScript",
+    "label": "allow"
+  },
+  {
+    "candidate": "What is Docker and how does it work?",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Web Accessibility (A11y)",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Github Copilot effectively",
+    "label": "allow"
+  },
+  {
+    "candidate": "Learning SQL in 1 hour",
+    "label": "allow"
+  },
+  {
+    "candidate": "Mastering CSS Flexbox for layouts",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a CRUD app with Angular",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Google Cloud Platform",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the React Virtual DOM",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to mock APIs in testing",
+    "label": "allow"
+  },
+  {
+    "candidate": "C# for Absolute Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to the Swift UI framework",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a game with Pygame",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Postman for API testing",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Serverless Computing",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to reverse a linked list in Java",
+    "label": "allow"
+  },
+  {
+    "candidate": "Deploying a Node app to Heroku",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Git Cherry Pick",
+    "label": "allow"
+  },
+  {
+    "candidate": "Writing clean CSS with SASS",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Azure DevOps",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding HTTP requests and responses",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to configure a Linux firewall with UFW",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a simple blockchain in Python",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Game Theory",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the cardiovascular system works",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Roman Republic Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the principles of Macroeconomics",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to learn a new language effectively",
+    "label": "allow"
+  },
+  {
+    "candidate": "The science of habit formation",
+    "label": "allow"
+  },
+  {
+    "candidate": "How nuclear power plants generate electricity",
+    "label": "allow"
+  },
+  {
+    "candidate": "A complete guide to speed reading",
+    "label": "allow"
+  },
+  {
+    "candidate": "The History of the Byzantine Empire",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding Quantum Computing",
+    "label": "allow"
+  },
+  {
+    "candidate": "How your memory works - Psychology Lecture",
+    "label": "allow"
+  },
+  {
+    "candidate": "Investing in Real Estate for Beginners",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Industrial Revolution Explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Astronomy - The Solar System",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to write a research paper",
+    "label": "allow"
+  },
+  {
+    "candidate": "The philosophy of Stoicism",
+    "label": "allow"
+  },
+  {
+    "candidate": "How DNA replication works",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the Periodic Table",
+    "label": "allow"
+  },
+  {
+    "candidate": "The causes of World War 1",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to prepare for the SATs",
+    "label": "allow"
+  },
+  {
+    "candidate": "The Economics of Healthcare",
+    "label": "allow"
+  },
+  {
+    "candidate": "How tectonic plates move",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding literary theory and criticism",
+    "label": "allow"
+  },
+  {
+    "candidate": "How do vaccines work?",
+    "label": "allow"
+  },
+  {
+    "candidate": "The history of ancient Greece",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to manage your time as a student",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Anthropology",
+    "label": "allow"
+  },
+  {
+    "candidate": "I Played Among Us In REAL LIFE!",
+    "label": "block"
+  },
+  {
+    "candidate": "GTA 6 Trailer Reaction!",
+    "label": "block"
+  },
+  {
+    "candidate": "The Best Mario Party Mini Games of All Time",
+    "label": "block"
+  },
+  {
+    "candidate": "I Spent 100 Days in a Zombie Apocalypse in Minecraft",
+    "label": "block"
+  },
+  {
+    "candidate": "Opening 100 Pokemon Booster Packs",
+    "label": "block"
+  },
+  {
+    "candidate": "My little brother plays Warzone for the first time",
+    "label": "block"
+  },
+  {
+    "candidate": "CS:GO Funny Moments & Fails",
+    "label": "block"
+  },
+  {
+    "candidate": "I broke the world record in Subway Surfers",
+    "label": "block"
+  },
+  {
+    "candidate": "FNAF Security Breach All Bosses",
+    "label": "block"
+  },
+  {
+    "candidate": "Apex Legends but I only use grenades",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to crazy TikTok dances",
+    "label": "block"
+  },
+  {
+    "candidate": "Try not to say WOW challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "Pranking my roommate with a fake spider",
+    "label": "block"
+  },
+  {
+    "candidate": "We ate ONLY pink food for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "ASMR eating honeycomb and mochi",
+    "label": "block"
+  },
+  {
+    "candidate": "Extreme floor is lava challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "Rating celebrity met gala outfits",
+    "label": "block"
+  },
+  {
+    "candidate": "I bought abandoned storage units",
+    "label": "block"
+  },
+  {
+    "candidate": "Surviving a haunted house overnight",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to my old embarrassing photos",
+    "label": "block"
+  },
+  {
+    "candidate": "The biggest fast food fails",
+    "label": "block"
+  },
+  {
+    "candidate": "Doing yoga challenge with my best friend",
+    "label": "block"
+  },
+  {
+    "candidate": "Tasting weird sodas from around the world",
+    "label": "block"
+  },
+  {
+    "candidate": "I traded a paperclip for a house",
+    "label": "block"
+  },
+  {
+    "candidate": "Funny animals videos that cure depression",
+    "label": "block"
+  },
+  {
+    "candidate": "Why I'm quitting YouTube.",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My honest review of the Apple Vision Pro",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The truth about dropshipping in 2024",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "A realistic day in the life of a digital nomad",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to make $100 a day online",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why your resume is getting rejected",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Tech gadgets I can't live without",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is college still worth it?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My crypto portfolio revealed",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I organize my chaotic life",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The secret to waking up early",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why I stopped using social media",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Aesthetic study vlog in the library",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "What nobody tells you about being a freelancer",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to start a successful podcast",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Ranking the best coffee machines for your desk",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why ChatGPT is going to change everything",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I tried working 100 hours a week",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The best programming languages to learn this year",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to negotiate a higher salary",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Building a custom mechanical keyboard",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why you shouldn't become a doctor",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My morning routine as a millionaire CEO",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I got scammed on the internet",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to become a UX designer with no experience",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Come with me to get iced coffee",
+    "label": "block"
+  },
+  {
+    "candidate": "My huge Sephora haul",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Moving to Los Angeles",
+    "label": "block"
+  },
+  {
+    "candidate": "What I wore this week - outfit ideas",
+    "label": "block"
+  },
+  {
+    "candidate": "Baking cookies and chatting",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: First day of senior year",
+    "label": "block"
+  },
+  {
+    "candidate": "My everyday jewelry collection",
+    "label": "block"
+  },
+  {
+    "candidate": "A relaxing rainy weekend vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "My simple hair care routine",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: We are getting married!",
+    "label": "block"
+  },
+  {
+    "candidate": "Hosting a dinner party for my friends",
+    "label": "block"
+  },
+  {
+    "candidate": "My realistic night routine for better sleep",
+    "label": "block"
+  },
+  {
+    "candidate": "Thrift with me for fall clothes",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Getting my wisdom teeth out",
+    "label": "block"
+  },
+  {
+    "candidate": "A day in my life in London",
+    "label": "block"
+  },
+  {
+    "candidate": "How I style baggy jeans",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Family road trip to the beach",
+    "label": "block"
+  },
+  {
+    "candidate": "My updated makeup collection",
+    "label": "block"
+  },
+  {
+    "candidate": "A busy day in my life running a small business",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Exploring Rome and eating pasta",
+    "label": "block"
+  },
+  {
+    "candidate": "Reorganizing my entire closet",
+    "label": "block"
+  },
+  {
+    "candidate": "My current workout routine at the gym",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Decorating for Christmas",
+    "label": "block"
+  },
+  {
+    "candidate": "What's on my iPhone 15",
+    "label": "block"
+  },
+  {
+    "candidate": "A productive cleaning vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "Introduction to the OSI Model",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to set up a reverse proxy with Nginx",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding binary trees in Java",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to implement JWT authentication in React",
+    "label": "allow"
+  },
+  {
+    "candidate": "Data visualization with D3.js tutorial",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to query MongoDB using PyMongo",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building a CLI tool with Go",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding CSS stacking contexts",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use WebSockets in Node.js",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to software design patterns",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to deploy a website on AWS S3",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding recursion in programming",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a GraphQL API with Apollo",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Linux Shell Scripting",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to write a Dockerfile",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding thread synchronization in C++",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use Git Rebase interactively",
+    "label": "allow"
+  },
+  {
+    "candidate": "Building an ecommerce store with Next.js",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to relational databases",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to test React components with Jest",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the event loop in Python asyncio",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to optimize SQL queries",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to ethical hacking",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a scraper with Puppeteer",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding state management in Vue with Pinia",
+    "label": "allow"
+  },
+  {
+    "candidate": "The History of the Space Race",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to study for medical school",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding basic accounting principles",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the central nervous system works",
+    "label": "allow"
+  },
+  {
+    "candidate": "The philosophy of existentialism explained",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to write a proper business plan",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the causes of the Great Depression",
+    "label": "allow"
+  },
+  {
+    "candidate": "How photosynthesis works at the molecular level",
+    "label": "allow"
+  },
+  {
+    "candidate": "The History of Ancient China",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to microfluidics",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to improve your critical thinking skills",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the mathematics of cryptography",
+    "label": "allow"
+  },
+  {
+    "candidate": "The science behind climate models",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to analyze poetry effectively",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to civil engineering concepts",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build strong habits using behavioral science",
+    "label": "allow"
+  },
+  {
+    "candidate": "The History of the Aztec Empire",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the mechanisms of evolution",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to structure an academic essay",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to the philosophy of science",
+    "label": "allow"
+  },
+  {
+    "candidate": "How water treatment plants work",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the basics of contract law",
+    "label": "allow"
+  },
+  {
+    "candidate": "The history of the printing press",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use note taking apps for productivity",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to art restoration techniques",
+    "label": "allow"
+  },
+  {
+    "candidate": "Terraria but everything is random",
+    "label": "block"
+  },
+  {
+    "candidate": "I made a working car in Garry's Mod",
+    "label": "block"
+  },
+  {
+    "candidate": "Pokemon Nuzlocke Challenge Finale",
+    "label": "block"
+  },
+  {
+    "candidate": "Genshin Impact funny moments compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "League of Legends Bronze Elo is wild",
+    "label": "block"
+  },
+  {
+    "candidate": "Playing scary Roblox games with viewers",
+    "label": "block"
+  },
+  {
+    "candidate": "Valorant aimbot settings (joke)",
+    "label": "block"
+  },
+  {
+    "candidate": "Fortnite funny fails and WTF moments",
+    "label": "block"
+  },
+  {
+    "candidate": "I won a game of PUBG with zero kills",
+    "label": "block"
+  },
+  {
+    "candidate": "Mario Maker 2 troll levels are insane",
+    "label": "block"
+  },
+  {
+    "candidate": "Elden Ring PvP invasion trolling",
+    "label": "block"
+  },
+  {
+    "candidate": "Animal Crossing funny glitches",
+    "label": "block"
+  },
+  {
+    "candidate": "I found a hacker in GTA Online",
+    "label": "block"
+  },
+  {
+    "candidate": "Rainbow Six Siege clutch moments",
+    "label": "block"
+  },
+  {
+    "candidate": "Minecraft speedrun but I have bad luck",
+    "label": "block"
+  },
+  {
+    "candidate": "MrBeast gives away a private island",
+    "label": "block"
+  },
+  {
+    "candidate": "I ordered everything on the secret menu",
+    "label": "block"
+  },
+  {
+    "candidate": "TikTok satisfying videos compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "We survived 24 hours in a bouncy castle",
+    "label": "block"
+  },
+  {
+    "candidate": "ASMR soft whispers for deep sleep",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to the cringiest TikToks ever",
+    "label": "block"
+  },
+  {
+    "candidate": "I paid people $100 to guess my age",
+    "label": "block"
+  },
+  {
+    "candidate": "Funny prank calls compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "Unboxing a $10,000 mystery box",
+    "label": "block"
+  },
+  {
+    "candidate": "Celebrity drama you missed this week",
+    "label": "block"
+  },
+  {
+    "candidate": "We built a giant slip and slide",
+    "label": "block"
+  },
+  {
+    "candidate": "Guess the YouTuber by their voice",
+    "label": "block"
+  },
+  {
+    "candidate": "Eating only blue candy for a day",
+    "label": "block"
+  },
+  {
+    "candidate": "I stayed overnight in a haunted forest",
+    "label": "block"
+  },
+  {
+    "candidate": "Ultimate dad jokes challenge",
+    "label": "block"
+  },
+  {
+    "candidate": "How to hack the Google algorithm",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Day in the life of a data scientist working from home",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I built a ChatGPT clone in 10 minutes",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is this $5,000 monitor worth it?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why I'm learning Rust instead of C++",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Aesthetic study routines that actually work",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why you shouldn't use a Macbook for gaming",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: Code with me for 12 hours",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is the new iPhone a scam?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My desk setup tour for software engineering",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I memorize code syntax quickly",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The truth about remote work",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why everyone is quitting tech jobs",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I bought the cheapest laptop on Amazon",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Ranking all the operating systems",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to make a viral YouTube video",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why you should wake up at 4 AM every day",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I automated my entire job with Python",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: Attending a hacker convention",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is artificial intelligence dangerous?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: A chill day off in my life",
+    "label": "block"
+  },
+  {
+    "candidate": "Doing my makeup in the car",
+    "label": "block"
+  },
+  {
+    "candidate": "My massive plant collection tour",
+    "label": "block"
+  },
+  {
+    "candidate": "A day in my life in New York City",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Going to a music festival",
+    "label": "block"
+  },
+  {
+    "candidate": "My go-to healthy breakfast recipes",
+    "label": "block"
+  },
+  {
+    "candidate": "Redecorating my home office",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Shopping for a new car",
+    "label": "block"
+  },
+  {
+    "candidate": "My curly hair routine step by step",
+    "label": "block"
+  },
+  {
+    "candidate": "Spending the day with my sister",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Traveling to Hawaii alone",
+    "label": "block"
+  },
+  {
+    "candidate": "My favorite outfits of the month",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying the viral espresso martini recipe",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Getting ready for a photoshoot",
+    "label": "block"
+  },
+  {
+    "candidate": "A weekend in the mountains vlog",
+    "label": "block"
+  },
+  {
+    "candidate": "What I got for my birthday haul",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Adopting a rescue cat",
+    "label": "block"
+  },
+  {
+    "candidate": "My updated winter morning routine",
+    "label": "block"
+  },
+  {
+    "candidate": "Organizing my kitchen pantry",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: A very aesthetic picnic date",
+    "label": "block"
+  },
+  {
+    "candidate": "Understanding Big Data architecture",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to deploy a machine learning model",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to Ruby on Rails",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to implement a search algorithm in C",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding virtual machines vs containers",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build a basic operating system",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to penetration testing",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use grep and awk commands",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding TCP/IP networking",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to write a bash script for automation",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to 3D rendering with WebGL",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to build an Android app using Jetpack Compose",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding closures in JavaScript",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to optimize images for the web",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to computer vision with OpenCV",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to use WebRTC for video calling",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding OAuth and how to implement it",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to set up a CI/CD pipeline in Gitlab",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to reactive programming with RxJS",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to manage state in Flutter apps",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the history of the internet",
+    "label": "allow"
+  },
+  {
+    "candidate": "How antibiotics fight bacteria",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to political science",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to manage personal debt effectively",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the physics of black holes",
+    "label": "allow"
+  },
+  {
+    "candidate": "How cognitive biases affect our decisions",
+    "label": "allow"
+  },
+  {
+    "candidate": "The history of the Japanese Samurai",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to molecular biology",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to create a budget and stick to it",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the mechanics of flight",
+    "label": "allow"
+  },
+  {
+    "candidate": "The causes of the French Revolution",
+    "label": "allow"
+  },
+  {
+    "candidate": "How the human eye processes light",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to classical mechanics",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to read and understand poetry",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding the basics of linguistics",
+    "label": "allow"
+  },
+  {
+    "candidate": "The history of the Cold War space race",
+    "label": "allow"
+  },
+  {
+    "candidate": "How to improve memory retention",
+    "label": "allow"
+  },
+  {
+    "candidate": "Introduction to the study of ethics",
+    "label": "allow"
+  },
+  {
+    "candidate": "How wind turbines generate power",
+    "label": "allow"
+  },
+  {
+    "candidate": "Understanding supply and demand curves",
+    "label": "allow"
+  },
+  {
+    "candidate": "Minecraft speedrunner vs 5 hunters",
+    "label": "block"
+  },
+  {
+    "candidate": "I played VR chat for 24 hours straight",
+    "label": "block"
+  },
+  {
+    "candidate": "Roblox adopt me trading legendary pets",
+    "label": "block"
+  },
+  {
+    "candidate": "Fortnite funny moments and epic wins",
+    "label": "block"
+  },
+  {
+    "candidate": "Super Smash Bros Ultimate tournament grand finals",
+    "label": "block"
+  },
+  {
+    "candidate": "Playing scary games in the dark",
+    "label": "block"
+  },
+  {
+    "candidate": "Valorant pro tips and tricks",
+    "label": "block"
+  },
+  {
+    "candidate": "I built a roller coaster in Planet Coaster",
+    "label": "block"
+  },
+  {
+    "candidate": "GTA 5 RP funny moments",
+    "label": "block"
+  },
+  {
+    "candidate": "Call of Duty Zombies Easter Egg Guide",
+    "label": "block"
+  },
+  {
+    "candidate": "I survived 100 days in a deserted island video game",
+    "label": "block"
+  },
+  {
+    "candidate": "Apex Legends new season gameplay",
+    "label": "block"
+  },
+  {
+    "candidate": "World of Warcraft raid boss guide",
+    "label": "block"
+  },
+  {
+    "candidate": "Sims 4 building a modern mansion",
+    "label": "block"
+  },
+  {
+    "candidate": "Red Dead Redemption 2 secret locations",
+    "label": "block"
+  },
+  {
+    "candidate": "I ate only food from gas stations for 24 hours",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to insane trick shots",
+    "label": "block"
+  },
+  {
+    "candidate": "Try not to laugh watching funny animals",
+    "label": "block"
+  },
+  {
+    "candidate": "Surviving 24 hours in a target store",
+    "label": "block"
+  },
+  {
+    "candidate": "ASMR roleplay spa treatment",
+    "label": "block"
+  },
+  {
+    "candidate": "Rating celebrity houses on Zillow",
+    "label": "block"
+  },
+  {
+    "candidate": "We tested viral life hacks to see if they work",
+    "label": "block"
+  },
+  {
+    "candidate": "I let my subscribers control my life for a day",
+    "label": "block"
+  },
+  {
+    "candidate": "Funny kids fails compilation",
+    "label": "block"
+  },
+  {
+    "candidate": "Unboxing the weirdest things on Amazon",
+    "label": "block"
+  },
+  {
+    "candidate": "Pranking my friends with a fake lottery ticket",
+    "label": "block"
+  },
+  {
+    "candidate": "Eating everything at a theme park",
+    "label": "block"
+  },
+  {
+    "candidate": "I stayed in an underwater hotel",
+    "label": "block"
+  },
+  {
+    "candidate": "Reacting to my old YouTube videos",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying the spiciest ramen noodles",
+    "label": "block"
+  },
+  {
+    "candidate": "Why I stopped using my iPhone",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Day in the life of a Google intern",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to build a PC for programming",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My desk setup upgrade for productivity",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Is learning to code still worth it in 2024?",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "A realistic week in my life as a developer",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why you shouldn't use Python",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How I made my first $1000 online",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "My mechanical keyboard collection tour",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "I tried working 12 hours a day for a week",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "The truth about software engineering salaries",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "How to organize your Notion workspace",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Why everyone is moving to Texas",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Tech gadgets I regret buying",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: Coding all night for a hackathon",
+    "label": "uncertain"
+  },
+  {
+    "candidate": "Vlog: A productive weekend in my life",
+    "label": "block"
+  },
+  {
+    "candidate": "My huge fall clothing haul",
+    "label": "block"
+  },
+  {
+    "candidate": "Empty apartment tour in Chicago",
+    "label": "block"
+  },
+  {
+    "candidate": "Get ready with me for work",
+    "label": "block"
+  },
+  {
+    "candidate": "A lazy sunday vlog and reset",
+    "label": "block"
+  },
+  {
+    "candidate": "Decorating my apartment for fall",
+    "label": "block"
+  },
+  {
+    "candidate": "My daily skincare routine for glowing skin",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Traveling to London for the weekend",
+    "label": "block"
+  },
+  {
+    "candidate": "What I eat in a day to stay healthy",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: A day in my life in Paris",
+    "label": "block"
+  },
+  {
+    "candidate": "My realistic morning routine",
+    "label": "block"
+  },
+  {
+    "candidate": "Trying viral makeup products",
+    "label": "block"
+  },
+  {
+    "candidate": "Vlog: Deep cleaning my room",
+    "label": "block"
+  },
+  {
+    "candidate": "My favorite outfits for summer",
+    "label": "block"
+  },
+  {
+    "candidate": "A relaxing night routine vlog",
+    "label": "block"
+  }
+]

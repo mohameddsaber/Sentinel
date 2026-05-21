@@ -38,7 +38,7 @@ async function getClassifier() {
         configureTransformersEnvironment(env);
         return pipeline("text-classification", LOCAL_MODEL_ID, {
           local_files_only: true,
-          dtype: "fp32"
+          dtype: "q8"
         });
       })
       .catch((error) => {
