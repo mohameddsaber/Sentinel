@@ -28,7 +28,6 @@ async function runEvaluation(datasetPath) {
     expectedCounts[example.label] += 1;
 
     const result = await scoreCandidate({
-      task: example.task,
       candidate: example.candidate
     });
 
@@ -64,9 +63,8 @@ async function runEvaluation(datasetPath) {
 
   for (const mistake of mistakes) {
     console.log(
-      `- [${mistake.index}] expected=${mistake.example.label} predicted=${mistake.result.decision} similarity=${mistake.result.similarity.toFixed(3)}`
+      `- [${mistake.index}] expected=${mistake.example.label} predicted=${mistake.result.decision} confidence=${mistake.result.similarity.toFixed(3)}`
     );
-    console.log(`  task: ${mistake.example.task}`);
     console.log(`  candidate: ${mistake.example.candidate}`);
     console.log(`  reasons: ${mistake.result.reasons.join(" | ")}`);
   }

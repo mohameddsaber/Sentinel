@@ -1,0 +1,6 @@
+transformers
+torch
+datasets
+optimum[onnxruntime]
+scikit-learn
+accelerate>=0.26.0

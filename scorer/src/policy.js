@@ -38,9 +38,8 @@ const SOFT_SUSPICIOUS_PATTERNS = [
 ];
 
 function applyDecisionPolicy(input) {
-  const similarity = Number.isFinite(input && input.similarity)
-    ? input.similarity
-    : 0;
+  const label = input && input.label ? input.label : "uncertain";
+  const score = Number.isFinite(input && input.score) ? input.score : 0;
   const normalizedCandidate =
     input && typeof input.normalizedCandidate === "string"
       ? input.normalizedCandidate
@@ -59,68 +58,52 @@ function applyDecisionPolicy(input) {
 
   if (hardBlockMatches.length > 0) {
     reasons.push(`hard block pattern: ${hardBlockMatches.join(", ")}`);
-    reasons.push(`similarity ${similarity.toFixed(3)} ignored due to hard block`);
+    reasons.push(`classifier label ${label} ignored due to hard block`);
 
     return {
       decision: "block",
       reasons,
       debug: {
-        allowThreshold: ALLOW_THRESHOLD,
-        blockThreshold: BLOCK_THRESHOLD,
+        label,
+        score,
         hardBlockMatches,
         softSuspiciousMatches
       }
     };
   }
 
-  if (similarity >= ALLOW_THRESHOLD) {
-    reasons.push(
-      `similarity ${similarity.toFixed(3)} >= allow threshold ${ALLOW_THRESHOLD}`
-    );
-
-    return {
-      decision: "allow",
-      reasons,
-      debug: {
-        allowThreshold: ALLOW_THRESHOLD,
-        blockThreshold: BLOCK_THRESHOLD,
-        hardBlockMatches,
-        softSuspiciousMatches
-      }
-    };
-  }
-
-  if (similarity <= BLOCK_THRESHOLD) {
-    reasons.push(
-      `similarity ${similarity.toFixed(3)} <= block threshold ${BLOCK_THRESHOLD}`
-    );
-
-    return {
-      decision: "block",
-      reasons,
-      debug: {
-        allowThreshold: ALLOW_THRESHOLD,
-        blockThreshold: BLOCK_THRESHOLD,
-        hardBlockMatches,
-        softSuspiciousMatches
-      }
-    };
-  }
-
-  if (softSuspiciousMatches.length > 0) {
-    reasons.push(`suspicious pattern: ${softSuspiciousMatches.join(", ")}`);
+  // Use the classifier output directly
+  if (label === "block" || label === "allow" || label === "uncertain") {
+     reasons.push(`classifier determined label: ${label} with score ${score.toFixed(3)}`);
+     
+     // If the model said allow but it has suspicious patterns, maybe drop to uncertain
+     if (label === "allow" && softSuspiciousMatches.length > 0) {
+        reasons.push(`suspicious pattern found: ${softSuspiciousMatches.join(", ")}`);
+        reasons.push(`downgrading from allow to uncertain`);
+        return {
+           decision: "uncertain",
+           reasons,
+           debug: { label, score, hardBlockMatches, softSuspiciousMatches }
+        };
+     }
+     
+     return {
+        decision: label,
+        reasons,
+        debug: { label, score, hardBlockMatches, softSuspiciousMatches }
+     };
   }
 
   reasons.push(
-    `similarity ${similarity.toFixed(3)} in uncertain band (${BLOCK_THRESHOLD}, ${ALLOW_THRESHOLD})`
+    `classifier returned unknown label ${label}`
   );
 
   return {
     decision: "uncertain",
     reasons,
     debug: {
-      allowThreshold: ALLOW_THRESHOLD,
-      blockThreshold: BLOCK_THRESHOLD,
+      label,
+      score,
       hardBlockMatches,
       softSuspiciousMatches
     }

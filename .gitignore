@@ -2,3 +2,8 @@
 scale.txt
 logo-prompt.txt
 **/node_modules
+extention/scripts/venv
+**/venv
+scorer/src/custom-model
+scorer/src/custom-model-pt
+scorer/scripts/results

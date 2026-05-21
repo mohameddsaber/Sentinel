@@ -1,23 +1,20 @@
-import { getExtractor } from "../extention/scorer/embedder.js";
-import { scoreCandidate } from "../extention/scorer/scorer.js";
-import { scoreYouTubeCandidate } from "../extention/scorer/integration.js";
+import { scoreCandidate } from "../src/scorer.js";
+import { scoreYouTubeCandidate } from "../src/integration.js";
+import { getClassifier } from "../src/classifier.js";
 
 const EXAMPLES = {
   text: {
     allow: {
-      task: "machine learning research papers and transformer architecture deep dives",
       candidate:
         "attention is all you need explained with annotated transformer diagrams and encoder decoder walkthrough"
     },
     block: {
-      task: "machine learning research papers and transformer architecture deep dives",
       candidate:
         "mrbeast funny reaction compilation and prank highlights"
     }
   },
   youtube: {
     allow: {
-      task: "machine learning research papers and transformer architecture deep dives",
       title: "full lecture on attention mechanisms and transformer scaling laws",
       channel: "ML Systems Lab",
       query: "transformer architecture lecture",
@@ -25,7 +22,6 @@ const EXAMPLES = {
       url: "https://www.youtube.com/watch?v=lecture"
     },
     block: {
-      task: "machine learning research papers and transformer architecture deep dives",
       title: "study with me for 4 hours deep work session",
       channel: "Focus Lab",
       query: "transformer architecture lecture",
@@ -39,7 +35,6 @@ const elements = {
   modeSelect: document.querySelector("#mode-select"),
   textFields: document.querySelector("#text-fields"),
   youtubeFields: document.querySelector("#youtube-fields"),
-  taskInput: document.querySelector("#task-input"),
   candidateInput: document.querySelector("#candidate-input"),
   youtubeTitleInput: document.querySelector("#youtube-title-input"),
   youtubeChannelInput: document.querySelector("#youtube-channel-input"),
@@ -57,7 +52,6 @@ const elements = {
   selectedFormValue: document.querySelector("#selected-form-value"),
   allowThresholdValue: document.querySelector("#allow-threshold-value"),
   blockThresholdValue: document.querySelector("#block-threshold-value"),
-  normalizedTaskOutput: document.querySelector("#normalized-task-output"),
   normalizedCandidateOutput: document.querySelector("#normalized-candidate-output"),
   reasonsList: document.querySelector("#reasons-list"),
   formsOutput: document.querySelector("#forms-output"),
@@ -78,7 +72,7 @@ clearOutput();
 
 async function handleWarmup() {
   await runBusyTask("Loading model", async () => {
-    await getExtractor();
+    await getClassifier();
     setStatus("Model ready", "allow");
   });
 }
@@ -123,14 +117,12 @@ async function runBusyTask(label, task) {
 
 function readTextInput() {
   return {
-    task: elements.taskInput.value,
     candidate: elements.candidateInput.value
   };
 }
 
 function readYouTubeInput() {
   return {
-    task: elements.taskInput.value,
     title: elements.youtubeTitleInput.value,
     channel: elements.youtubeChannelInput.value,
     query: elements.youtubeQueryInput.value,
@@ -153,7 +145,6 @@ function renderResult(result, mode) {
   elements.blockThresholdValue.textContent = formatThreshold(
     result.debug?.blockThreshold
   );
-  elements.normalizedTaskOutput.textContent = result.normalizedTask || "-";
   elements.normalizedCandidateOutput.textContent =
     result.normalizedCandidate || "-";
 
@@ -198,7 +189,6 @@ function renderError(error) {
   elements.selectedFormValue.textContent = "-";
   elements.allowThresholdValue.textContent = "-";
   elements.blockThresholdValue.textContent = "-";
-  elements.normalizedTaskOutput.textContent = "-";
   elements.normalizedCandidateOutput.textContent = "-";
   elements.reasonsList.innerHTML = `<li>${escapeHtml(
     error instanceof Error ? error.message : String(error)
@@ -215,7 +205,6 @@ function clearOutput() {
   elements.selectedFormValue.textContent = "-";
   elements.allowThresholdValue.textContent = "-";
   elements.blockThresholdValue.textContent = "-";
-  elements.normalizedTaskOutput.textContent = "-";
   elements.normalizedCandidateOutput.textContent = "-";
   elements.reasonsList.innerHTML = "<li>No result yet.</li>";
   elements.formsOutput.textContent = "No result yet.";
@@ -225,8 +214,6 @@ function clearOutput() {
 function fillExample(kind) {
   const mode = getMode();
   const example = EXAMPLES[mode][kind];
-
-  elements.taskInput.value = example.task;
 
   if (mode === "youtube") {
     elements.youtubeTitleInput.value = example.title;

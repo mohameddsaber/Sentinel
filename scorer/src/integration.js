@@ -24,7 +24,6 @@ async function scoreYouTubeCandidate(input, options) {
 
     const result = await scoreCandidate(
       {
-        task: input.task,
         candidate,
         metadata: {
           ...input.metadata,
@@ -50,7 +49,6 @@ async function scoreYouTubeCandidate(input, options) {
 
   return {
     selectedForm: selected.form,
-    normalizedTask: selected.result.normalizedTask,
     normalizedCandidate: selected.result.normalizedCandidate,
     similarity: selected.result.similarity,
     decision: selected.result.decision,
@@ -140,10 +138,6 @@ function decisionRank(decision) {
 function validateYouTubeScoreInput(input) {
   if (!input || typeof input !== "object") {
     throw new TypeError("scoreYouTubeCandidate expects an input object.");
-  }
-
-  if (typeof input.task !== "string" || !input.task.trim()) {
-    throw new TypeError("scoreYouTubeCandidate requires a non-empty task string.");
   }
 }
 

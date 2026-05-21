@@ -1,0 +1,12 @@
+{
+  "name": "sentinel-scorer",
+  "version": "0.1.0",
+  "description": "Standalone UI and playground for the Sentinel classifier",
+  "type": "module",
+  "scripts": {
+    "start": "node src/playground-server.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  }
+}
