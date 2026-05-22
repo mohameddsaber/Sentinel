@@ -81,7 +81,7 @@
     },
     {
         "candidate": "Deconstructing the pathfinding algorithms of Age of Empires II",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "The psychology of map control in CS:GO major tournament finals",
@@ -373,7 +373,7 @@
     },
     {
         "candidate": "The ethics of scraping public data for generative AI training",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational fluid dynamics for optimizing wind turbine blade design",
@@ -581,7 +581,7 @@
     },
     {
         "candidate": "How flight simulator enthusiasts build realistic home cockpits",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "Tracing the digital footprint of early internet hoax chains",
@@ -701,7 +701,7 @@
     },
     {
         "candidate": "The ethics of using predictive policing algorithms in criminal justice",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational chemistry for discovering new battery materials",
@@ -1029,7 +1029,7 @@
     },
     {
         "candidate": "The ethics of deploying emotion recognition algorithms in workplace surveillance systems",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational biology approaches to simulating protein folding and molecular interactions",
@@ -1237,7 +1237,7 @@
     },
     {
         "candidate": "How flight simulator developers model complex aerodynamic forces and weather systems",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "Tracing the digital footprint of early viral marketing campaigns and flash mobs",
@@ -1357,7 +1357,7 @@
     },
     {
         "candidate": "The ethics of deploying emotion recognition algorithms in workplace productivity surveillance systems",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational biology approaches to simulating protein folding and predicting molecular interactions",
@@ -1565,7 +1565,7 @@
     },
     {
         "candidate": "How flight simulator developers model complex aerodynamic forces and weather systems to achieve maximum realism",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "Tracing the digital footprint of early viral marketing campaigns and flash mobs in the pre-social media era",
@@ -1685,7 +1685,7 @@
     },
     {
         "candidate": "The ethics of deploying emotion recognition algorithms in workplace productivity surveillance systems and the impact on employee well-being",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational biology approaches to simulating protein folding and predicting molecular interactions for drug discovery",
@@ -1893,7 +1893,7 @@
     },
     {
         "candidate": "How flight simulator developers model complex aerodynamic forces and weather systems",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "Tracing the digital footprint of early viral marketing campaigns and flash mobs",
@@ -2013,7 +2013,7 @@
     },
     {
         "candidate": "The ethics of deploying emotion recognition algorithms in workplace productivity surveillance systems",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational biology approaches to simulating protein folding and predicting molecular interactions",
@@ -2221,7 +2221,7 @@
     },
     {
         "candidate": "How flight simulator developers model complex aerodynamic forces and weather systems to achieve maximum realism",
-        "label": "block"
+        "label": "allow"
     },
     {
         "candidate": "Tracing the digital footprint of early viral marketing campaigns and flash mobs in the pre-social media era",
@@ -2341,7 +2341,7 @@
     },
     {
         "candidate": "The ethics of deploying emotion recognition algorithms in workplace productivity surveillance systems and the impact on employee well-being",
-        "label": "uncertain"
+        "label": "allow"
     },
     {
         "candidate": "Computational biology approaches to simulating protein folding and predicting molecular interactions for drug discovery",

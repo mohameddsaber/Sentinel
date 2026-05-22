@@ -1,0 +1,76 @@
+import json
+import os
+import re
+from transformers import AutoTokenizer, pipeline
+from optimum.onnxruntime import ORTModelForSequenceClassification
+
+# --- Settings ---
+os.environ["OMP_NUM_THREADS"] = "1"
+
+TEST_DATA_PATH = "../data/test.json"
+MODEL_DIR = "../src/custom-model"
+QUANT_MODEL_PATH = "../src/custom-model/onnx"
+OUTPUT_REPORT_PATH = "../data/misclassifications_report.json"
+
+def normalize_text(text):
+    if not isinstance(text, str): return ""
+    text = text.lower().strip().replace("&", " and ")
+    text = re.sub(r'[`"\'“”‘’()[\]{}<>|]', ' ', text)
+    text = re.sub(r'[^a-z0-9+#./_\-\s]', ' ', text)
+    text = re.sub(r'([a-z0-9+#])([./_\-])([a-z0-9+#])', r'\1 \3', text)
+    return re.sub(r'\s+', ' ', text).strip()
+
+def run_report():
+    print(f"Loading test data from {TEST_DATA_PATH}...")
+    with open(TEST_DATA_PATH, "r") as f:
+        test_data = json.load(f)
+
+    print("Loading Models...")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
+    model_fp32 = ORTModelForSequenceClassification.from_pretrained(MODEL_DIR, file_name="model.onnx")
+    pipe_fp32 = pipeline("text-classification", model=model_fp32, tokenizer=tokenizer)
+
+    model_q8 = ORTModelForSequenceClassification.from_pretrained(QUANT_MODEL_PATH, file_name="model_quantized.onnx")
+    pipe_q8 = pipeline("text-classification", model=model_q8, tokenizer=tokenizer)
+
+    misclassifications = []
+    
+    print(f"Evaluating {len(test_data)} items and writing to {OUTPUT_REPORT_PATH}...")
+    
+    for item in test_data:
+        text = normalize_text(item["candidate"])
+        actual = item["label"]
+        
+        pred_fp32 = pipe_fp32(text)[0]
+        pred_q8 = pipe_q8(text)[0]
+        
+        if pred_fp32["label"] != actual or pred_q8["label"] != actual:
+            misclassifications.append({
+                "text": item["candidate"],
+                "normalized_text": text,
+                "actual_label": actual,
+                "fp32_prediction": {
+                    "label": pred_fp32["label"],
+                    "score": float(pred_fp32["score"])
+                },
+                "q8_prediction": {
+                    "label": pred_q8["label"],
+                    "score": float(pred_q8["score"])
+                }
+            })
+
+    output_data = {
+        "summary": {
+            "total_test_items": len(test_data),
+            "total_misclassified": len(misclassifications)
+        },
+        "misclassifications": misclassifications
+    }
+
+    with open(OUTPUT_REPORT_PATH, "w") as f:
+        json.dump(output_data, f, indent=2)
+
+    print(f"Done! Report saved to {OUTPUT_REPORT_PATH}")
+
+if __name__ == "__main__":
+    run_report()
