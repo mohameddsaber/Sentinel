@@ -8,6 +8,7 @@
   const YT_STYLE_ID = "deepwork-youtube-focus-style";
   let lastUrl = "";
   let lastTitle = "";
+  let lastCategory = "";
   let extensionContextAlive = true;
   let metaIntervalId = null;
   let titleObserver = null;
@@ -71,10 +72,20 @@
     if (!isContextAlive()) return;
     const url = window.location.href;
     const title = document.title || "";
-    if (url === lastUrl && title === lastTitle) return;
+    let category = "";
+
+    if (url.includes("youtube.com")) {
+      const categoryMeta = document.querySelector('meta[itemprop="genre"]');
+      if (categoryMeta) {
+        category = categoryMeta.getAttribute("content") || "";
+      }
+    }
+
+    if (url === lastUrl && title === lastTitle && category === lastCategory) return;
     lastUrl = url;
     lastTitle = title;
-    void safeSendMessage({ type: "page_meta", url, title });
+    lastCategory = category;
+    void safeSendMessage({ type: "page_meta", url, title, category });
   };
 
   const observeTitle = () => {
@@ -214,7 +225,7 @@
 
       if (response?.verdict === "prompt") {
         if (response.channelKey === lastPromptedChannelKey &&
-            document.getElementById(CHANNEL_PROMPT_ID)) {
+          document.getElementById(CHANNEL_PROMPT_ID)) {
           return;
         }
         lastPromptedChannelKey = response.channelKey || "";
@@ -326,7 +337,7 @@
 
     if (response.verdict === "prompt") {
       if (response.channelKey === lastPromptedChannelKey &&
-          document.getElementById(CHANNEL_PROMPT_ID)) {
+        document.getElementById(CHANNEL_PROMPT_ID)) {
         pendingChannelNavigationUrl = destinationUrl;
         return;
       }
@@ -456,7 +467,7 @@
     }
     removeYouTubeFocusUI();
   }
-// remove recommendations and related videos from youtube homepage and watch page.
+  // remove recommendations and related videos from youtube homepage and watch page.
   function enforceYouTubeFocusUI() {
     if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
     // Remove existing style so re-injection after SPA navigation is clean
@@ -507,7 +518,7 @@
     `;
     document.documentElement.appendChild(style);
   }
-// remove the style when the session is inactive
+  // remove the style when the session is inactive
   function removeYouTubeFocusUI() {
     const style = document.getElementById(YT_STYLE_ID);
     if (style) style.remove();
