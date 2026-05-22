@@ -8,3 +8,4 @@ scorer/src/custom-model
 scorer/src/custom-model-pt
 scorer/scripts/results
 scorer/data/old
+.env
