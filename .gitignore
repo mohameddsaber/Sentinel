@@ -7,5 +7,5 @@ extention/scripts/venv
 scorer/src/custom-model
 scorer/src/custom-model-pt
 scorer/scripts/results
-scorer/data/old
+scorer/data/old*
 .env

@@ -281,7 +281,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   tabMeta.delete(tabId);
-  clearApprovedSearchesForTab(tabId).catch(() => {});
+  clearApprovedSearchesForTab(tabId).catch(() => { });
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -290,7 +290,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message.type === "toggle_deepwork") {
-    toggleDeepWork(message.enabled, message.durationMin,message.currentTask).then(sendResponse);
+    toggleDeepWork(message.enabled, message.durationMin, message.currentTask).then(sendResponse);
     return true;
   }
   if (message.type === "get_emergency_exit_status") {
@@ -308,7 +308,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "page_meta") {
     const tabId = sender?.tab?.id;
     if (tabId && message.url) {
-      tabMeta.set(tabId, { url: message.url, title: message.title || "" });
+      tabMeta.set(tabId, { url: message.url, title: message.title || "", category: message.category || "" });
       handleUrlChange(tabId, message.url, sender?.tab?.active === true);
     }
     sendResponse({ ok: true });
@@ -349,7 +349,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function getStateForPopup() {
-  const { settings, state,progress } = await chrome.storage.local.get([
+  const { settings, state, progress } = await chrome.storage.local.get([
     "settings",
     "state",
     "progress"
@@ -377,7 +377,7 @@ async function getStateForPopup() {
 
 async function toggleDeepWork(enabled, durationMin, currentTask) {
   if (enabled) {
-    await startDeepWork(durationMin,currentTask);
+    await startDeepWork(durationMin, currentTask);
   }
   return { ok: true };
 }
@@ -429,12 +429,12 @@ async function endDeepWork(reason) {
   const activeState = state || DEFAULT_STATE;
   const activeProgress = progress || DEFAULT_PROGRESS;
   const { deepWorkActive, startTime, currentTask } = activeState;
-    if (!deepWorkActive || !startTime) return;
+  if (!deepWorkActive || !startTime) return;
   const endTime = Date.now();
   const actualDurationMin = Math.max(
-  1,
-  Math.round((endTime - startTime) / 60000)
-);
+    1,
+    Math.round((endTime - startTime) / 60000)
+  );
   const newSession = {
     startTime,
     endTime,
@@ -713,7 +713,9 @@ function isBlockedByRules(url, settings, meta) {
   if (isAllowlisted(url, settings.allowPatterns || [])) return false;
   if (isYouTubeDomain(url)) {
     if (settings.blockShorts && isYouTubeShorts(url)) return true;
-    return !isAllowedYouTubeRoute(url, meta?.title || "");
+    const isAllowed = isAllowedYouTubeRoute(url, meta?.title || "", meta?.category || "");
+    console.log(`[Sentinel Background] Video: ${url} | Category: "${meta?.category || 'N/A'}" | Blocked: ${!isAllowed}`);
+    return !isAllowed;
   }
   if (matchesDomain(url, settings.blockedDomains || [])) return true;
   if (matchesPatterns(url, settings.blockedPatterns || [])) return true;
@@ -802,7 +804,7 @@ function isYouTubeChannelPath(path) {
   );
 }
 
-function isAllowedYouTubeRoute(url, title = "") {
+function isAllowedYouTubeRoute(url, title = "", category = "") {
   if (!isYouTubeDomain(url)) return false;
   const parsed = parseUrl(url);
   if (!parsed) return false;
@@ -822,7 +824,7 @@ function isAllowedYouTubeRoute(url, title = "") {
 
   // Individual video — apply full channel + keyword scoring
   if (path === "/watch" && parsed.searchParams.has("v")) {
-    return isAllowedYouTubeVideo(url, title);
+    return isAllowedYouTubeVideo(url, title, category);
   }
 
   return false;
@@ -832,13 +834,25 @@ function isAllowedYouTubeRoute(url, title = "") {
  * Decides whether a specific YouTube video URL + title should be allowed.
  * Priority order:
  *   1. Known entertainment channel → block
- *   2. Known educational channel  → allow
- *   3. Keyword score >= ALLOW threshold → allow
- *   4. Keyword score <= BLOCK threshold with negative hits → block
- *   5. Ambiguous → allow (avoid false positives for genuine work)
+ *   2. Allowed categories → allow
+ *   3. Disallowed categories → block
+ *   4. Known educational channel → allow
+ *   5. Keyword score >= ALLOW threshold → allow
+ *   6. Keyword score <= BLOCK threshold with negative hits → block
+ *   7. Ambiguous → allow (avoid false positives for genuine work)
  */
-function isAllowedYouTubeVideo(url, title = "") {
+function isAllowedYouTubeVideo(url, title = "", category = "") {
   if (isEntertainmentChannel(url)) return false;
+
+  if (category) {
+    const catLower = category.toLowerCase();
+    const isAllowedCat = catLower === "education" ||
+      catLower === "science & technology" ||
+      catLower === "howto & style" ||
+      catLower === "how-to & style";
+    return isAllowedCat;
+  }
+
   if (isEducationalChannel(url)) return true;
 
   const score = keywordScore(url, title);
@@ -880,10 +894,10 @@ function matchesYouTubeChannelSet(url, channelSet) {
 
     for (const entry of channelSet) {
       const e = entry.toLowerCase();
-      if (handle    && e === handle.toLowerCase())    return true;
+      if (handle && e === handle.toLowerCase()) return true;
       if (channelId && e === channelId.toLowerCase()) return true;
-      if (cSlug     && e === cSlug.toLowerCase())     return true;
-      if (userSlug  && e === userSlug.toLowerCase())  return true;
+      if (cSlug && e === cSlug.toLowerCase()) return true;
+      if (userSlug && e === userSlug.toLowerCase()) return true;
     }
   }
 
@@ -1105,6 +1119,9 @@ function taskOverlapScore(query, currentTask) {
  *   { verdict: "prompt",     query, currentTask }  → content script → soft_blocked.html
  */
 async function handleSearchQueryCheck(query, tabId) {
+  // TEMPORARY: Disable search blocking
+  return { verdict: "allow" };
+
   const { state } = await chrome.storage.local.get("state");
   const activeState = state || DEFAULT_STATE;
   const normalizedQuery = normalizeSearchQuery(query);

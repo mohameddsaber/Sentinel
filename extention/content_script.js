@@ -67,17 +67,104 @@
     }
   });
 
+  if (window.location.hostname.includes('youtube.com')) {
+    const script = document.createElement('script');
+    script.textContent = `
+      (function() {
+        let pollInterval = null;
+
+        function extractCategory() {
+          let cat = "";
+          try {
+            const player = document.querySelector('#movie_player');
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentVideoId = urlParams.get('v');
+
+            if (player && typeof player.getPlayerResponse === 'function') {
+               const pr = player.getPlayerResponse();
+               const videoId = pr?.videoDetails?.videoId;
+               if (videoId && currentVideoId === videoId) {
+                  cat = pr?.microformat?.playerMicroformatRenderer?.category || "";
+               }
+            }
+            if (!cat && window.ytInitialPlayerResponse) {
+               const videoId = window.ytInitialPlayerResponse?.videoDetails?.videoId;
+               if (videoId && currentVideoId === videoId) {
+                  cat = window.ytInitialPlayerResponse?.microformat?.playerMicroformatRenderer?.category || "";
+               }
+            }
+          } catch(e) {}
+          
+          if (cat) {
+            window.postMessage({ type: 'YT_CATEGORY_RESPONSE', category: cat, url: window.location.href }, '*');
+            return true;
+          }
+          return false;
+        }
+
+        function startPolling() {
+           if (pollInterval) clearInterval(pollInterval);
+           let attempts = 0;
+           pollInterval = setInterval(() => {
+              if (extractCategory() || attempts++ > 20) {
+                 clearInterval(pollInterval);
+              }
+           }, 50);
+        }
+
+        window.addEventListener('message', (event) => {
+          if (event.source !== window) return;
+          if (event.data && event.data.type === 'GET_YT_CATEGORY') {
+            if (!extractCategory()) startPolling();
+          }
+        });
+
+        window.addEventListener('yt-page-data-updated', startPolling);
+        window.addEventListener('yt-navigate-finish', startPolling);
+        
+        const originalPushState = history.pushState;
+        history.pushState = function() {
+           originalPushState.apply(this, arguments);
+           startPolling();
+        };
+      })();
+    `;
+    if (document.documentElement) document.documentElement.appendChild(script);
+    if (script.parentNode) script.remove();
+  }
+
+  let ytCategoryFromPage = "";
+  let currentTabUrl = location.href;
+  let fetchingCategoryUrl = "";
+
   // send url and title to background every 2 seconds or on change, whichever is sooner
-  const sendMeta = () => {
+  const sendMeta = async () => {
     if (!isContextAlive()) return;
     const url = window.location.href;
+
+    if (url !== currentTabUrl) {
+      currentTabUrl = url;
+      ytCategoryFromPage = ""; // Reset cached category on navigation
+    }
+
     const title = document.title || "";
-    let category = "";
+    let category = ytCategoryFromPage;
 
     if (url.includes("youtube.com")) {
-      const categoryMeta = document.querySelector('meta[itemprop="genre"]');
-      if (categoryMeta) {
-        category = categoryMeta.getAttribute("content") || "";
+      window.postMessage({ type: 'GET_YT_CATEGORY' }, '*');
+
+      if (!category && url.includes("/watch") && fetchingCategoryUrl !== url) {
+        fetchingCategoryUrl = url;
+        try {
+          const res = await fetch(url);
+          const html = await res.text();
+          const match = html.match(/<meta\s+itemprop="genre"\s+content="([^"]+)"/i) || html.match(/<meta\s+itemprop="category"\s+content="([^"]+)"/i);
+          if (match && match[1]) {
+            category = match[1];
+            ytCategoryFromPage = category;
+            console.log("[Sentinel Content Script] Fetched Category from HTML fallback:", category);
+          }
+        } catch (e) { }
       }
     }
 
@@ -87,6 +174,17 @@
     lastCategory = category;
     void safeSendMessage({ type: "page_meta", url, title, category });
   };
+
+  window.addEventListener("message", (event) => {
+    if (event.source !== window) return;
+    if (event.data?.type === "YT_CATEGORY_RESPONSE") {
+      if (event.data.url === window.location.href && ytCategoryFromPage !== event.data.category) {
+        ytCategoryFromPage = event.data.category;
+        console.log(`[Sentinel Content Script] Fetched YouTube Category: "${ytCategoryFromPage}"`);
+        sendMeta();
+      }
+    }
+  });
 
   const observeTitle = () => {
     const titleEl = document.querySelector("title");
@@ -287,6 +385,13 @@
     if (location.href !== lastHref) {
       const newHref = location.href;
       lastHref = newHref;
+      
+      // Immediately request category and send meta on navigation
+      if (newHref.includes("/watch")) {
+         window.postMessage({ type: 'GET_YT_CATEGORY' }, '*');
+         sendMeta();
+      }
+
       // Check search query before the results page renders
       void checkYouTubeSearch(newHref);
       void checkYouTubeChannelApproval(newHref);
