@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Deep work mode with distraction loop detection and session reports.",
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_title": "Deep Work",
     "default_icon": {
       "128": "favicon/web-app-manifest-192x192.png",
@@ -27,24 +27,24 @@
     "<all_urls>"
   ],
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "background/background.js",
     "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"] ,
-      "js": ["content_script.js"],
+      "js": ["content/content_script.js"],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "blocked.html",
-        "blocked.css",
-        "blocked.js",
-        "soft_blocked.html",
-        "hard_blocked.html"
+        "blocked/blocked.html",
+        "blocked/blocked.css",
+        "blocked/blocked.js",
+        "blocked/soft_blocked.html",
+        "blocked/hard_blocked.html"
       ],
       "matches": ["<all_urls>"]
     }

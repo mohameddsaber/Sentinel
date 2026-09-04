@@ -160,7 +160,7 @@
           const html = await res.text();
           const match = html.match(/<meta\s+itemprop="genre"\s+content="([^"]+)"/i) || html.match(/<meta\s+itemprop="category"\s+content="([^"]+)"/i);
           if (match && match[1]) {
-            category = match[1];
+            category = decodeHtmlEntities(match[1]);
             ytCategoryFromPage = category;
             console.log("[Sentinel Content Script] Fetched Category from HTML fallback:", category);
           }
@@ -275,14 +275,14 @@
 
       if (response?.verdict === "hard_block") {
         window.location.href = chrome.runtime.getURL(
-          `hard_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}`
+          `blocked/hard_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}`
         );
         return;
       }
 
       if (response?.verdict === "prompt") {
         window.location.href = chrome.runtime.getURL(
-          `soft_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}&tabId=${encodeURIComponent(String(response.tabId || ""))}`
+          `blocked/soft_blocked.html?query=${encodeURIComponent(response.query || query)}&task=${encodeURIComponent(response.currentTask || "")}&tabId=${encodeURIComponent(String(response.tabId || ""))}`
         );
         return;
       }
@@ -316,7 +316,7 @@
       if (response?.verdict === "block") {
         removeChannelApprovalPrompt();
         window.location.href = chrome.runtime.getURL(
-          `blocked.html?url=${encodeURIComponent(window.location.href)}`
+          `blocked/blocked.html?url=${encodeURIComponent(window.location.href)}`
         );
         return;
       }
@@ -435,7 +435,7 @@
     if (response.verdict === "block") {
       removeChannelApprovalPrompt();
       window.location.href = chrome.runtime.getURL(
-        `blocked.html?url=${encodeURIComponent(destinationUrl)}`
+        `blocked/blocked.html?url=${encodeURIComponent(destinationUrl)}`
       );
       return;
     }
@@ -553,7 +553,7 @@
       removeChannelApprovalPrompt();
       if (denyBehavior === "block") {
         window.location.href = chrome.runtime.getURL(
-          `blocked.html?url=${encodeURIComponent(url)}`
+          `blocked/blocked.html?url=${encodeURIComponent(url)}`
         );
       }
     });
