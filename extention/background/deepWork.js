@@ -3,12 +3,12 @@ import {
   DEFAULT_STATE,
   DEFAULT_PROGRESS
 } from "./config.js";
+import {handleActiveTabSwitch} from "./background.js";
 
 export async function startDeepWork(durationMin, currentTask) {
   const now = Date.now();
-  await clearAllApprovedSearches();
+  // await clearAllApprovedSearches();
 
-  // Reset the override log at the start of each new session
   const { progress } = await chrome.storage.local.get("progress");
   const activeProgress = progress || DEFAULT_PROGRESS;
   await chrome.storage.local.set({
@@ -49,15 +49,6 @@ async function enforceActiveTabAtSessionStart() {
   }
 }
 
-async function clearAllApprovedSearches() {
-  const sessionState = await chrome.storage.session.get(null);
-  const keysToRemove = Object.keys(sessionState).filter((key) =>
-    key.startsWith(APPROVED_SEARCH_KEY_PREFIX)
-  );
-  if (keysToRemove.length === 0) return;
-  await chrome.storage.session.remove(keysToRemove);
-}
-
 async function playEndSound() {
   if (!(await chrome.offscreen.hasDocument())) {
     await chrome.offscreen.createDocument({
@@ -93,7 +84,7 @@ export async function endDeepWork(reason) {
     state: { ...DEFAULT_STATE },
     progress: { ...activeProgress, sessions: [...activeProgress.sessions, newSession] },
   });
-  await clearAllApprovedSearches();
+  // await clearAllApprovedSearches();
   await chrome.alarms.clear("deepwork_end");
     await playEndSound();
   
@@ -142,5 +133,3 @@ export async function setDailyGoal(dailyMinutesGoal) {
 
   return { ok: true };
 }
-
-

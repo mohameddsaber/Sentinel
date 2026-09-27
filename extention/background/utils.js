@@ -1,14 +1,28 @@
 import {
   ALWAYS_ALLOW_DOMAINS,
-  KEYWORD_WEIGHTS,
   ADULT_DOMAIN_KEYWORDS,
   STREAMING_DOMAIN_KEYWORDS,
   SUSPICIOUS_TLDS,
-  KNOWN_SAFE_STREAMING_DOMAINS
+  KNOWN_SAFE_STREAMING_DOMAINS,
+  KEYWORD_WEIGHTS
 } from "./config.js";
 
-import {isKnownSafeYouTubeIntent,isYouTubeDomain} from "./youtube.js";
+export function keywordScore(url, title) {
+  const text = `${url} ${title}`.toLowerCase();
+  let total = 0;
+  let negativeHits = 0;
 
+  for (const entry of KEYWORD_WEIGHTS) {
+    for (const word of entry.words) {
+      if (text.includes(word)) {
+        total += entry.weight;
+        if (entry.weight < 0) negativeHits += 1;
+      }
+    }
+  }
+
+  return { total, negativeHits };
+}
 
 export function matchesDomain(url, domains) {
   const hostname = extractDomain(url);
@@ -100,8 +114,6 @@ export function domainPatternRisk(url) {
 export function shouldBlockUnknownMediaDomain(url, title) {
   if (matchesDomain(url, KNOWN_SAFE_STREAMING_DOMAINS)) return false;
   if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
-  if (isKnownSafeYouTubeIntent(url)) return false;
-  if (isYouTubeDomain(url)) return true;
 
   const text = `${extractDomain(url)} ${getPath(url)} ${title}`.toLowerCase();
 
@@ -124,36 +136,3 @@ export function shouldBlockUnknownMediaDomain(url, title) {
   return false;
 }
 
-export function keywordScore(url, title) {
-  const text = `${url} ${title}`.toLowerCase();
-  let total = 0;
-  let negativeHits = 0;
-
-  for (const entry of KEYWORD_WEIGHTS) {
-    for (const word of entry.words) {
-      if (text.includes(word)) {
-        total += entry.weight;
-        if (entry.weight < 0) negativeHits += 1;
-      }
-    }
-  }
-
-  return { total, negativeHits };
-}
-
-// Words too common to be meaningful for task overlap matching
-const FILLER_WORDS = new Set([
-  "a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for",
-  "of", "with", "by", "from", "is", "it", "be", "as", "this", "that",
-  "was", "are", "how", "what", "why", "when", "do", "i", "my", "me",
-  "using", "use", "make", "get", "learn", "learning", "understand", "need",
-  "help", "fix", "build", "create", "work", "working"
-]);
-
-function tokenise(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter(w => w.length > 1 && !FILLER_WORDS.has(w));
-}

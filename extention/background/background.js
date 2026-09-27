@@ -8,6 +8,7 @@ import {
   SCORE_ALLOW_THRESHOLD,
   SCORE_BLOCK_THRESHOLD,
   STRICT_UNKNOWN_MEDIA_BLOCK,
+
 } from "./config.js";
 
 import {
@@ -24,17 +25,16 @@ import {
   matchesPatterns,
   domainPatternRisk,
   shouldBlockUnknownMediaDomain,
-  keywordScore
+  keywordScore,
 } from "./utils.js";
 
 import {
   isYouTubeDomain,
   isYouTubeShorts,
   isAllowedYouTubeRoute,
-  isKnownSafeYouTubeIntent
+  handleYouTubeChannelCheck,
+  approveYouTubeChannel
 } from "./youtube.js";
-// import{clearApprovedSearchesForTab} from "./search.js";
-
 
 const tabMeta = new Map();
 
@@ -110,10 +110,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     setDailyGoal(message.dailyMinutesGoal).then(sendResponse);
     return true;
   }
-  if (message.type === "search_query_check") {
-    handleSearchQueryCheck(message.query, sender?.tab?.id).then(sendResponse);
-    return true;
-  }
+
   if (message.type === "youtube_channel_check") {
     handleYouTubeChannelCheck(message.url).then(sendResponse);
     return true;
@@ -122,29 +119,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     approveYouTubeChannel(message.url).then(sendResponse);
     return true;
   }
-  if (message.type === "approve_search_query") {
-    approveSearchQuery(sender?.tab?.id, message.query).then(sendResponse);
-    return true;
-  }
-  // Sent by soft_blocked.html after the user provides a written reason.
-  // tabId comes from the page's query param since extension pages have no sender tab context.
-  if (message.type === "approve_search_query_with_reason") {
-    const tabId = message.tabId ?? sender?.tab?.id;
-    approveSearchQueryWithReason(tabId, message.query, message.reason).then(sendResponse);
-    return true;
-  }
-  // Used by soft_blocked.html to display the running session override count.
-  if (message.type === "get_override_count") {
-    getTodayOverrideCount().then(sendResponse);
-    return true;
-  }
+
 });
 
-async function getTodayOverrideCount() {
-  const { progress } = await chrome.storage.local.get("progress");
-  const overrides = (progress || DEFAULT_PROGRESS).searchOverrides || [];
-  return { count: overrides.length };
-}
 async function getStateForPopup() {
   const { settings, state, progress } = await chrome.storage.local.get([
     "settings",
@@ -159,7 +136,7 @@ async function getStateForPopup() {
   const progressPercent = goal > 0
     ? Math.min(100, Math.round((todayMinutes / goal) * 100))
     : 0;
-  const { count: searchOverridesToday } = await getTodayOverrideCount();
+  // const { count: searchOverridesToday } = await getTodayOverrideCount();
   return {
     sentinelState: activeState.deepWorkActive ? "SESSION_ACTIVE" : "IDLE",
     currentTask: activeState.currentTask,
@@ -167,9 +144,9 @@ async function getStateForPopup() {
     todayMinutes,
     goal,
     progressPercent,
-    searchOverridesToday,
   };
 }
+
 async function handleUrlChange(tabId, url, isActive) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
@@ -188,8 +165,7 @@ async function handleUrlChange(tabId, url, isActive) {
     await redirectToBlocked(tabId, url);
   }
 }
-
-async function handleActiveTabSwitch(tabId, url) {
+export async function handleActiveTabSwitch(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
@@ -208,6 +184,7 @@ async function handleActiveTabSwitch(tabId, url) {
     await redirectToBlocked(tabId, url);
   }
 }
+
 async function redirectToBlocked(tabId, originalUrl) {
   const blockedUrl = chrome.runtime.getURL(`blocked/blocked.html?url=${encodeURIComponent(originalUrl)}`);
   try {
@@ -227,11 +204,9 @@ async function injectContentScriptIntoExistingTabs() {
           files: ["content/content_script.js"],
         });
       } catch {
-        // ignore restricted pages or tabs where injection is unavailable
       }
     }
   } catch {
-    // ignore
   }
 }
 
@@ -280,7 +255,6 @@ function isBlockedByRules(url, settings, meta) {
   if (matchesPatterns(url, settings.blockedPatterns || [])) return true;
 
   if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
-  if (isKnownSafeYouTubeIntent(url)) return false;
 
   const domainRisk = domainPatternRisk(url);
   if (domainRisk >= 3) return true;

@@ -1,15 +1,10 @@
 import {
   DEFAULT_SETTINGS,
   DEFAULT_STATE,
-  EDUCATIONAL_YT_CHANNELS,
-  ENTERTAINMENT_YT_CHANNELS,
-  SCORE_ALLOW_THRESHOLD,
-  SCORE_BLOCK_THRESHOLD
 } from "./config.js";
 
 import {
   extractDomain,
-  getPath,
   parseUrl
 } from "./utils.js";
 export function isYouTubeDomain(url) {
@@ -18,31 +13,6 @@ export function isYouTubeDomain(url) {
 }
 export function isYouTubeShorts(url) {
   return /https?:\/\/(www\.)?youtube\.com\/shorts\//i.test(url);
-}
-
- function isBlockedYouTubeSurface(url) {
-  if (!isYouTubeDomain(url)) return false;
-  const path = getPath(url);
-  if (path === "/feed/explore") return true;
-  if (path === "/feed/trending") return true;
-  return false;
-}
-
-export function isKnownSafeYouTubeIntent(url) {
-  if (!isYouTubeDomain(url)) return false;
-  const parsed = parseUrl(url);
-  if (!parsed) return false;
-  const path = parsed.pathname;
-  if (path === "/results" && parsed.searchParams.has("search_query")) return true;
-  if (path === "/watch" && parsed.searchParams.has("v")) return true;
-  if (path === "/playlist" && parsed.searchParams.has("list")) return true;
-  if (path === "/feed/playlists") return true;
-  if (path === "/feed/library") return true;
-  // Channel pages: only safe if NOT a known entertainment channel
-  if (path.startsWith("/@") || path.startsWith("/channel/") || path.startsWith("/c/") || path.startsWith("/user/")) {
-    return !isEntertainmentChannel(url);
-  }
-  return false;
 }
 
 function isYouTubeChannelPath(path) {
@@ -65,7 +35,6 @@ export function isAllowedYouTubeRoute(url, title = "", category = "") {
 
   // Channel pages — check against allow/block lists
   if (isYouTubeChannelPath(path)) {
-    if (isEntertainmentChannel(url)) return false;
     return true;
   }
 
@@ -80,7 +49,6 @@ export function isAllowedYouTubeRoute(url, title = "", category = "") {
   return false;
 }
 function isAllowedYouTubeVideo(url, title = "", category = "") {
-  if (isEntertainmentChannel(url)) return false;
 
   if (category) {
     const catLower = category.toLowerCase();
@@ -90,22 +58,7 @@ function isAllowedYouTubeVideo(url, title = "", category = "") {
       catLower === "how-to & style";
     return isAllowedCat;
   }
-
-  if (isEducationalChannel(url)) return true;
-
-  const score = keywordScore(url, title);
-  if (score.total >= SCORE_ALLOW_THRESHOLD) return true;
-  if (score.total <= SCORE_BLOCK_THRESHOLD && score.negativeHits > 0) return false;
-
   return true; // ambiguous — default allow
-}
-
-function isEducationalChannel(url) {
-  return matchesYouTubeChannelSet(url, EDUCATIONAL_YT_CHANNELS);
-}
-
-function isEntertainmentChannel(url) {
-  return matchesYouTubeChannelSet(url, ENTERTAINMENT_YT_CHANNELS);
 }
 
 function isUserAllowedYouTubeChannel(url, allowedChannels = []) {
@@ -113,33 +66,6 @@ function isUserAllowedYouTubeChannel(url, allowedChannels = []) {
   const channelInfo = extractYouTubeChannelInfo(url);
   if (!channelInfo) return false;
   return allowedChannels.includes(channelInfo.key);
-}
-
-function matchesYouTubeChannelSet(url, channelSet) {
-  if (!isYouTubeDomain(url)) return false;
-  const parsed = parseUrl(url);
-  if (!parsed) return false;
-
-  const pathMatch = parsed.pathname.match(
-    /^\/((@[^/]+)|(channel\/([^/]+))|(c\/([^/]+))|(user\/([^/]+)))/i
-  );
-  if (pathMatch) {
-    // Grab just the handle/ID portion
-    const handle = pathMatch[2]; // e.g. "@3blue1brown"
-    const channelId = pathMatch[4]; // e.g. "UC..."
-    const cSlug = pathMatch[6];
-    const userSlug = pathMatch[8];
-
-    for (const entry of channelSet) {
-      const e = entry.toLowerCase();
-      if (handle && e === handle.toLowerCase()) return true;
-      if (channelId && e === channelId.toLowerCase()) return true;
-      if (cSlug && e === cSlug.toLowerCase()) return true;
-      if (userSlug && e === userSlug.toLowerCase()) return true;
-    }
-  }
-
-  return false;
 }
 
 function extractYouTubeChannelInfo(url) {
@@ -187,7 +113,7 @@ function extractYouTubeChannelInfo(url) {
 
   return null;
 }
-async function handleYouTubeChannelCheck(url) {
+export async function handleYouTubeChannelCheck(url) {
   const { settings, state } = await chrome.storage.local.get(["settings", "state"]);
   const activeSettings = settings || DEFAULT_SETTINGS;
   const activeState = state || DEFAULT_STATE;
@@ -197,8 +123,6 @@ async function handleYouTubeChannelCheck(url) {
 
   const parsed = parseUrl(url);
   if (!parsed || !isYouTubeChannelPath(parsed.pathname)) return { verdict: "allow" };
-  if (isEntertainmentChannel(url)) return { verdict: "block" };
-  if (isEducationalChannel(url)) return { verdict: "allow" };
   if (isUserAllowedYouTubeChannel(url, activeSettings.allowedYouTubeChannels || [])) {
     return { verdict: "allow" };
   }
@@ -214,7 +138,7 @@ async function handleYouTubeChannelCheck(url) {
   };
 }
 
-async function approveYouTubeChannel(url) {
+export async function approveYouTubeChannel(url) {
   const channelInfo = extractYouTubeChannelInfo(url);
   if (!channelInfo) return { ok: false };
 

@@ -1,3 +1,39 @@
+export const YOUTUBE_SEARCH_HARD_BLOCK_PATTERNS = [
+  // Ultra-passive / dopamine
+  "asmr", "mukbang", "satisfying", "oddly satisfying",
+
+  // Pranks / reactions / memes
+  "prank", "reaction", "reacts", "meme", "memes",
+  "funny moments", "best moments", "compilation", "try not to laugh",
+
+  // Short-form / algorithm bait
+  "shorts", "reels", "tiktok", "clips", "clip", "edit", "edits",
+
+  // Celebrity / drama / gossip
+  "celebrity", "drama", "gossip", "exposed", "beef", "controversy",
+
+  // Gaming binge content
+  "gameplay", "lets play", "let's play", "livestream", "stream highlights",
+
+  // Music consumption
+  "lyrics", "music video", "official video", "audio", "live concert", "music mix", "playlist",
+
+  // Lifestyle / vlog / day content
+  "vlog", "day in the life", "morning routine", "night routine", "daily routine",
+
+  // Clickbait formats
+  "you won't believe", "insane", "crazy", "shocking",
+  "top 10", "top 5", "must watch", "gone wrong",
+
+  // Podcasts / long passive listening
+  "podcast", "interview highlights",
+
+  // Commentary / commentary drama
+  "commentary", "rant", "hot take"
+];
+
+
+
 function getApprovedSearchStorageKey(tabId) {
   return `${APPROVED_SEARCH_KEY_PREFIX}${tabId}`;
 }
@@ -115,3 +151,42 @@ async function handleSearchQueryCheck(query, tabId) {
   // Ambiguous or clearly off-task → require a written reason to proceed
   return { verdict: "prompt", query, currentTask, tabId };
 }
+
+
+  // if (message.type === "search_query_check") {
+  //   handleSearchQueryCheck(message.query, sender?.tab?.id).then(sendResponse);
+  //   return true;
+  // }
+  // if (message.type === "approve_search_query") {
+  //   approveSearchQuery(sender?.tab?.id, message.query).then(sendResponse);
+  //   return true;
+  // }
+  // Sent by soft_blocked.html after the user provides a written reason.
+  // tabId comes from the page's query param since extension pages have no sender tab context.
+
+  // if (message.type === "approve_search_query_with_reason") {
+  //   const tabId = message.tabId ?? sender?.tab?.id;
+  //   approveSearchQueryWithReason(tabId, message.query, message.reason).then(sendResponse);
+  //   return true;
+  // }
+  // Used by soft_blocked.html to display the running session override count.
+  
+  // if (message.type === "get_override_count") {
+  //   getTodayOverrideCount().then(sendResponse);
+  //   return true;
+  // }
+
+  // async function getTodayOverrideCount() {
+//   const { progress } = await chrome.storage.local.get("progress");
+//   const overrides = (progress || DEFAULT_PROGRESS).searchOverrides || [];
+//   return { count: overrides.length };
+// }
+
+// async function clearAllApprovedSearches() {
+//   const sessionState = await chrome.storage.session.get(null);
+//   const keysToRemove = Object.keys(sessionState).filter((key) =>
+//     key.startsWith(APPROVED_SEARCH_KEY_PREFIX)
+//   );
+//   if (keysToRemove.length === 0) return;
+//   await chrome.storage.session.remove(keysToRemove);
+// }
