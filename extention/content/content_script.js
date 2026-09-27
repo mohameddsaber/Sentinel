@@ -575,7 +575,6 @@
   // remove recommendations and related videos from youtube homepage and watch page.
 function enforceYouTubeFocusUI() {
   if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
-  // Remove existing style so re-injection after SPA navigation is clean
   removeYouTubeFocusUI();
 
   const style = document.createElement("style");
@@ -591,12 +590,18 @@ function enforceYouTubeFocusUI() {
     }
 
     /* Watch-page algorithmic suggestions only — NOT the whole #secondary
-       column, so the Gemini "Ask" panel (which lives in that column)
-       stays visible */
+       column, so the Gemini "Ask" panel and the playlist panel (if the
+       video is part of one) stay visible */
     ytd-watch-next-secondary-results-renderer ytd-compact-video-renderer,
     ytd-watch-next-secondary-results-renderer ytd-reel-shelf-renderer,
     ytd-watch-next-secondary-results-renderer yt-lockup-view-model {
       display: none !important;
+    }
+
+    /* Safety net: explicitly force the playlist panel visible in case a
+       future YouTube DOM change nests it under something we hide above */
+    ytd-playlist-panel-renderer {
+      display: block !important;
     }
 
     /* Autoplay — button in the player controls and the autonav pause screen */
