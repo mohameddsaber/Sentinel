@@ -573,56 +573,50 @@
     removeYouTubeFocusUI();
   }
   // remove recommendations and related videos from youtube homepage and watch page.
-  function enforceYouTubeFocusUI() {
-    if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
-    // Remove existing style so re-injection after SPA navigation is clean
-    removeYouTubeFocusUI();
+function enforceYouTubeFocusUI() {
+  if (!/^(www\.)?youtube\.com$/i.test(window.location.hostname)) return;
+  // Remove existing style so re-injection after SPA navigation is clean
+  removeYouTubeFocusUI();
 
-    const style = document.createElement("style");
-    style.id = YT_STYLE_ID;
-    style.textContent = `
-      /* Homepage recommendation grid/shelves */
-      ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
-      ytd-browse[page-subtype="home"] ytd-rich-section-renderer,
-      ytd-browse[page-subtype="home"] ytd-rich-item-renderer,
-      ytd-browse[page-subtype="home"] #contents.ytd-rich-grid-renderer,
-      ytd-browse[page-subtype="home"] #contents {
-        display: none !important;
-      }
+  const style = document.createElement("style");
+  style.id = YT_STYLE_ID;
+  style.textContent = `
+    /* Homepage recommendation grid/shelves */
+    ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+    ytd-browse[page-subtype="home"] ytd-rich-section-renderer,
+    ytd-browse[page-subtype="home"] ytd-rich-item-renderer,
+    ytd-browse[page-subtype="home"] #contents.ytd-rich-grid-renderer,
+    ytd-browse[page-subtype="home"] #contents {
+      display: none !important;
+    }
 
-      /* Watch-page algorithmic suggestions */
-      ytd-watch-next-secondary-results-renderer,
-      #secondary,
-      ytd-compact-video-renderer,
-      ytd-reel-shelf-renderer,
-      #related {
-        display: none !important;
-      }
+    /* Watch-page algorithmic suggestions only — NOT the whole #secondary
+       column, so the Gemini "Ask" panel (which lives in that column)
+       stays visible */
+    ytd-watch-next-secondary-results-renderer ytd-compact-video-renderer,
+    ytd-watch-next-secondary-results-renderer ytd-reel-shelf-renderer,
+    ytd-watch-next-secondary-results-renderer yt-lockup-view-model {
+      display: none !important;
+    }
 
-      /* Autoplay — button in the player controls and the autonav pause screen */
-      .ytp-autonav-toggle-button-container,
-      ytd-toggle-button-renderer.ytd-autonav-pause-renderer,
-      ytd-autonav-pause-renderer {
-        display: none !important;
-      }
+    /* Autoplay — button in the player controls and the autonav pause screen */
+    .ytp-autonav-toggle-button-container,
+    ytd-toggle-button-renderer.ytd-autonav-pause-renderer,
+    ytd-autonav-pause-renderer {
+      display: none !important;
+    }
 
-      /* End-screen cards and info cards overlaid on the video */
-      .ytp-endscreen-content,
-      .ytp-ce-element,
-      .ytp-cards-teaser,
-      .ytp-cards-button,
-      ytd-endscreen-element-renderer {
-        display: none !important;
-      }
-
-      /* Comments */
-      ytd-comments,
-      #comments {
-        display: none !important;
-      }
-    `;
-    document.documentElement.appendChild(style);
-  }
+    /* End-screen cards and info cards overlaid on the video */
+    .ytp-endscreen-content,
+    .ytp-ce-element,
+    .ytp-cards-teaser,
+    .ytp-cards-button,
+    ytd-endscreen-element-renderer {
+      display: none !important;
+    }
+  `;
+  document.documentElement.appendChild(style);
+}
   // remove the style when the session is inactive
   function removeYouTubeFocusUI() {
     const style = document.getElementById(YT_STYLE_ID);
