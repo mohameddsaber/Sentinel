@@ -32,14 +32,18 @@ if (saveGoalBtn && goalInput) {
 
 init();
 
+const startSound = new Audio(chrome.runtime.getURL('sounds/start.mp3'));
+
 async function init() {
   timerSlider.addEventListener("input", () => {
     updateTimer(Number(timerSlider.value));
   });
 
   sessionBtn.addEventListener("click", async () => {
-    if (!currentState || currentState.sentinelState === "SESSION_ACTIVE") return;
+    startSound.play();
 
+    if (!currentState || currentState.sentinelState === "SESSION_ACTIVE") return;
+    
     sessionBtn.disabled = true;
     sessionBtn.textContent = "STARTING...";
 

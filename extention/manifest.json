@@ -7,13 +7,13 @@
     "default_popup": "popup/popup.html",
     "default_title": "Deep Work",
     "default_icon": {
-      "128": "favicon/web-app-manifest-192x192.png",
+      "128": "favicon/favicon.svg",
       "48": "favicon/favicon-96x96.png",
       "16": "favicon/favicon-96x96.png"
     }
   },
   "icons": {
-    "128": "favicon/web-app-manifest-192x192.png",
+    "128": "favicon/favicon.svg",
     "48": "favicon/favicon-96x96.png",
     "16": "favicon/favicon-96x96.png"
   },
@@ -21,7 +21,8 @@
     "storage",
     "tabs",
     "scripting",
-    "alarms"
+    "alarms",
+    "offscreen"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -44,7 +45,9 @@
         "blocked/blocked.css",
         "blocked/blocked.js",
         "blocked/soft_blocked.html",
-        "blocked/hard_blocked.html"
+        "blocked/hard_blocked.html",
+        "sounds/*.mp3",
+        "sounds/*.wav"
       ],
       "matches": ["<all_urls>"]
     }

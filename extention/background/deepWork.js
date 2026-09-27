@@ -57,6 +57,17 @@ async function clearAllApprovedSearches() {
   if (keysToRemove.length === 0) return;
   await chrome.storage.session.remove(keysToRemove);
 }
+
+async function playEndSound() {
+  if (!(await chrome.offscreen.hasDocument())) {
+    await chrome.offscreen.createDocument({
+      url: "offscreen.html",
+      reasons: ["AUDIO_PLAYBACK"],
+      justification: "Play session end sound",
+    });
+  }
+  chrome.runtime.sendMessage({ type: "play_end_sound" });
+}
 export async function endDeepWork(reason) {
   const { state, progress } = await chrome.storage.local.get([
     "state",
@@ -84,6 +95,8 @@ export async function endDeepWork(reason) {
   });
   await clearAllApprovedSearches();
   await chrome.alarms.clear("deepwork_end");
+    await playEndSound();
+  
 }
 export function getTodayMinutes(sessions, activeState = DEFAULT_STATE) {
   const now = new Date();

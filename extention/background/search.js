@@ -32,7 +32,7 @@ async function approveSearchQuery(tabId, query) {
   return { ok: true };
 }
 
-async function clearApprovedSearchesForTab(tabId) {
+export async function clearApprovedSearchesForTab(tabId) {
   if (!tabId) return;
   await chrome.storage.session.remove(getApprovedSearchStorageKey(tabId));
 }

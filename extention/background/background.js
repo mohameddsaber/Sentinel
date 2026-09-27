@@ -33,6 +33,7 @@ import {
   isAllowedYouTubeRoute,
   isKnownSafeYouTubeIntent
 } from "./youtube.js";
+// import{clearApprovedSearchesForTab} from "./search.js";
 
 
 const tabMeta = new Map();
@@ -72,9 +73,10 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   }
 });
 
+
 chrome.tabs.onRemoved.addListener((tabId) => {
   tabMeta.delete(tabId);
-  clearApprovedSearchesForTab(tabId).catch(() => { });
+  // clearApprovedSearchesForTab(tabId).catch(() => { });
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
