@@ -37,28 +37,6 @@ export async function toggleDeepWork(enabled, durationMin, currentTask) {
   return { ok: true };
 }
 
-async function enforceActiveTabAtSessionStart() {
-  try {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    const activeTab = tabs[0];
-    if (activeTab?.id && activeTab.url) {
-      await handleActiveTabSwitch(activeTab.id, activeTab.url);
-    }
-  } catch {
-    // ignore
-  }
-}
-
-async function playEndSound() {
-  if (!(await chrome.offscreen.hasDocument())) {
-    await chrome.offscreen.createDocument({
-      url: "offscreen.html",
-      reasons: ["AUDIO_PLAYBACK"],
-      justification: "Play session end sound",
-    });
-  }
-  chrome.runtime.sendMessage({ type: "play_end_sound" });
-}
 export async function endDeepWork(reason) {
   const { state, progress } = await chrome.storage.local.get([
     "state",
@@ -132,4 +110,27 @@ export async function setDailyGoal(dailyMinutesGoal) {
   });
 
   return { ok: true };
+}
+
+async function enforceActiveTabAtSessionStart() {
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const activeTab = tabs[0];
+    if (activeTab?.id && activeTab.url) {
+      await handleActiveTabSwitch(activeTab.id, activeTab.url);
+    }
+  } catch {
+    // ignore
+  }
+}
+
+async function playEndSound() {
+  if (!(await chrome.offscreen.hasDocument())) {
+    await chrome.offscreen.createDocument({
+      url: "offscreen.html",
+      reasons: ["AUDIO_PLAYBACK"],
+      justification: "Play session end sound",
+    });
+  }
+  chrome.runtime.sendMessage({ type: "play_end_sound" });
 }

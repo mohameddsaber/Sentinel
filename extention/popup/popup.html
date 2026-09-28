@@ -11,6 +11,259 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="popup.css" />
+
+  <style>
+    /* ---------- View switching ---------- */
+    [hidden] {
+      display: none !important;
+    }
+
+    /* ---------- Tab bar ---------- */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 9px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--text-lo);
+      cursor: pointer;
+      transition: color 0.18s, background 0.18s, border-color 0.18s;
+    }
+
+    .tab:hover {
+      color: var(--text-mid);
+    }
+
+    .tab.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+      background: rgba(24, 212, 245, 0.04);
+    }
+
+    /* ---------- Rank card ---------- */
+    .rank-card {
+      --rank-color: var(--cyan);
+    }
+
+    .rank-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .rank-badge {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--rank-color);
+      border: 1px solid var(--rank-color);
+      border-radius: 5px;
+      background: rgba(24, 212, 245, 0.06);
+      box-shadow: 0 0 10px rgba(24, 212, 245, 0.18);
+    }
+
+    .rank-meta {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: 20px 14px;
+      column-gap: 10px;
+      row-gap: 2px;
+      align-items: center;
+    }
+
+    .rank-name,
+    .rank-total {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    .rank-name {
+      letter-spacing: 3px;
+      color: var(--rank-color);
+    }
+
+    .rank-total {
+      letter-spacing: 1px;
+      color: var(--text-hi);
+      text-align: right;
+    }
+
+    .rank-sub {
+      font-size: 11px;
+      line-height: 14px;
+      letter-spacing: 1.2px;
+      color: var(--text-lo);
+    }
+
+    .rank-sub.right {
+      text-align: right;
+    }
+
+    .rank-card .progress-meter-fill {
+      background: var(--rank-color);
+      box-shadow: 0 0 12px rgba(24, 212, 245, 0.25);
+    }
+
+    .rank-pips {
+      display: flex;
+      gap: 6px;
+      margin-top: 11px;
+    }
+
+    .pip {
+      flex: 1;
+      height: 5px;
+      border-radius: 2px;
+      background: var(--border);
+      transition: background 0.2s;
+    }
+
+    .pip.reached {
+      background: var(--rank-color);
+    }
+
+    .pip.current {
+      box-shadow: 0 0 6px var(--rank-color);
+    }
+
+    .empty-hint {
+      margin-top: 10px;
+      padding: 7px 0;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-lo);
+      border: 1px dashed var(--border-hi);
+      border-radius: 4px;
+    }
+
+    /* ---------- Stat tiles ---------- */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .stat-tile {
+      padding: 8px 9px;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: border-color 0.2s;
+    }
+
+    .stat-tile:hover {
+      border-color: var(--border-hi);
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: 1px;
+      color: var(--text-hi);
+    }
+
+    .stat-label {
+      margin-top: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      color: var(--text-lo);
+    }
+
+    .is-empty .stat-val {
+      color: var(--text-lo);
+    }
+
+    /* ---------- 7-day bar chart ---------- */
+    .week-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 56px;
+    }
+
+    .bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      transition: height 0.3s ease, background 0.2s;
+    }
+
+    .bar.has-data {
+      background: rgba(24, 212, 245, 0.45);
+    }
+
+    .bar.today {
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(24, 212, 245, 0.4);
+    }
+
+    .week-labels {
+      display: flex;
+      gap: 8px;
+      margin-top: 7px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-lo);
+      text-align: center;
+    }
+
+    .week-labels span {
+      flex: 1;
+    }
+
+    .week-labels span.today {
+      color: var(--cyan);
+    }
+    /* ---------- Rank view: fit within Chrome's 600px popup cap ---------- */
+    #viewRank {
+      padding: 10px 12px 12px;   /* was 12px 12px 16px */
+      gap: 8px;                  /* was 10px */
+    }
+
+    .week-bars {
+      height: 40px;              /* was 56px */
+    }
+
+    .rank-head {
+      margin-bottom: 10px;       /* was 12px */
+    }
+
+    .rank-pips {
+      margin-top: 9px;           /* was 11px */
+    }
+
+    /* Safety net: never show a scrollbar */
+    html,
+    body {
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="popup">
@@ -25,7 +278,14 @@
 
     <div class="subtitle">Focus Defense System</div>
 
-    <div class="cards">
+    <!-- Tab bar -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-view="viewMain" role="tab" type="button">SESSION</button>
+      <button class="tab" data-view="viewRank" role="tab" type="button">RANK</button>
+    </div>
+
+    <!-- VIEW 1: SESSION (unchanged) -->
+    <div class="cards view" id="viewMain">
       <section class="card">
         <div class="card-title">SESSION CONTROL</div>
         <div class="card-body">
@@ -78,10 +338,100 @@
           </div>
         </div>
       </section>
+    </div>
+
+    <!-- VIEW 2: RANK + STATS -->
+    <div class="cards view" id="viewRank" hidden>
+
+      <section class="card rank-card" id="rankCard">
+        <div class="card-title">CURRENT RANK</div>
+        <div class="card-body">
+          <div class="rank-head">
+            <div class="rank-badge" id="rankBadge">I</div>
+            <div class="rank-meta">
+              <div class="rank-name" id="rankName">RECRUIT</div>
+              <div class="rank-total" id="rankTotal">0m</div>
+              <div class="rank-sub" id="rankPosition">RANK 1 OF 6</div>
+              <div class="rank-sub right">ALL TIME</div>
+            </div>
+          </div>
+
+          <div class="progress-meter" aria-hidden="true">
+            <div class="progress-meter-fill" id="rankBarFill"></div>
+          </div>
+          <div class="progress-caption">
+            <span id="rankLeft">5h</span>
+            <span id="rankNextName">to CADET</span>
+          </div>
+
+          <div class="rank-pips" id="rankPips" aria-hidden="true">
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <span class="pip"></span>
+          </div>
+
+          <div class="empty-hint" id="rankEmpty" hidden>START YOUR FIRST SESSION</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">STATS</div>
+        <div class="card-body">
+          <div class="stat-grid" id="statGrid">
+            <div class="stat-tile">
+              <div class="stat-val" id="statWeek">0m</div>
+              <div class="stat-label">THIS WEEK</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-val" id="statSessions">0</div>
+              <div class="stat-label">SESSIONS</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-val" id="statAvg">0m</div>
+              <div class="stat-label">AVERAGE</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-val" id="statStreak">0d</div>
+              <div class="stat-label">STREAK</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-val" id="statBest">0m</div>
+              <div class="stat-label">BEST DAY</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-val" id="statLongest">0m</div>
+              <div class="stat-label">LONGEST</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">LAST 7 DAYS</div>
+        <div class="card-body">
+          <div class="week-bars" id="weekBars" aria-hidden="true">
+            <div class="bar" data-day="0"></div>
+            <div class="bar" data-day="1"></div>
+            <div class="bar" data-day="2"></div>
+            <div class="bar" data-day="3"></div>
+            <div class="bar" data-day="4"></div>
+            <div class="bar" data-day="5"></div>
+            <div class="bar today" data-day="6"></div>
+          </div>
+          <div class="week-labels" id="weekLabels">
+            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span class="today">S</span>
+          </div>
+        </div>
+      </section>
 
     </div>
   </div>
 
   <script src="popup.js"></script>
+  <script src="rank.js"></script>
+  <script src="data.js"></script>
 </body>
 </html>

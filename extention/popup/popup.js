@@ -40,10 +40,10 @@ async function init() {
   });
 
   sessionBtn.addEventListener("click", async () => {
-    startSound.play();
-
     if (!currentState || currentState.sentinelState === "SESSION_ACTIVE") return;
     
+    startSound.play();
+
     sessionBtn.disabled = true;
     sessionBtn.textContent = "STARTING...";
 
