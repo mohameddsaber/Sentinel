@@ -24,7 +24,8 @@
        return sessions;
      --------------------------------------------------------- */
   async function loadSessions() {
-    return (window.SentinelPlaceholder && window.SentinelPlaceholder.sessions) || [];
+    const { progress } = await chrome.storage.local.get("progress");
+    return (progress && progress.sessions) || [];
   }
 
   /* ---------- helpers ---------- */
@@ -149,19 +150,22 @@
     $("statGrid").classList.toggle("is-empty", stats.totalMin === 0);
   }
 
-  function renderWeek(stats) {
-    const maxMin = Math.max(1, ...stats.days.map((d) => d.min));
+  async function renderWeek(stats) {
+    const {settings} = await chrome.storage.local.get("settings");
+    const dailyGoal = Number(settings && settings.dailyMinutesGoal) || 120;
     const bars = $("weekBars").children;
     const labels = $("weekLabels").children;
 
     stats.days.forEach((day, i) => {
       const bar = bars[i];
-      const height = day.min > 0 ? Math.max(8, Math.round((day.min / maxMin) * 52)) : 4;
+      const ratio = Math.min(1, day.min / dailyGoal);
+      const height = day.min > 0 ? Math.max(8, Math.round((ratio) * 52)) : 4;
       const isToday = i === stats.days.length - 1;
 
       bar.style.height = `${height}px`;
       bar.classList.toggle("has-data", day.min > 0 && !isToday);
       bar.classList.toggle("today", isToday);
+      bar.classList.toggle("goal-met", day.min >= dailyGoal);
       bar.title = `${day.date.toLocaleDateString("en", { weekday: "short" })}: ${formatDuration(day.min)}`;
 
       labels[i].textContent = day.date.toLocaleDateString("en", { weekday: "narrow" });
