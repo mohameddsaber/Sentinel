@@ -3,7 +3,7 @@ import {
   DEFAULT_STATE,
   DEFAULT_PROGRESS
 } from "./config.js";
-import {handleActiveTabSwitch} from "./background.js";
+import {enforceBlocking} from "./background.js";
 
 export async function startDeepWork(durationMin, currentTask) {
   const now = Date.now();
@@ -117,7 +117,7 @@ async function enforceActiveTabAtSessionStart() {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     const activeTab = tabs[0];
     if (activeTab?.id && activeTab.url) {
-      await handleActiveTabSwitch(activeTab.id, activeTab.url);
+      await enforceBlocking(activeTab.id, activeTab.url);
     }
   } catch {
     // ignore

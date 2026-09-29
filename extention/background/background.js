@@ -57,19 +57,16 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url) {
-    handleUrlChange(tabId, changeInfo.url, tab.active === true);
-    return;
-  }
-  if (changeInfo.status === "complete" && tab.url) {
-    handleUrlChange(tabId, tab.url, tab.active === true);
+  if (changeInfo.url || changeInfo.status === "loading") {
+    const url= (changeInfo.url || tab.pendingUrl || tab.url );
+    if(url) enforceBlocking(tabId, url);
   }
 });
 
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   const tab = await chrome.tabs.get(tabId);
   if (tab.url) {
-    handleActiveTabSwitch(tabId, tab.url);
+    enforceBlocking(tabId, tab.url);
   }
 });
 
@@ -109,7 +106,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const tabId = sender?.tab?.id;
     if (tabId && message.url) {
       tabMeta.set(tabId, { url: message.url, title: message.title || "", category: message.category || "" });
-      handleUrlChange(tabId, message.url, sender?.tab?.active === true);
+      enforceBlocking(tabId, message.url);
     }
     sendResponse({ ok: true });
     return true;
@@ -155,25 +152,7 @@ async function getStateForPopup() {
   };
 }
 
-async function handleUrlChange(tabId, url, isActive) {
-  if (!isHttpUrl(url)) return;
-  if (isExtensionUrl(url)) return;
-
-  const { settings, state } = await chrome.storage.local.get([
-    "settings",
-    "state",
-  ]);
-  const activeSettings = settings || DEFAULT_SETTINGS;
-  const activeState = state || DEFAULT_STATE;
-  const deepWorkActive = activeState.deepWorkActive;
-  const meta = tabMeta.get(tabId);
-  const isDistracting = isBlockedByRules(url, activeSettings, meta);
-
-  if (deepWorkActive && isDistracting) {
-    await redirectToBlocked(tabId, url);
-  }
-}
-export async function handleActiveTabSwitch(tabId, url) {
+export async function enforceBlocking(tabId, url) {
   if (!isHttpUrl(url)) return;
   if (isExtensionUrl(url)) return;
 
