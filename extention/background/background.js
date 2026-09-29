@@ -98,6 +98,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === "page_meta") {
+    if (sender.documentLifecycle && sender.documentLifecycle !== "active") {
+    sendResponse({ ok: false });
+    return true;
+    }
+    if (sender.frameId !== 0) {
+      sendResponse({ ok: false });
+      return true;
+    }
     const tabId = sender?.tab?.id;
     if (tabId && message.url) {
       tabMeta.set(tabId, { url: message.url, title: message.title || "", category: message.category || "" });

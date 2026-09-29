@@ -15,6 +15,14 @@
   let navigationObserver = null;
   let lastPromptedChannelKey = "";
   let pendingChannelNavigationUrl = null;
+  
+  const startWhenVisible = (fn) => {
+  if (document.prerendering) {
+    document.addEventListener("prerenderingchange", fn, { once: true });
+    } else {
+      fn();
+    }
+  };
 
   const teardown = () => {
     if (metaIntervalId) {
@@ -342,10 +350,12 @@
     }
   };
 
+  startWhenVisible(() => {
   sendMeta();
   observeTitle();
   checkYouTubeSearch(window.location.href);
   checkYouTubeChannelApproval(window.location.href);
+});
 
   document.addEventListener("click", (event) => {
     if (!isPlainPrimaryClick(event)) return;
@@ -375,8 +385,10 @@
       sendMeta();
     }
   });
-  metaIntervalId = setInterval(sendMeta, 2000);
-  void syncYouTubeFocusUI();
+  startWhenVisible(() => {
+    metaIntervalId = setInterval(sendMeta, 2000);
+    void syncYouTubeFocusUI();
+  });
 
   // Re-sync focus UI on YouTube SPA navigations (URL changes without a full page load)
   // Also intercepts search navigations for off-task query checking.
