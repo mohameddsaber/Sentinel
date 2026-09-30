@@ -36,7 +36,13 @@
       "matches": ["<all_urls>"] ,
       "js": ["content/content_script.js"],
       "run_at": "document_idle"
-    }
+    },
+     {
+    "matches": ["https://www.youtube.com/*"],
+    "js": ["content/yt_bridge.js"],
+    "world": "MAIN",
+    "run_at": "document_start"
+  }    
   ],
   "web_accessible_resources": [
     {
