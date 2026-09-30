@@ -3,12 +3,6 @@ import {
   DEFAULT_STATE,
   DEFAULT_PROGRESS,
   EMERGENCY_EXIT_COOLDOWN_MS,
-  ALWAYS_BLOCK_DOMAINS,
-  ALWAYS_ALLOW_DOMAINS,
-  SCORE_ALLOW_THRESHOLD,
-  SCORE_BLOCK_THRESHOLD,
-  STRICT_UNKNOWN_MEDIA_BLOCK,
-
 } from "./config.js";
 
 import {
@@ -21,20 +15,14 @@ import {
 import {
   isHttpUrl,
   isExtensionUrl,
-  matchesDomain,
-  matchesPatterns,
-  domainPatternRisk,
-  shouldBlockUnknownMediaDomain,
-  keywordScore,
 } from "./utils.js";
 
 import {
-  isYouTubeDomain,
-  isYouTubeShorts,
-  isAllowedYouTubeRoute,
   handleYouTubeChannelCheck,
   approveYouTubeChannel
 } from "./youtube.js";
+
+import { isBlockedByRules } from "./blockingLogic.js";
 
 const tabMeta = new Map();
 
@@ -229,40 +217,4 @@ async function useEmergencyExit() {
   await chrome.storage.local.set({ emergencyExitLastUsedAt: usedAt });
   await endDeepWork("emergency_exit");
   return { ok: true, available: false, remainingMs: EMERGENCY_EXIT_COOLDOWN_MS, lastUsedAt: usedAt };
-}
-function isBlockedByRules(url, settings, meta) {
-  if (isAllowlisted(url, settings.allowPatterns || [])) return false;
-  if (isYouTubeDomain(url)) {
-    if (settings.blockShorts && isYouTubeShorts(url)) return true;
-    const isAllowed = isAllowedYouTubeRoute(url, meta?.title || "", meta?.category || "");
-    console.log(`[Sentinel Background] Video: ${url} | Category: "${meta?.category || 'N/A'}" | Blocked: ${!isAllowed}`);
-    return !isAllowed;
-  }
-  if (matchesDomain(url, settings.blockedDomains || [])) return true;
-  if (matchesPatterns(url, settings.blockedPatterns || [])) return true;
-
-  if (matchesDomain(url, ALWAYS_ALLOW_DOMAINS)) return false;
-
-  const domainRisk = domainPatternRisk(url);
-  if (domainRisk >= 3) return true;
-
-  if (STRICT_UNKNOWN_MEDIA_BLOCK && shouldBlockUnknownMediaDomain(url, meta?.title || "")) {
-    return true;
-  }
-
-  const score = keywordScore(url, meta?.title || "");
-  const hasNegatives = score.negativeHits > 0;
-
-  if (matchesDomain(url, ALWAYS_BLOCK_DOMAINS)) {
-    return score.total < SCORE_ALLOW_THRESHOLD;
-  }
-
-  if (score.total <= SCORE_BLOCK_THRESHOLD && hasNegatives) {
-    return true;
-  }
-  return false;
-}
-
-function isAllowlisted(url, allowPatterns) {
-  return matchesPatterns(url, allowPatterns || []);
 }
