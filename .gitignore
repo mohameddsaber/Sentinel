@@ -10,4 +10,4 @@ scorer/scripts/results
 scorer/data/old*
 .env
 /IOS APP
-/backend
+
